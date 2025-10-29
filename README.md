@@ -1,11 +1,11 @@
 # TDAM: The Digital Art Museum
 
-## Final Year Project 
-## TUDublin - Computer Science - TU856/4 
+## Final Year Project - TUDublin
 ## C22305863 - Iria Parada 
 ### Supervisor: Art Sloan 
 
 Full-stack mobile application
+<br>
 ![ReactNative](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white)
 ![Springboot](https://img.shields.io/badge/Spring%20Boot-6DB33F?style=for-the-badge&logo=spring&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
