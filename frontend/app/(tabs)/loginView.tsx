@@ -1,3 +1,6 @@
+//Login View/Screen - 
+//"Dummy" screen of the Login page
+
 import TdamButton from "@/components/Button";
 import TdamTextInput from "@/components/TextInput";
 import React, { useState } from "react";
@@ -5,7 +8,7 @@ import { View, StyleSheet, Dimensions } from "react-native";
 import ImageViewer from "@/components/imageViewer";
 
 const logo = require("../../assets/images/logo.png")
-const { height } = Dimensions.get("window");
+const { height } = Dimensions.get("window"); //get height relative to the screen size 
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -39,6 +42,7 @@ export default function LoginScreen() {
   );
 }
 
+// -- styling -- 
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "#ffffff",

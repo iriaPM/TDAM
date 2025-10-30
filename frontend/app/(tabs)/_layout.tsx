@@ -1,10 +1,13 @@
-import { HeaderShownContext, HeaderTitle } from "@react-navigation/elements";
+//layout file - 
+//I use this to  manage the main tabs/navigation in the app
+
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons"
 
 export default function TabsLayout() {
     return (
         <Tabs
+            //styling
             screenOptions={{
                 tabBarActiveTintColor: "#FF8F8F",
                 headerStyle: {

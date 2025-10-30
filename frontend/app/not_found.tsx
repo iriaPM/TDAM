@@ -17,7 +17,7 @@ export default function NotFound() {
     );
 }
 
-
+// -- styling -- 
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "#eac6f5ff",

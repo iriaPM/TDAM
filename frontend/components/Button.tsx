@@ -1,3 +1,7 @@
+// Button Component - 
+// This is made so I have a reusable button eg.login screen, reg screen etc
+// it contains the label theme and style modifiers or props so I can customise the component in a differnt screen 
+
 import { StyleSheet, View, Pressable, Text, StyleProp, ViewStyle } from "react-native";
 
 type Props = {
@@ -46,6 +50,7 @@ export default function TdamButton({ label, theme }: Props) {
     return null;
 }
 
+// -- styling -- 
 const styles = StyleSheet.create({
     buttonContainer: {
         justifyContent: "center",

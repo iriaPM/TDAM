@@ -1,3 +1,8 @@
+// TextInput Component - 
+// This is made so I have a reusable text input eg.login screen, reg screen etc
+// it contains the placeholder value   input text and style  props so I can customise the component in a differnt screen 
+
+
 import React from 'react';
 import { TextInput, StyleSheet, View, StyleProp, TextStyle, ViewStyle } from 'react-native';
 
@@ -29,6 +34,7 @@ const TdamTextInput = ({
     );
 };
 
+// -- styling -- 
 const styles = StyleSheet.create({
     container: {
         width: '100%',

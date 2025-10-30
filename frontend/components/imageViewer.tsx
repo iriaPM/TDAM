@@ -1,3 +1,7 @@
+// Image Viewer Component - 
+// This is made so I have a reusable image viewer component eg.login screen, reg screen etc
+// it contains the source and style  props so I can customise the component in a differnt screen 
+
 import { StyleSheet, StyleProp, ImageStyle } from 'react-native';
 import { Image } from "expo-image";
 
@@ -10,6 +14,7 @@ export default function ImageViewer({ imgSource, style }: Props) {
     return <Image source={imgSource} style={[styles.image, style]}></Image>
 }
 
+// -- styling -- 
 const styles = StyleSheet.create({
     image: {
         resizeMode: "contain",
