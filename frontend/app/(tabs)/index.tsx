@@ -1,8 +1,6 @@
 import { Link } from "expo-router";
 import { View, StyleSheet } from "react-native";
-import { Image } from "expo-image";
 import ImageViewer from "@/components/imageViewer";
-import Button from "@/components/Button";
 
 const PlaceholderImage = require("../../assets/images/placeholderArt.png")
 
@@ -33,6 +31,8 @@ const styles = StyleSheet.create({
     color: "#C2E2FA"
   },
   imageContainer: {
+    width: 300,
+    height:300,
     flex: 1
   }
 });

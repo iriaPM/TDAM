@@ -1,7 +1,11 @@
 import TdamButton from "@/components/Button";
 import TdamTextInput from "@/components/TextInput";
 import React, { useState } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { View, StyleSheet, Dimensions } from "react-native";
+import ImageViewer from "@/components/imageViewer";
+
+const logo = require("../../assets/images/logo.png")
+const { height } = Dimensions.get("window");
 
 export default function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -9,37 +13,57 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <TdamTextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
+
+      <ImageViewer
+        imgSource={logo}
+        style={styles.imageContainer}
       />
-      <TdamTextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-      />
-      <TdamButton style={styles.button} label="Login" theme="primary" />
+
+      <View style={styles.form}>
+        <TdamTextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+        />
+        <TdamTextInput
+          style={styles.input}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+        />
+        <TdamButton style={styles.button} label="Log in" theme="primary" />
+      </View>
+
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#ffffff",
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "flex-start",
-    paddingHorizontal: 20,
-  },
-  input: {
-    width: "100%",
-    marginBottom: 15,
-  },
-  button: {
-    width: "100%",
-    marginTop: 10,
-  },
+    container: {
+        backgroundColor: "#ffffff",
+        flex: 1,
+        justifyContent: "flex-start",
+        alignItems: "center",
+        paddingHorizontal: 20,
+    },
+    input: {
+        width: "100%",
+        marginBottom: 15,
+    },
+    button: {
+        width: "100%",
+        marginTop: 10,
+    },
+    form: {
+        width: "100%",
+        marginTop: height * 0.25,
+    },
+    imageContainer: {
+        position: "absolute",
+        top: -30,
+        width: "100%",
+        height: height * 0.34,
+        resizeMode: "contain",
+    }
 });
