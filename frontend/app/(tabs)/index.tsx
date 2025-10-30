@@ -16,7 +16,7 @@ export default function Index() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#eac6f5ff",
+    backgroundColor: "#FFF1CB",
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
@@ -24,6 +24,6 @@ const styles = StyleSheet.create({
   button : {
     fontSize: 20,
     textDecorationLine: "underline",
-    color: "#d570f4ff"
+    color: "#C2E2FA"
   }
 });

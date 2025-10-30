@@ -1,15 +1,16 @@
 import { HeaderShownContext, HeaderTitle } from "@react-navigation/elements";
 import { Stack } from "expo-router";
+import { LogBox } from "react-native";
+
+LogBox.ignoreAllLogs(true);
 
 export default function RootLayout() {
   return (
     <Stack>
-      <Stack.Screen name="index" options={{
-        headerTitle: "TDAM!: The Digital Art Museum",
+      <Stack.Screen name="(tabs)" options={{
+        headerShown: false,
       }} />
-      <Stack.Screen name="loginView" options={{
-        headerTitle: "Welcome!",
-      }} />
+      <Stack.Screen name="loginView"/>
     </Stack>
   );
 }
