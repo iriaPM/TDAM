@@ -5,7 +5,7 @@ type Props = {
     theme?: "primary" | "secondary";
 }
 
-export default function Button({ label, theme }: Props) {
+export default function TdamButton({ label, theme }: Props) {
     if (!theme) {
         return (
             <View style={styles.buttonContainer}>
@@ -47,44 +47,34 @@ export default function Button({ label, theme }: Props) {
 
 const styles = StyleSheet.create({
     buttonContainer: {
-        width: 320,
-        height: 68,
-        marginHorizontal: 20,
-        alignItems: "center",
         justifyContent: "center",
-        padding: 3,
+        width: '100%',
+        paddingHorizontal: 16,
     },
     button: {
-        borderRadius: 10,
-        width: "100%",
-        height: "100%",
         alignItems: "center",
         justifyContent: "center",
-        flexDirection: "row",
-        borderWidth: 2,
+        height: 50,
+        borderWidth: 1,
+        borderRadius: 4,
+        paddingHorizontal: 16,
+        fontSize: 16,
+        backgroundColor: '#f5f5f5',
+        borderColor: "#ffffffff"
     },
     defaultButton: {
-        backgroundColor: "#f0f0f0",
-        borderColor: "#000",
+        backgroundColor: "#FFF1CB",
     },
     primaryButton: {
-        backgroundColor: "#f8c8c8",
-        borderColor: "#a33",
-        borderWidth: 6,
+        backgroundColor: "#FF8F8F",
     },
     secondaryButton: {
-        backgroundColor: "#a7d8ff",
-        borderColor: "#005",
-        borderWidth: 6,
+        backgroundColor: "#C2E2FA",
     },
     buttonLabel: {
         color: "#000",
         fontSize: 16,
         fontWeight: "600",
-    },
-    circleContainer: {
-        alignItems: "center",
-        justifyContent: "center",
     },
     buttonIcon: {
         paddingRight: 8,

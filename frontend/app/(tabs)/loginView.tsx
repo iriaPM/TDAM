@@ -1,4 +1,4 @@
-import Button from "@/components/Button";
+import TdamButton from "@/components/Button";
 import TdamTextInput from "@/components/TextInput";
 import React, { useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
@@ -15,7 +15,7 @@ export default function LoginScreen() {
         value={text}
         onChangeText={setText}
       />
-      <Button label="Primary" theme="primary" />
+      <TdamButton label="Primary" theme="primary" />
 
       <Text style={styles.preview}>You typed: {text}</Text>
     </View>
