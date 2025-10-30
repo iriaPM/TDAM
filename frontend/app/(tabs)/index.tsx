@@ -2,6 +2,7 @@ import { Link } from "expo-router";
 import { View, StyleSheet } from "react-native";
 import { Image } from "expo-image";
 import ImageViewer from "@/components/imageViewer";
+import Button from "@/components/Button";
 
 const PlaceholderImage = require("../../assets/images/placeholderArt.png")
 
@@ -10,6 +11,9 @@ export default function Index() {
     <View style={styles.container}>
       <View style={styles.imageContainer}>
         <ImageViewer imgSource={PlaceholderImage}/>
+      </View>
+      <View>
+        <Button label="button test"></Button>
       </View>
       <Link href="/loginView" style={styles.button}>
         Login

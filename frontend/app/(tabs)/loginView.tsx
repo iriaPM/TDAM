@@ -1,11 +1,11 @@
 import { Text, View, StyleSheet } from "react-native";
 
 export default function LoginScreen() {
-    return (
-        <View style={styles.container}>
-            <Text style={styles.text}>Log in</Text>
-        </View>
-    )
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Log in</Text>
+    </View>
+  )
 }
 
 
