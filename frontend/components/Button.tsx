@@ -1,8 +1,9 @@
-import { StyleSheet, View, Pressable, Text } from "react-native";
+import { StyleSheet, View, Pressable, Text, StyleProp, ViewStyle } from "react-native";
 
 type Props = {
     label: string;
     theme?: "primary" | "secondary";
+    style?: StyleProp<ViewStyle>;
 }
 
 export default function TdamButton({ label, theme }: Props) {

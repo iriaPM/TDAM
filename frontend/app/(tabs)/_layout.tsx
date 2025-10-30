@@ -29,7 +29,7 @@ export default function TabsLayout() {
             <Tabs.Screen
                 name="loginView"
                 options={{
-                    headerTitle: "Welcome!",
+                    headerTitle: "Log in",
                 }} />
 
         </Tabs>

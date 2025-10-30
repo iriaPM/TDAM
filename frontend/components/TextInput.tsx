@@ -5,8 +5,8 @@ interface TdamTextInputProps {
     placeholder?: string;
     value?: string;
     onChangeText?: (text: string) => void;
-    style?: StyleProp<TextStyle>; 
-    containerStyle?: StyleProp<ViewStyle>; 
+    style?: StyleProp<TextStyle>;
+    containerStyle?: StyleProp<ViewStyle>;
 }
 
 const TdamTextInput = ({
@@ -19,7 +19,7 @@ const TdamTextInput = ({
     return (
         <View style={[styles.container, containerStyle]}>
             <TextInput
-                style={[styles.input, style]} 
+                style={[styles.input, style]}
                 placeholder={placeholder}
                 placeholderTextColor="#999"
                 value={value}

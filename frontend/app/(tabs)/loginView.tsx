@@ -4,20 +4,24 @@ import React, { useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
 
 export default function LoginScreen() {
-  const [text, setText] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Log in</Text>
-      <Text style={styles.text}>Email:</Text>
       <TdamTextInput
-        placeholder="Enter email here"
-        value={text}
-        onChangeText={setText}
+        style={styles.input}
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
       />
-      <TdamButton label="Primary" theme="primary" />
-
-      <Text style={styles.preview}>You typed: {text}</Text>
+      <TdamTextInput
+        style={styles.input}
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+      />
+      <TdamButton style={styles.button} label="Login" theme="primary" />
     </View>
   );
 }
@@ -27,18 +31,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
     flex: 1,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-start",
     paddingHorizontal: 20,
   },
-  text: {
-    color: "#000",
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
+  input: {
+    width: "100%",
+    marginBottom: 15,
   },
-  preview: {
-    color: "#333",
-    fontSize: 16,
+  button: {
+    width: "100%",
     marginTop: 10,
   },
 });
