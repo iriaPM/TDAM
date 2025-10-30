@@ -10,10 +10,7 @@ export default function Index() {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <ImageViewer imgSource={PlaceholderImage}/>
-      </View>
-      <View>
-        <Button label="button test"></Button>
+        <ImageViewer imgSource={PlaceholderImage} />
       </View>
       <Link href="/loginView" style={styles.button}>
         Login
