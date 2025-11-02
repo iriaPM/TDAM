@@ -4,17 +4,14 @@
 import TdamButton from "@/components/Button";
 import ImageViewer from "@/components/imageViewer";
 import TdamTextInput from "@/components/TextInput";
-import React, { useState } from "react";
+import { useRegViewModel } from "@/viewmodel/RegistrationViewModel";
 import { View, StyleSheet, Dimensions } from "react-native";
 
 const logo = require("../../assets/images/logo.png")
 const { height } = Dimensions.get("window"); //get height relative to the screen size 
 
 export default function RegistrationScreen() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [username, setUsername] = useState("");
-
+    const { email, setEmail, password, setPassword, username, setUsername, register } = useRegViewModel();
 
     return (
         <View style={styles.container}>
@@ -43,7 +40,12 @@ export default function RegistrationScreen() {
                     value={password}
                     onChangeText={setPassword}
                 />
-                <TdamButton style={styles.button} label="Register" theme="secondary" />
+                <TdamButton
+                    style={styles.button}
+                    label="Register"
+                    theme="secondary"
+                    onPress={register}
+                />
             </View>
 
         </View>

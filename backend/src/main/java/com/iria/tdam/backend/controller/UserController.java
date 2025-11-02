@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import com.iria.tdam.backend.model.User;
 import com.iria.tdam.backend.repository.UserRepository;
 import com.iria.tdam.backend.dto.LoginRequest;
+import com.iria.tdam.backend.dto.RegisterRequest;
 
 @RestController
 @RequestMapping("/api")
@@ -25,6 +26,25 @@ public class UserController {
         if (user == null || !user.getPassword().equals(request.getPassword())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }
+
+        return ResponseEntity.ok(user);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        
+        if (userRepository.findByEmail(request.getEmail()) != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("email already in use");
+        }
+        if (userRepository.findByUsername(request.getUsername()) != null) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("username already in use");
+        }
+
+        User user = new User();
+        user.setUserName(request.getUsername());
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+        userRepository.save(user);
 
         return ResponseEntity.ok(user);
     }
