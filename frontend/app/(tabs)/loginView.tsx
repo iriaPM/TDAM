@@ -4,7 +4,7 @@
 
 import TdamButton from "@/components/Button";
 import TdamTextInput from "@/components/TextInput";
-import React, { useState } from "react";
+import React from "react";
 import { View, StyleSheet, Dimensions, Text } from "react-native";
 import ImageViewer from "@/components/imageViewer";
 import { useLoginViewModel } from "../../viewmodel/LoginViewModel";
@@ -67,6 +67,7 @@ const styles = StyleSheet.create({
   button: {
     width: "100%",
     marginTop: 10,
+    paddingHorizontal: 16
   },
   form: {
     width: "100%",

@@ -21,7 +21,7 @@ export default function TabsLayout() {
             }}
         >
             <Tabs.Screen
-                name="index"
+                name="home"
                 options={{
                     headerTitle: "TDAM! The Digital Art Museum",
                     tabBarIcon: ({ focused, color }) => <Ionicons

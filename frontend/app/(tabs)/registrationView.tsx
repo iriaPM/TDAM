@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     button: {
         width: "100%",
         marginTop: 10,
+        paddingHorizontal: 16,
     },
     form: {
         width: "100%",

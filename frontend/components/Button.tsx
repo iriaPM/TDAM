@@ -15,7 +15,7 @@ type Props = {
 export default function TdamButton({ label, theme, onPress, disabled, style }: Props) {
     if (!theme) {
         return (
-            <View style={styles.buttonContainer}>
+            <View style={[styles.buttonContainer, style]}>
                 <Pressable
                     style={styles.button}
                     onPress={onPress}
@@ -28,11 +28,12 @@ export default function TdamButton({ label, theme, onPress, disabled, style }: P
     }
     if (theme === "primary") {
         return (
-            <View style={styles.buttonContainer}>
+            <View style={[styles.buttonContainer, style]}>
                 <Pressable
                     style={[styles.button, styles.primaryButton]}
                     onPress={onPress}
-                    disabled={disabled}                >
+                    disabled={disabled}
+                >
                     <Text style={styles.buttonLabel}>{label}</Text>
                 </Pressable>
             </View>
@@ -40,7 +41,7 @@ export default function TdamButton({ label, theme, onPress, disabled, style }: P
     }
     if (theme === "secondary") {
         return (
-            <View style={styles.buttonContainer}>
+            <View style={[styles.buttonContainer, style]}>
                 <Pressable
                     style={[styles.button, styles.secondaryButton]}
                     onPress={onPress}
@@ -58,8 +59,7 @@ export default function TdamButton({ label, theme, onPress, disabled, style }: P
 const styles = StyleSheet.create({
     buttonContainer: {
         justifyContent: "center",
-        width: '100%',
-        paddingHorizontal: 16,
+        // Removed width: '100%' and paddingHorizontal: 16
     },
     button: {
         alignItems: "center",

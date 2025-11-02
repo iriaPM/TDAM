@@ -1,38 +1,68 @@
-import { Link } from "expo-router";
-import { View, StyleSheet } from "react-native";
+import { router } from "expo-router";
+import { View, StyleSheet, Dimensions, Text } from "react-native";
 import ImageViewer from "@/components/imageViewer";
+import TdamButton from "@/components/Button";
 
-const PlaceholderImage = require("../../assets/images/placeholderArt.png")
+const logo = require("../../assets/images/logo.png")
+const { height, width } = Dimensions.get("window"); //get height relative to the screen size 
 
 export default function Index() {
+  const buttonRowWidth = width * 0.75;
+  const buttonWidth = (buttonRowWidth - 16) / 2;
+
   return (
     <View style={styles.container}>
-      <View style={styles.imageContainer}>
-        <ImageViewer imgSource={PlaceholderImage} />
+      <Text style={styles.title}>Welcome to TDAM!</Text>
+
+      <ImageViewer
+        imgSource={logo}
+        style={styles.image}
+      />
+
+      <View style={[styles.buttonRow, { width: buttonRowWidth }]}>
+        <TdamButton
+          style={[{ width: buttonWidth }]}
+          label="Login"
+          theme="primary"
+          onPress={() => router.push("/loginView")}
+        />
+        <TdamButton
+          style={[{ width: buttonWidth }]}
+          label="Register"
+          theme="secondary"
+          onPress={() => router.push("/registrationView")}
+        />
       </View>
-      <Link href="/loginView" style={styles.button}>
-        Login
-      </Link>
     </View>
   );
 }
 
-
+// -- styling -- 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#ffffffff",
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
+    backgroundColor: "#ffffff",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    paddingTop: height * 0.1,
+    paddingHorizontal: 20,
   },
-  button: {
-    fontSize: 20,
-    textDecorationLine: "underline",
-    color: "#C2E2FA"
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: "#B7A3E3",
+    textAlign: "center",
   },
-  imageContainer: {
-    width: 300,
-    height:300,
-    flex: 1
-  }
+  image: {
+    width: 420,
+    height: 420,
+    resizeMode: "contain",
+    marginBottom: 30,
+  },
+  buttonRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
 });
