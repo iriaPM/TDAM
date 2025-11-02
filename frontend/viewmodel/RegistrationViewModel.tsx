@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import { registerUser } from "../services/api";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function useRegViewModel() {
     const [username, setUsername] = useState('')
@@ -24,8 +25,8 @@ export function useRegViewModel() {
         setLoading(true);
         try {
             const user = await registerUser(username, email, password);
-            console.log("Logged in:", user);
-
+            console.log("Successfully Registered :", user);
+            await AsyncStorage.setItem('userToken', user.token);
         } catch (err) {
             setError("Failed to register");
         } finally {

@@ -7,9 +7,9 @@ import TdamTextInput from "@/components/TextInput";
 import React from "react";
 import { View, StyleSheet, Dimensions, Text } from "react-native";
 import ImageViewer from "@/components/imageViewer";
-import { useLoginViewModel } from "../../viewmodel/LoginViewModel";
+import { useLoginViewModel } from "../viewmodel/LoginViewModel";
 
-const logo = require("../../assets/images/logo.png")
+const logo = require("../assets/images/logo.png")
 const { height } = Dimensions.get("window"); //get height relative to the screen size 
 
 export default function LoginView() {

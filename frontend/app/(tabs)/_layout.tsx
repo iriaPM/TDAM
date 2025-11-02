@@ -23,23 +23,12 @@ export default function TabsLayout() {
             <Tabs.Screen
                 name="home"
                 options={{
-                    headerTitle: "TDAM! The Digital Art Museum",
+                    headerTitle: "",
                     tabBarIcon: ({ focused, color }) => <Ionicons
                         name={focused ? "home-sharp" : "home-outline"}
                         color={color}
                         size={24} />
                 }} />
-            <Tabs.Screen
-                name="loginView"
-                options={{
-                    headerTitle: "Log in",
-                }} />
-            <Tabs.Screen
-                name="registrationView"
-                options={{
-                    headerTitle: "Register",
-                }} />
-
         </Tabs>
     );
 }

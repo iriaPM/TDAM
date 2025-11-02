@@ -4,10 +4,10 @@
 import TdamButton from "@/components/Button";
 import ImageViewer from "@/components/imageViewer";
 import TdamTextInput from "@/components/TextInput";
-import { useRegViewModel } from "@/viewmodel/RegistrationViewModel";
+import { useRegViewModel } from "../viewmodel/RegistrationViewModel";
 import { View, StyleSheet, Dimensions } from "react-native";
 
-const logo = require("../../assets/images/logo.png")
+const logo = require("../assets/images/logo.png")
 const { height } = Dimensions.get("window"); //get height relative to the screen size 
 
 export default function RegistrationScreen() {
