@@ -24,12 +24,13 @@ export function useRegViewModel() {
         setLoading(true);
         try {
             const user = await registerUser(username, email, password);
-            
+            console.log("Logged in:", user);
+
         } catch (err) {
-            setError("Failed to login");
+            setError("Failed to register");
         } finally {
             setLoading(false);
         }
     }
-    return { email, setEmail, password, setPassword,username,setUsername, error, loading, register };
+    return { email, setEmail, password, setPassword, username, setUsername, error, loading, register };
 }
