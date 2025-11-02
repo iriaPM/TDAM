@@ -1,0 +1,31 @@
+//User controller -  align api call from frontend 
+package com.iria.tdam.backend.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.iria.tdam.backend.model.User;
+import com.iria.tdam.backend.repository.UserRepository;
+import com.iria.tdam.backend.dto.LoginRequest;
+
+@RestController
+@RequestMapping("/api")
+@CrossOrigin(origins = "*")
+public class UserController {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail());
+
+        if (user == null || !user.getPassword().equals(request.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        }
+
+        return ResponseEntity.ok(user);
+    }
+}
