@@ -1,17 +1,18 @@
+//loginView.tsx 
 //Login View/Screen - 
 //"Dummy" screen of the Login page
 
 import TdamButton from "@/components/Button";
 import TdamTextInput from "@/components/TextInput";
 import React, { useState } from "react";
-import { View, StyleSheet, Dimensions } from "react-native";
+import { View, StyleSheet, Dimensions, Text } from "react-native";
 import ImageViewer from "@/components/imageViewer";
-import { useLoginViewModel } from "../viewmodel/LoginViewModel";
+import { useLoginViewModel } from "../../viewmodel/LoginViewModel";
 
 const logo = require("../../assets/images/logo.png")
 const { height } = Dimensions.get("window"); //get height relative to the screen size 
 
-export default function LoginScreen() {
+export default function LoginView() {
   const { email, setEmail, password, setPassword, login, error, loading } = useLoginViewModel();
 
   return (
@@ -35,7 +36,15 @@ export default function LoginScreen() {
           value={password}
           onChangeText={setPassword}
         />
-        <TdamButton style={styles.button} label="Log in" theme="primary" />
+        <TdamButton
+          style={styles.button}
+          label="Log in"
+          theme="primary"
+          onPress={login}
+          disabled={loading}
+        />
+        {error && <Text style={styles.errorText}>{error}</Text>}
+
       </View>
 
     </View>
@@ -69,5 +78,9 @@ const styles = StyleSheet.create({
     width: "100%",
     height: height * 0.34,
     resizeMode: "contain",
+  },
+  errorText: {
+    color: 'red',
+    marginBottom: 10,
   }
 });

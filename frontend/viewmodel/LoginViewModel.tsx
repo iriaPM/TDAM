@@ -2,7 +2,6 @@
 // validate input + call API
 
 import { useState } from "react";
-import { User } from "../models/Users";
 import { loginUser } from "../services/api";
 
 export function useLoginViewModel() {
@@ -24,8 +23,10 @@ export function useLoginViewModel() {
         try {
             const user = await loginUser(email, password);
             console.log("Logged in:", user);
+            alert("logged in");
         } catch (err) {
             setError("Failed to login");
+            alert(" error at logging in");
         } finally {
             setLoading(false);
         }

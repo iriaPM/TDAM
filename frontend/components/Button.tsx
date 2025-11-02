@@ -8,15 +8,18 @@ type Props = {
     label: string;
     theme?: "primary" | "secondary";
     style?: StyleProp<ViewStyle>;
+    onPress?: () => void;
+    disabled?: boolean;
 }
 
-export default function TdamButton({ label, theme }: Props) {
+export default function TdamButton({ label, theme, onPress, disabled, style }: Props) {
     if (!theme) {
         return (
             <View style={styles.buttonContainer}>
                 <Pressable
                     style={styles.button}
-                    onPress={() => alert("You pressed a button")}
+                    onPress={onPress}
+                    disabled={disabled}
                 >
                     <Text style={styles.buttonLabel}>{label}</Text>
                 </Pressable>
@@ -28,8 +31,8 @@ export default function TdamButton({ label, theme }: Props) {
             <View style={styles.buttonContainer}>
                 <Pressable
                     style={[styles.button, styles.primaryButton]}
-                    onPress={() => alert("You pressed the PRIMARY button")}
-                >
+                    onPress={onPress}
+                    disabled={disabled}                >
                     <Text style={styles.buttonLabel}>{label}</Text>
                 </Pressable>
             </View>
@@ -40,7 +43,8 @@ export default function TdamButton({ label, theme }: Props) {
             <View style={styles.buttonContainer}>
                 <Pressable
                     style={[styles.button, styles.secondaryButton]}
-                    onPress={() => alert("You pressed the SECONDARY button")}
+                    onPress={onPress}
+                    disabled={disabled}
                 >
                     <Text style={styles.buttonLabel}>{label}</Text>
                 </Pressable>
