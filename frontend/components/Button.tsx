@@ -59,7 +59,6 @@ export default function TdamButton({ label, theme, onPress, disabled, style }: P
 const styles = StyleSheet.create({
     buttonContainer: {
         justifyContent: "center",
-        // Removed width: '100%' and paddingHorizontal: 16
     },
     button: {
         alignItems: "center",

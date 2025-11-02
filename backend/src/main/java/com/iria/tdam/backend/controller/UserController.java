@@ -2,7 +2,6 @@
 package com.iria.tdam.backend.controller;
 
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +30,7 @@ public class UserController {
         String token = UUID.randomUUID().toString();
         user.setToken(token);
         userRepository.save(user);
+        
         return ResponseEntity.ok(user);
     }
 

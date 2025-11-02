@@ -13,7 +13,7 @@ export function useRegViewModel() {
     const [loading, setLoading] = useState(false);
 
     const register = async () => {
-        //make sure username is unique? is that done here on in the backend?  what other checks should i do? 
+
         if (!email.includes('@')) {
             setError('Invalid email');
             return;
