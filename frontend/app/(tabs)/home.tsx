@@ -2,6 +2,8 @@
 import { router } from "expo-router";
 import { View, StyleSheet, Dimensions, Text } from "react-native";
 import ImageViewer from "@/components/imageViewer";
+import TdamButton from "@/components/Button";
+import { logout } from "../logout";
 
 const logo = require("../../assets/images/logo.png")
 const { height, width } = Dimensions.get("window"); //get height relative to the screen size 
@@ -11,7 +13,12 @@ export default function home() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to TDAM!</Text>
-
+      <TdamButton
+        style={styles.button}
+        label="Log out"
+        theme="primary"
+        onPress={logout}
+      />
       <ImageViewer
         imgSource={logo}
         style={styles.image}
@@ -42,5 +49,10 @@ const styles = StyleSheet.create({
     height: 420,
     resizeMode: "contain",
     marginBottom: 30,
+  },
+   button: {
+    width: "100%",
+    marginTop: 10,
+    paddingHorizontal: 16
   },
 });
