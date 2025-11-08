@@ -37,6 +37,8 @@ export default function Index() {
           label="Login"
           theme="primary"
           onPress={() => router.push("/loginView")}
+          //onPress={() => router.push("/home")}
+
         />
         <TdamButton
           style={[{ width: buttonWidth }]}
@@ -53,7 +55,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: "#ffffffff",
     alignItems: "center",
     justifyContent: "flex-start",
     paddingTop: height * 0.1,
