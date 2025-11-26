@@ -1,4 +1,5 @@
-//home.tsx
+//Artwork feed view.tsx
+//diaplay all the artworks from the museums in a feed
 import { router } from "expo-router";
 import { View, StyleSheet, Dimensions, Text } from "react-native";
 import TdamArtworkCard from "@/components/ArtworkCard";

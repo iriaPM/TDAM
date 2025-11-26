@@ -1,8 +1,10 @@
 // ArtworkCard Component - 
 // Artword card to display all the artworks from the Museums
 
-import { StyleSheet, View, Pressable, Text, StyleProp, ViewStyle } from "react-native";
+import { StyleSheet, View, Pressable, Text, StyleProp, ViewStyle, Dimensions } from "react-native";
 import ImageViewer from "./imageViewer";
+
+const { height, width } = Dimensions.get("window"); //get height/width relative to the screen size 
 
 type Props = {
     style?: StyleProp<ViewStyle>;
@@ -17,45 +19,40 @@ type Props = {
 
 export default function TdamArtworkCard({ style, title, artist, imageUrl, year, movement, onPress }: Props) {
 
-    <View style={[styles.cardContainer, style]}>
-        <Text style={styles.title}>{title}</Text>
-        <ImageViewer
-            imgSource={imageUrl}
-            style={styles.image}
-        />
-        <Text style={styles.card}>{artist}</Text>
-        <Text style={styles.card}>{year}</Text>
-        <Text style={styles.card}>{movement}</Text>
-    </View>
-    return null;
+    return (
+        <View style={[styles.cardContainer, style]}>
+            <Text style={styles.title}>{title}</Text>
+            <ImageViewer
+                imgSource={imageUrl}
+                style={styles.image}
+            />
+            <View>
+                <Text style={styles.text}>{artist}, {year}, {movement}</Text>
+            </View>
+        </View>
+    );
 }
 
 // -- styling -- 
 const styles = StyleSheet.create({
     cardContainer: {
+        paddingHorizontal: width * 0.050,
         justifyContent: "center",
+        alignItems: "flex-start",
+        gap: 2,
+        backgroundColor: "#ffffffff",
     },
     title: {
-        fontSize: 18,
-        marginBottom: 8,
+        fontSize: 12,
+        fontWeight: "bold",
     },
-    card: {
-        alignItems: "center",
-        justifyContent: "center",
-        height: 50,
-        borderWidth: 1,
-        borderRadius: 4,
-        paddingHorizontal: 16,
-        fontSize: 16,
-        backgroundColor: '#f5f5f5',
-        borderColor: "#ffffffff"
+    text: {
+        fontSize: 11,
     },
     saveIcon: {
-        paddingRight: 8,
     },
     image: {
-        width: 420,
-        height: 420,
-        resizeMode: "contain"
+        width: 320,
+        height: 320,
     }
 });
