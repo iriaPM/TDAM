@@ -8,20 +8,27 @@ import { View } from "react-native";
 
 const { height, width } = Dimensions.get("window"); //get height/width relative to the screen size 
 
-export default function TdamSearchBar({ }) {
+export default function TdamSearchBar({ onSearch }: { onSearch: (query: string) => void }) {
     const [searchQuery, setSearchQuery] = useState("");
+
+    const handleChange = (text: string) => {
+        setSearchQuery(text);
+        onSearch(text); //call the onSearch prop with the current query
+    }
 
     return (
         <View style={styles.container}>
             <Ionicons name="search" size={22} color="grey" />
             <TextInput
                 placeholder="Search..."
+                value={searchQuery}
                 placeholderTextColor="#828282"
-                onChangeText={setSearchQuery}
+                onChangeText={handleChange}
+                onSubmitEditing={() => onSearch(searchQuery)}//search on enter 
                 style={styles.input}
+                returnKeyType="search"
             />
         </View>
-
     );
 }
 

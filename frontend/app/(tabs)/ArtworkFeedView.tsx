@@ -10,11 +10,11 @@ import TdamSearchBar from "@/components/SearchBar";
 const { height, width } = Dimensions.get("window"); //get height relative to the screen size 
 
 export default function ArtworkFeedView() {
-    const { artworks, toggleSave } = useArtworksViewModel();
+    const { artworks, toggleSave, searchArtworks } = useArtworksViewModel();
 
     return (
         <SafeAreaView style={styles.container}>
-            <TdamSearchBar />
+            <TdamSearchBar onSearch={searchArtworks} />
             <FlatList
                 data={artworks}
                 keyExtractor={(item) => item.id}
@@ -23,8 +23,8 @@ export default function ArtworkFeedView() {
                         title={item.title}
                         artist={item.artist}
                         year={item.year}
-                        movement={item.movement}
-                        imageUrl={item.image}
+                        movement={item.movement ? item.movement : ""}
+                        imageUrl={item.imageUrl}
                         isSaved={item.isSaved}
                         onSave={() => toggleSave(item.id)}
                     />
