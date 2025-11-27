@@ -1,28 +1,33 @@
 //Artwork feed view.tsx
 //diaplay all the artworks from the museums in a feed
 import { router } from "expo-router";
-import { View, StyleSheet, Dimensions, Text } from "react-native";
+import { View, StyleSheet, Dimensions, FlatList } from "react-native";
 import TdamArtworkCard from "@/components/ArtworkCard";
-import { useState } from "react";
+import { useArtworksViewModel } from "@/viewmodel/ArtworkFeedViewModel";
 
-const mockImage = require("../../assets/images/BertheMorisot.png")
 const { height, width } = Dimensions.get("window"); //get height relative to the screen size 
 
-export default function home() {
-    const [isSaved, setIsSaved] = useState(false);
+export default function ArtworkFeedView() {
+    const { artworks, toggleSave } = useArtworksViewModel();
 
     return (
         <View style={styles.container}>
-            <TdamArtworkCard
-                title="Starry Night"
-                artist="Vincent van Gogh"
-                imageUrl={mockImage}
-                year="1889"
-                movement="Post-Impressionism"
-                onPress={() => router.push("/home")}
-                style={styles.card}
-                isSaved={isSaved}
-                onSave={() => setIsSaved(!isSaved)}
+            <FlatList
+                style={styles.list}
+                data={artworks}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                    <TdamArtworkCard
+                        title={item.title}
+                        artist={item.artist}
+                        year={item.year}
+                        movement={item.movement}
+                        imageUrl={item.image}
+                        isSaved={item.isSaved}
+                        onSave={() => toggleSave(item.id)}
+                    />
+                )}
+                contentContainerStyle={{ paddingBottom: 16 }}
             />
         </View>
     );
@@ -33,13 +38,7 @@ const styles = StyleSheet.create({
     container: {
 
     },
-    image: {
-
-    },
-    button: {
-
-    },
-    card: {
+    list: {
 
     }
 });
