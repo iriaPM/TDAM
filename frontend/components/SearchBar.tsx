@@ -13,13 +13,13 @@ export default function TdamSearchBar({ }) {
 
     return (
         <View style={styles.container}>
+            <Ionicons name="search" size={22} color="grey" />
             <TextInput
-                placeholder="Search artworks..." 
-                placeholderTextColor= "#868383ff"
+                placeholder="Search..."
+                placeholderTextColor="#828282"
                 onChangeText={setSearchQuery}
                 style={styles.input}
             />
-            <Ionicons name="search" size={22} color="grey" />
         </View>
 
     );
@@ -30,16 +30,15 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: "#d2d2d2ff",
+        backgroundColor: "#F5F5F5",
         borderRadius: 20,
         padding: 10,
         marginInlineStart: 10,
         marginInlineEnd: 10,
-
+        marginBottom: 5,
     },
     input: {
-        fontSize: 11,
-        fontWeight: "bold",
+        fontSize: 13,
         flex: 1,
         marginInlineStart: 10,
         marginInlineEnd: 10,
