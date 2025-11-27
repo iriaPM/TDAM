@@ -20,17 +20,6 @@ type Props = {
 }
 
 export default function TdamArtworkCard({ style, title, artist, imageUrl, year, movement, onPress, isSaved, onSave }: Props) {
-    const [ratio, setRatio] = useState(1);
-
-    //dynamically detect aspect ratio of images 
-    useEffect(() => {
-        if (!imageUrl) return;
-        Image.getSize(
-            typeof imageUrl === "number" ? Image.resolveAssetSource(imageUrl).uri : imageUrl,
-            (width, height) => setRatio(width / height),
-            (err) => console.log("Failed to load image size", err)
-        );
-    }, [imageUrl]);
 
     return (
         <View style={[styles.containter]}>
@@ -38,7 +27,7 @@ export default function TdamArtworkCard({ style, title, artist, imageUrl, year, 
                 <Text style={styles.title}>{title}</Text>
                 <ImageViewer
                     imgSource={imageUrl}
-                    style={[styles.image, { aspectRatio: ratio }]}
+                    style={styles.image}
                 />
                 <View>
                     <Text style={styles.text}>{artist}, {year}, {movement}</Text>
