@@ -21,12 +21,12 @@ export default function RootLayout() {
   if (loading) return null;
 
   return (
-     <Stack>
+    <Stack screenOptions={{ headerShown: false }}>
       {isLoggedIn ? (
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false, }} />
       ) : (
         <>
-          <Stack.Screen name="" options={{ headerShown: false }} />
+          <Stack.Screen name="index" options={{ headerShown: false }} />
         </>
       )}
     </Stack>

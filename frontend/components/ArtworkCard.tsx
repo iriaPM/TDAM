@@ -21,7 +21,7 @@ type Props = {
 
 export default function TdamArtworkCard({ style, title, artist, imageUrl, year, movement, onPress, isSaved, onSave }: Props) {
     const [ratio, setRatio] = useState(1);
-    
+
     //dynamically detect aspect ratio of images 
     useEffect(() => {
         if (!imageUrl) return;
@@ -33,37 +33,52 @@ export default function TdamArtworkCard({ style, title, artist, imageUrl, year, 
     }, [imageUrl]);
 
     return (
-        <View style={[styles.cardContainer, style]}>
-            <Text style={styles.title}>{title}</Text>
-            <ImageViewer
-                imgSource={imageUrl}
-                style={[styles.image, { aspectRatio: ratio }]}
-            />
-            <View>
-                <Text style={styles.text}>{artist}, {year}, {movement}</Text>
+        <View style={[styles.containter]}>
+            <View style={[styles.cardContainer, style]}>
+                <Text style={styles.title}>{title}</Text>
+                <ImageViewer
+                    imgSource={imageUrl}
+                    style={[styles.image, { aspectRatio: ratio }]}
+                />
+                <View>
+                    <Text style={styles.text}>{artist}, {year}, {movement}</Text>
+                </View>
+                <View style={styles.saveIcon}>
+                    <Pressable onPress={onSave}>
+                        <Ionicons
+                            name={isSaved ? "add-circle" : "add-circle-outline"}
+                            size={24}
+                            color="black"
+                        />
+                    </Pressable>
+                    <Text style={styles.text}> {isSaved ? "Saved" : "Add to collection"}</Text>
+                </View>
             </View>
-            <View style={styles.saveIcon}>
-                <Pressable onPress={onSave}>
-                    <Ionicons
-                        name={isSaved ? "add-circle" : "add-circle-outline"}
-                        size={24}
-                        color="black"
-                    />
-                </Pressable>
-                <Text style={styles.text}> {isSaved ? "Saved" : "Add to collection"}</Text>
-            </View>
+            //line separator
+            <View style={styles.separator} />
         </View>
     );
 }
 
 // -- styling -- 
 const styles = StyleSheet.create({
+    containter: {
+        backgroundColor: "#ffffffff",
+        width: width,
+
+    },
     cardContainer: {
         paddingHorizontal: width * 0.050,
         justifyContent: "center",
         alignItems: "flex-start",
         gap: 2,
         backgroundColor: "#ffffffff",
+    },
+    separator: {
+        height: 1,
+        backgroundColor: "#ccc",
+        width: "100%",
+        marginVertical: 15,
     },
     title: {
         fontSize: 12,

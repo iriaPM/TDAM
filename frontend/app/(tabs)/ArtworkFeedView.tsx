@@ -13,7 +13,6 @@ export default function ArtworkFeedView() {
     return (
         <View style={styles.container}>
             <FlatList
-                style={styles.list}
                 data={artworks}
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
@@ -36,9 +35,6 @@ export default function ArtworkFeedView() {
 // -- styling -- 
 const styles = StyleSheet.create({
     container: {
-
+        backgroundColor: "#ffffffff",
     },
-    list: {
-
-    }
 });

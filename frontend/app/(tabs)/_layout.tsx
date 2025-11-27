@@ -10,31 +10,34 @@ export default function TabsLayout() {
         <Tabs
             //styling
             screenOptions={{
+                headerShown: false,
                 tabBarActiveTintColor: "#FF8F8F",
-                headerStyle: {
-                    backgroundColor: "#ffffffff",
-                },
-                headerShadowVisible: false,
-                headerTintColor: "#000000ff",
                 tabBarStyle: {
                     backgroundColor: "#ffffffff"
-                }
+                },
             }}
         >
             <Tabs.Screen
                 name="home"
                 options={{
-                    headerTitle: "",
-                    tabBarIcon: ({ focused, color }) => <Ionicons
-                        name={focused ? "home-sharp" : "home-outline"}
-                        color={color}
-                        size={24} />
+                    headerShown: false,
+                    tabBarIcon: ({ focused, color }) =>
+                        <Ionicons
+                            name={focused ? "home-sharp" : "home-outline"}
+                            color={color}
+                            size={24}
+                        />
                 }} />
             <Tabs.Screen
                 name="ArtworkFeedView"
                 options={{
-                    headerTitle: "",
-                    tabBarIcon: ({ focused, color }) => <MaterialCommunityIcons name={focused ? "image-filter-frames" : "image-frame"} size={24} color={color} />
+                    headerShown: false,
+                    tabBarIcon: ({ focused, color }) =>
+                        <MaterialCommunityIcons
+                            name={focused ? "image-filter-frames" : "image-frame"}
+                            size={24}
+                            color={color}
+                        />
                 }} />
         </Tabs>
     );
