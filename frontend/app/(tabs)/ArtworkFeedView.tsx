@@ -5,7 +5,7 @@ import { View, StyleSheet, Dimensions, Text } from "react-native";
 import TdamArtworkCard from "@/components/ArtworkCard";
 import { useState } from "react";
 
-const mockImage = require("../../assets/images/StarryNight.png")
+const mockImage = require("../../assets/images/BertheMorisot.png")
 const { height, width } = Dimensions.get("window"); //get height relative to the screen size 
 
 export default function home() {

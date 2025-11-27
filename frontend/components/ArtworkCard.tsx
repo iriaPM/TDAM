@@ -1,9 +1,10 @@
 // ArtworkCard Component - 
 // Artword card to display all the artworks from the Museums
 
-import { StyleSheet, View, Pressable, Text, StyleProp, ViewStyle, Dimensions } from "react-native";
+import { StyleSheet, View, Pressable, Text, StyleProp, ViewStyle, Dimensions, Image } from "react-native";
 import ImageViewer from "./imageViewer";
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { use, useEffect, useState } from "react";
 const { height, width } = Dimensions.get("window"); //get height/width relative to the screen size 
 
 type Props = {
@@ -19,12 +20,24 @@ type Props = {
 }
 
 export default function TdamArtworkCard({ style, title, artist, imageUrl, year, movement, onPress, isSaved, onSave }: Props) {
+    const [ratio, setRatio] = useState(1);
+    
+    //dynamically detect aspect ratio of images 
+    useEffect(() => {
+        if (!imageUrl) return;
+        Image.getSize(
+            typeof imageUrl === "number" ? Image.resolveAssetSource(imageUrl).uri : imageUrl,
+            (width, height) => setRatio(width / height),
+            (err) => console.log("Failed to load image size", err)
+        );
+    }, [imageUrl]);
+
     return (
         <View style={[styles.cardContainer, style]}>
             <Text style={styles.title}>{title}</Text>
             <ImageViewer
                 imgSource={imageUrl}
-                style={styles.image}
+                style={[styles.image, { aspectRatio: ratio }]}
             />
             <View>
                 <Text style={styles.text}>{artist}, {year}, {movement}</Text>
@@ -62,10 +75,10 @@ const styles = StyleSheet.create({
     saveIcon: {
         flexDirection: "row",
         alignItems: "center",
-        gap: 4,
+        gap: 2,
     },
     image: {
-        width: 320,
-        height: 320,
+        width: width * 0.9,
+        height: undefined,
     }
 });
