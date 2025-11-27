@@ -5,6 +5,7 @@ import { View, StyleSheet, Dimensions, FlatList } from "react-native";
 import TdamArtworkCard from "@/components/ArtworkCard";
 import { useArtworksViewModel } from "@/viewmodel/ArtworkFeedViewModel";
 import { SafeAreaView } from "react-native-safe-area-context";
+import TdamSearchBar from "@/components/SearchBar";
 
 const { height, width } = Dimensions.get("window"); //get height relative to the screen size 
 
@@ -13,6 +14,7 @@ export default function ArtworkFeedView() {
 
     return (
         <SafeAreaView style={styles.container}>
+            <TdamSearchBar />
             <FlatList
                 data={artworks}
                 keyExtractor={(item) => item.id}
