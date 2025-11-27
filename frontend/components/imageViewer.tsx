@@ -11,5 +11,9 @@ type Props = {
 }
 
 export default function ImageViewer({ imgSource, style }: Props) {
-    return <Image source={imgSource} style={style} contentFit="cover"></Image>
+    return <Image
+        source={imgSource}
+        style={style}
+        contentFit="cover">
+    </Image>
 }
