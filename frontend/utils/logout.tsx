@@ -6,7 +6,7 @@ import { router } from 'expo-router';
 export async function logout() {
   try {
     await AsyncStorage.removeItem('userToken'); // remove stored token
-    router.replace('/'); // go back to the index or login screen
+    router.replace('/loginView'); // go back to the index or login screen
   } catch (error) {
     console.error('Error during logout:', error);
   }

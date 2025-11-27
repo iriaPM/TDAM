@@ -3,7 +3,7 @@ import { router } from "expo-router";
 import { View, StyleSheet, Dimensions, Text } from "react-native";
 import ImageViewer from "@/components/imageViewer";
 import TdamButton from "@/components/Button";
-import { logout } from "../logout";
+import { logout } from "../../utils/logout";
 
 const logo = require("../../assets/images/logo.png")
 const { height, width } = Dimensions.get("window"); //get height relative to the screen size 

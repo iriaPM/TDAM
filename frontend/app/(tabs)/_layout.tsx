@@ -1,4 +1,4 @@
-//layout file - 
+//layout inside  
 //I use this to  manage the main tabs/navigation in the app
 
 import { Tabs } from "expo-router";

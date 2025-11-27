@@ -3,6 +3,7 @@ import { LogBox } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
+import { Slot } from "expo-router"
 
 LogBox.ignoreAllLogs(true);
 
@@ -22,17 +23,11 @@ export default function RootLayout() {
   if (loading) return null;
 
   return (
-    <>
-      <StatusBar style="dark" backgroundColor="#ffffff" />
-      <Stack screenOptions={{ headerShown: false }}>
-        {isLoggedIn ? (
-          <Stack.Screen name="(tabs)" options={{ headerShown: false, }} />
-        ) : (
-          <>
-            <Stack.Screen name="index" options={{ headerShown: false }} />
-          </>
-        )}
-      </Stack>
-    </>
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="index" />
+      <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="loginView" />
+      <Stack.Screen name="registrationView" />
+    </Stack>
   );
 }
