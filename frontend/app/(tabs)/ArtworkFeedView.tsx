@@ -17,7 +17,7 @@ export default function ArtworkFeedView() {
             <TdamSearchBar onSearch={searchArtworks} />
             <FlatList
                 data={artworks}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item.objectID }
                 renderItem={({ item }) => (
                     <TdamArtworkCard
                         title={item.title}
@@ -26,7 +26,7 @@ export default function ArtworkFeedView() {
                         movement={item.movement ? item.movement : ""}
                         imageUrl={item.imageUrl}
                         isSaved={item.isSaved}
-                        onSave={() => toggleSave(item.id)}
+                        onSave={() => toggleSave(item.objectID )}
                     />
                 )}
                 contentContainerStyle={{ paddingBottom: 16 }}

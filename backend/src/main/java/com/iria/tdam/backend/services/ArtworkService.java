@@ -2,13 +2,17 @@ package com.iria.tdam.backend.services;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import com.iria.tdam.backend.dto.ArtworkDto;
 
 @Service
 public class ArtworkService {
     private final RestTemplate restTemplate = new RestTemplate();
+
+    public static class MetAllObjectsResponse {
+        public List<Integer> objectIDs;
+    }
 
     public List<Integer> searchArtworks(String query) {
         String url = "https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&q=" + query;
@@ -44,4 +48,20 @@ public class ArtworkService {
                 .map(this::getArtworkById)
                 .collect(Collectors.toList());
     }
+
+    public List<ArtworkDto> getRandomArtworks() {
+        // The Met API provides a list of all object IDs
+        String url = "https://collectionapi.metmuseum.org/public/collection/v1/objects";
+        var response = restTemplate.getForObject(url, MetAllObjectsResponse.class);
+
+        if (response == null || response.objectIDs == null)
+            return List.of();
+
+        Collections.shuffle(response.objectIDs);
+        return response.objectIDs.stream()
+                .limit(10)
+                .map(this::getArtworkById)
+                .collect(Collectors.toList());
+    }
+
 }

@@ -1,7 +1,7 @@
 //artwork model
 
 export interface Artwork {
-    id: string;           
+    objectID: string;           
     title: string;
     artist: string;
     year: string;

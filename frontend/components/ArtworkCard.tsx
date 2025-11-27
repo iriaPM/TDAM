@@ -42,7 +42,6 @@ export default function TdamArtworkCard({ style, title, artist, imageUrl, year, 
                     <Text style={styles.text}> {isSaved ? "Saved" : "Add to collection"}</Text>
                 </View>
             </View>
-            //line separator
             <View style={styles.separator} />
         </View>
     );

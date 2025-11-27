@@ -15,9 +15,18 @@ public class ArtworkController {
     @Autowired
     private ArtworkService artworkService;
 
-    // GET /api/artworks?query=painting
     @GetMapping("/artworks")
     public List<ArtworkDto> getArtworks(@RequestParam(defaultValue = "painting") String query) {
+        return artworkService.getArtworks(query);
+    }
+
+    @GetMapping("/artworks/random")
+    public List<ArtworkDto> getRandomArtworks() {
+        return artworkService.getRandomArtworks();
+    }
+
+    @GetMapping("/artworks/search")
+    public List<ArtworkDto> searchArtworks(@RequestParam String query) {
         return artworkService.getArtworks(query);
     }
 
