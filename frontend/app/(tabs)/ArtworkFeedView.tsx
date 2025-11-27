@@ -4,6 +4,7 @@ import { router } from "expo-router";
 import { View, StyleSheet, Dimensions, FlatList } from "react-native";
 import TdamArtworkCard from "@/components/ArtworkCard";
 import { useArtworksViewModel } from "@/viewmodel/ArtworkFeedViewModel";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const { height, width } = Dimensions.get("window"); //get height relative to the screen size 
 
@@ -11,7 +12,7 @@ export default function ArtworkFeedView() {
     const { artworks, toggleSave } = useArtworksViewModel();
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <FlatList
                 data={artworks}
                 keyExtractor={(item) => item.id}
@@ -28,7 +29,7 @@ export default function ArtworkFeedView() {
                 )}
                 contentContainerStyle={{ paddingBottom: 16 }}
             />
-        </View>
+        </SafeAreaView>
     );
 }
 

@@ -4,7 +4,6 @@
 import { StyleSheet, View, Pressable, Text, StyleProp, ViewStyle, Dimensions, Image } from "react-native";
 import ImageViewer from "./imageViewer";
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { use, useEffect, useState } from "react";
 const { height, width } = Dimensions.get("window"); //get height/width relative to the screen size 
 
 type Props = {
@@ -54,7 +53,6 @@ const styles = StyleSheet.create({
     containter: {
         backgroundColor: "#ffffffff",
         width: width,
-
     },
     cardContainer: {
         paddingHorizontal: width * 0.050,
