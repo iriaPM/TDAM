@@ -22,8 +22,8 @@ export default function ArtworkFeedView() {
                     <TdamArtworkCard
                         title={item.title}
                         artist={item.artist}
-                        year={item.year}
-                        movement={item.movement ? item.movement : ""}
+                        year={item.objectDate}
+                        movement={item.movement}
                         imageUrl={item.imageUrl}
                         isSaved={item.isSaved}
                         onSave={() => toggleSave(item.objectID )}

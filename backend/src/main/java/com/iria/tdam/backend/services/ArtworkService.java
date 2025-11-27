@@ -14,6 +14,16 @@ public class ArtworkService {
         public List<Integer> objectIDs;
     }
 
+    public class MetObjectResponse {
+        public String title;
+        public String artistDisplayName;
+        public String medium;
+        public String objectDate;
+        public String primaryImage;
+        public String primaryImageSmall;
+        public List<String> additionalImages;
+    }
+
     public List<Integer> searchArtworks(String query) {
         String url = "https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&q=" + query;
         var response = restTemplate.getForObject(url, MetSearchResponse.class);
@@ -29,12 +39,22 @@ public class ArtworkService {
             return null;
 
         ArtworkDto dto = new ArtworkDto();
+        String imageUrl = response.primaryImageSmall;
+
+        if (imageUrl == null || imageUrl.isEmpty()) {
+            imageUrl = response.primaryImage; 
+        }
+        if ((imageUrl == null || imageUrl.isEmpty()) && response.additionalImages != null
+                && !response.additionalImages.isEmpty()) {
+            imageUrl = response.additionalImages.get(0); //fallback image
+        }
+
         dto.setObjectID(String.valueOf(id));
         dto.setTitle(response.title);
         dto.setArtist(response.artistDisplayName);
         dto.setMedium(response.medium);
         dto.setObjectDate(response.objectDate);
-        dto.setImageUrl(response.primaryImageSmall);
+        dto.setImageUrl(imageUrl);
 
         return dto;
     }
@@ -46,6 +66,7 @@ public class ArtworkService {
         return ids.stream()
                 .limit(10)
                 .map(this::getArtworkById)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 
@@ -61,6 +82,7 @@ public class ArtworkService {
         return response.objectIDs.stream()
                 .limit(10)
                 .map(this::getArtworkById)
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
 

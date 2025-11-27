@@ -11,8 +11,8 @@ type Props = {
     title: string;
     artist: string;
     imageUrl?: any;
-    year: string;
-    movement: string;
+    year?: string;
+    movement?: string;
     onPress?: () => void;
     isSaved?: boolean;
     onSave?: () => void;
@@ -25,11 +25,13 @@ export default function TdamArtworkCard({ style, title, artist, imageUrl, year, 
             <View style={[styles.cardContainer, style]}>
                 <Text style={styles.title}>{title}</Text>
                 <ImageViewer
-                    imgSource={imageUrl}
+                    imgSource={imageUrl ? { uri: imageUrl } : require("../assets/images/placeholderArt.png")}
                     style={styles.image}
                 />
                 <View>
-                    <Text style={styles.text}>{artist}, {year}, {movement}</Text>
+                    <Text style={styles.text}>
+                        {[artist, year, movement].filter(Boolean).join(", ")}
+                    </Text>
                 </View>
                 <View style={styles.saveIcon}>
                     <Pressable onPress={onSave}>
