@@ -1,46 +1,36 @@
 //Artwork feed  view model
 //retrieve and manage artworks data for the feed
-
 import { Artwork } from "@/models/Artwork";
+import { getArtworksAPI } from "@/services/api";
 import { useState } from "react";
-
 
 export function useArtworksViewModel() {
     const [artworks, setArtworks] = useState<Artwork[]>([]);
 
     const toggleSave = (id: string) => {
         setArtworks(prev =>
-            prev.map(artwork =>
-                artwork.id === id ? { ...artwork, isSaved: !artwork.isSaved } : artwork
+            prev.map(art =>
+                art.id === id ? { ...art, isSaved: !art.isSaved } : art
             )
         );
     };
 
     const searchArtworks = async (query: string) => {
-        if (!query.trim()) return; //if query is empty, do nothing
+        if (!query.trim()) return;
 
         try {
-            const response = await fetch(`http://172.27.192.1:8080/api/artworks?query=${query}`);
-            const data = await response.json();
+            const results = await getArtworksAPI(query);
+            const mapped = results.map((item: Artwork) => ({
+                ...item,
+                isSaved: false,
+            }));
 
-            const mapped: Artwork[] = data.map((item: any) => ({
-                id: item.objectID.toString(),
-                title: item.title || "Unknown",
-                artist: item.artist || "Unknown",
-                year: item.year || "Unknown",
-                medium: item.medium || "Unknown",
-                dimensions: item.dimensions || "Unknown",
-                location: item.location || "Unknown",
-                imageUrl: item.imageUrl || "Unknown",
-                movement: item.movement || "Unknown",
-                isSaved: false
-                })
-            )
             setArtworks(mapped);
-        } catch (error) {
-            console.error("Failed to fetch artworks:", error);
+
+        } catch (err) {
+            console.error("Error fetching artworks:", err);
         }
-    }
+    };
 
     return { artworks, toggleSave, searchArtworks };
 }

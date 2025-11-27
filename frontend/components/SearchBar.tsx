@@ -8,7 +8,11 @@ import { View } from "react-native";
 
 const { height, width } = Dimensions.get("window"); //get height/width relative to the screen size 
 
-export default function TdamSearchBar({ onSearch }: { onSearch: (query: string) => void }) {
+type Props = {
+    onSearch: (query: string) => void;
+}
+
+export default function TdamSearchBar({ onSearch }:Props) {
     const [searchQuery, setSearchQuery] = useState("");
 
     const handleChange = (text: string) => {
