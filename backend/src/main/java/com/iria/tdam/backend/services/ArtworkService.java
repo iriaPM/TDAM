@@ -5,6 +5,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.*;
 import java.util.stream.Collectors;
 import com.iria.tdam.backend.dto.ArtworkDto;
+import com.iria.tdam.backend.dto.MetObjectResponse;
 
 @Service
 public class ArtworkService {
@@ -12,16 +13,6 @@ public class ArtworkService {
 
     public static class MetAllObjectsResponse {
         public List<Integer> objectIDs;
-    }
-
-    public class MetObjectResponse {
-        public String title;
-        public String artistDisplayName;
-        public String medium;
-        public String objectDate;
-        public String primaryImage;
-        public String primaryImageSmall;
-        public List<String> additionalImages;
     }
 
     public List<Integer> searchArtworks(String query) {
@@ -62,7 +53,7 @@ public class ArtworkService {
     public List<ArtworkDto> getArtworks(String query) {
         List<Integer> ids = searchArtworks(query);
 
-        // Limit to first 10 items (to avoid API overload)
+        //Limit to first 10 items (to avoid API overload)
         return ids.stream()
                 .limit(10)
                 .map(this::getArtworkById)
@@ -71,7 +62,7 @@ public class ArtworkService {
     }
 
     public List<ArtworkDto> getRandomArtworks() {
-        // The Met API provides a list of all object IDs
+        //The Met API provides a list of all object IDs
         String url = "https://collectionapi.metmuseum.org/public/collection/v1/objects";
         var response = restTemplate.getForObject(url, MetAllObjectsResponse.class);
 

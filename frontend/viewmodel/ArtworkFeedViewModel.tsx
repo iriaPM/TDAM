@@ -34,7 +34,6 @@ export function useArtworksViewModel() {
         }
         setSearching(true);
         const results = await searchArtworksAPI(query);
-
         const mapped = results.map(item => ({
             ...item,
             isSaved: false,
@@ -47,7 +46,7 @@ export function useArtworksViewModel() {
     const toggleSave = (id: string) => {
         setArtworks(prev =>
             prev.map(a =>
-                a.objectID  === id ? { ...a, isSaved: !a.isSaved } : a
+                a.objectID === id ? { ...a, isSaved: !a.isSaved } : a
             )
         );
     };

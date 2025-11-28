@@ -44,10 +44,12 @@ export async function getProfile(): Promise<User> {
 
 export async function searchArtworksAPI(query: string): Promise<Artwork[]> {
     const response = await fetch(`${BASE_URL}/artworks/search?query=${query}`);
+    if (!response.ok) return [];
     return response.json();
 }
 
 export async function getRandomArtworksAPI(): Promise<Artwork[]> {
     const response = await fetch(`${BASE_URL}/artworks/random`);
+    if (!response.ok) return [];
     return response.json();
 }
