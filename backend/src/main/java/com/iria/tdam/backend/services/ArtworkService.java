@@ -1,13 +1,16 @@
 package com.iria.tdam.backend.services;
 
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.util.*;
 import java.util.stream.Collectors;
 import com.iria.tdam.backend.dto.ArtworkDto;
 import com.iria.tdam.backend.dto.MetObjectResponse;
+import org.springframework.cache.annotation.Cacheable;
 
 @Service
+@CacheConfig(cacheNames = "artworks")
 public class ArtworkService {
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -33,13 +36,13 @@ public class ArtworkService {
         String imageUrl = response.primaryImageSmall;
 
         if (imageUrl == null || imageUrl.isEmpty()) {
-            imageUrl = response.primaryImage; 
+            imageUrl = response.primaryImage;
         }
         if ((imageUrl == null || imageUrl.isEmpty()) && response.additionalImages != null
                 && !response.additionalImages.isEmpty()) {
-            imageUrl = response.additionalImages.get(0); //fallback image
+            imageUrl = response.additionalImages.get(0); // fallback image
         }
-
+       
         dto.setObjectID(String.valueOf(id));
         dto.setTitle(response.title);
         dto.setArtist(response.artistDisplayName);
@@ -50,19 +53,22 @@ public class ArtworkService {
         return dto;
     }
 
+    @Cacheable("randomArtworks")
     public List<ArtworkDto> getArtworks(String query) {
         List<Integer> ids = searchArtworks(query);
 
-        //Limit to first 10 items (to avoid API overload)
+        // Limit to first 10 items (to avoid API overload)
         return ids.stream()
                 .limit(10)
                 .map(this::getArtworkById)
                 .filter(Objects::nonNull)
+                .filter(a -> a.getImageUrl() != null && !a.getImageUrl().isEmpty())
                 .collect(Collectors.toList());
     }
 
+    @Cacheable("randomArtworks")
     public List<ArtworkDto> getRandomArtworks() {
-        //The Met API provides a list of all object IDs
+        // The Met API provides a list of all object IDs
         String url = "https://collectionapi.metmuseum.org/public/collection/v1/objects";
         var response = restTemplate.getForObject(url, MetAllObjectsResponse.class);
 
@@ -74,6 +80,7 @@ public class ArtworkService {
                 .limit(10)
                 .map(this::getArtworkById)
                 .filter(Objects::nonNull)
+                .filter(a -> a.getImageUrl() != null && !a.getImageUrl().isEmpty())
                 .collect(Collectors.toList());
     }
 
