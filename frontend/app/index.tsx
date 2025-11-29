@@ -8,15 +8,15 @@ import { useEffect } from "react";
 const logo = require("../assets/images/logo.png")
 const { height, width } = Dimensions.get("window"); //get height relative to the screen size 
 
-// useEffect(() => {
-//   const checkToken = async () => {
-//     const token = await AsyncStorage.getItem('userToken');
-//     if (token) {
-//       router.replace('/home');
-//     }
-//   };
-//   checkToken();
-// }, []);
+useEffect(() => {
+  const checkToken = async () => {
+    const token = await AsyncStorage.getItem('userToken');
+    if (token) {
+      router.replace('/home');
+    }
+  };
+  checkToken();
+}, []);
 
 export default function Index() {
   const buttonRowWidth = width * 0.75;
@@ -36,8 +36,8 @@ export default function Index() {
           style={[{ width: buttonWidth }]}
           label="Login"
           theme="primary"
-          //onPress={() => router.push("/loginView")}
-          onPress={() => router.push("/home")}
+          onPress={() => router.push("/loginView")}
+          //onPress={() => router.push("/home")}
 
         />
         <TdamButton

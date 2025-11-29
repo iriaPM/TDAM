@@ -4,6 +4,7 @@
 import { useState } from "react";
 import { registerUser } from "../services/api";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from "expo-router";
 
 export function useRegViewModel() {
     const [username, setUsername] = useState('')
@@ -26,9 +27,12 @@ export function useRegViewModel() {
         try {
             const user = await registerUser(username, email, password);
             console.log("Successfully Registered :", user);
+            alert("Successfully Registered");
             await AsyncStorage.setItem('userToken', user.token);
+            router.replace('/loginView');
         } catch (err) {
             setError("Failed to register");
+            alert("Failed to register");
         } finally {
             setLoading(false);
         }

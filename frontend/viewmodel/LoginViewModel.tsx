@@ -4,7 +4,7 @@
 import { useState } from "react";
 import { loginUser } from "../services/api";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { router, Router } from "expo-router";
+import { router } from "expo-router";
 
 export function useLoginViewModel() {
     const [email, setEmail] = useState('');
@@ -25,13 +25,13 @@ export function useLoginViewModel() {
         try {
             const user = await loginUser(email, password);
             console.log("Logged in:", user);
-            alert("logged in");
+            alert("Successfully Logged in!");
             
             await AsyncStorage.setItem('userToken', user.token);
             router.replace('/home');
         } catch (err) {
             setError("Failed to login");
-            alert(" error at logging in");
+            alert("Failed to login :(");
         } finally {
             setLoading(false);
         }
