@@ -12,6 +12,7 @@ interface TdamTextInputProps {
     onChangeText?: (text: string) => void;
     style?: StyleProp<TextStyle>;
     containerStyle?: StyleProp<ViewStyle>;
+    secureText?: boolean
 }
 
 const TdamTextInput = ({
@@ -20,6 +21,7 @@ const TdamTextInput = ({
     onChangeText = () => { },
     style,
     containerStyle,
+    secureText,
 }: TdamTextInputProps) => {
     return (
         <View style={[styles.container, containerStyle]}>
@@ -29,6 +31,7 @@ const TdamTextInput = ({
                 placeholderTextColor="#999"
                 value={value}
                 onChangeText={onChangeText}
+                secureTextEntry = {secureText}
             />
         </View>
     );

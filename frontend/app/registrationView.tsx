@@ -39,6 +39,7 @@ export default function RegistrationScreen() {
                     placeholder="Password"
                     value={password}
                     onChangeText={setPassword}
+                    secureText
                 />
                 <TdamButton
                     style={styles.button}

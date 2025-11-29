@@ -35,6 +35,7 @@ export default function LoginView() {
           placeholder="Password"
           value={password}
           onChangeText={setPassword}
+          secureText
         />
         <TdamButton
           style={styles.button}

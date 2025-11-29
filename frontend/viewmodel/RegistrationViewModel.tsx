@@ -29,7 +29,7 @@ export function useRegViewModel() {
             console.log("Successfully Registered :", user);
             alert("Successfully Registered");
             await AsyncStorage.setItem('userToken', user.token);
-            router.replace('/home');
+            router.replace('/loginView');
         } catch (err) {
             setError("Failed to register");
             alert("Failed to register");
