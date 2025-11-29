@@ -71,17 +71,15 @@ const styles = StyleSheet.create({
   },
   form: {
     width: "100%",
-    marginTop: height * 0.25,
   },
   imageContainer: {
-    position: "absolute",
-    top: -30,
     width: "100%",
-    height: height * 0.34,
+    height: height * 0.40,
     resizeMode: "contain",
+    marginTop: 30,
   },
   errorText: {
     color: 'red',
     marginBottom: 10,
-  }
+  },
 });
