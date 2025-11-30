@@ -8,6 +8,8 @@ import { useEffect } from "react";
 const logo = require("../assets/images/logo.png")
 const { height, width } = Dimensions.get("window"); //get height relative to the screen size 
 
+//this is to check if the user is logged in
+//and make them go automatically to the home page 
 useEffect(() => {
   const checkToken = async () => {
     const token = await AsyncStorage.getItem('userToken');
@@ -31,15 +33,17 @@ export default function Index() {
         style={styles.image}
       />
 
+      {/*login button*/}
       <View style={[styles.buttonRow, { width: buttonRowWidth }]}>
         <TdamButton
           style={[{ width: buttonWidth }]}
           label="Login"
           theme="primary"
           onPress={() => router.push("/loginView")}
-          //onPress={() => router.push("/home")}
-
+        //onPress={() => router.push("/home")}
         />
+
+        {/*register button*/}
         <TdamButton
           style={[{ width: buttonWidth }]}
           label="Register"

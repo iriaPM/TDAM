@@ -1,3 +1,5 @@
+//registration requests functions
+
 package com.iria.tdam.backend.dto;
 
 public class RegisterRequest {

@@ -1,5 +1,5 @@
 //Registration View -
-//"Dummy" screen of the Registration page
+//screen of the Registration page
 
 import TdamButton from "@/components/Button";
 import ImageViewer from "@/components/imageViewer";
@@ -22,18 +22,24 @@ export default function RegistrationScreen() {
             />
 
             <View style={styles.form}>
+
+                {/*username button*/}
                 <TdamTextInput
                     style={styles.input}
                     placeholder="Username"
                     value={username}
                     onChangeText={setUsername}
                 />
+
+                {/*email button*/}
                 <TdamTextInput
                     style={styles.input}
                     placeholder="Email"
                     value={email}
                     onChangeText={setEmail}
                 />
+
+                {/*password button*/}
                 <TdamTextInput
                     style={styles.input}
                     placeholder="Password"
@@ -41,6 +47,8 @@ export default function RegistrationScreen() {
                     onChangeText={setPassword}
                     secureText
                 />
+
+                {/*registration button*/}
                 <TdamButton
                     style={styles.button}
                     label="Register"
