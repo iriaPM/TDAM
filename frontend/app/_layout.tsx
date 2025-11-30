@@ -1,11 +1,6 @@
 import { Stack } from "expo-router";
-import { LogBox } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { Slot } from "expo-router"
-
-LogBox.ignoreAllLogs(true);
 
 export default function RootLayout() {
   const [loading, setLoading] = useState(true);

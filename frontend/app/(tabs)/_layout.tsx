@@ -17,6 +17,7 @@ export default function TabsLayout() {
                 },
             }}
         >
+            {/*bottom tabs*/}
             <Tabs.Screen
                 name="home"
                 options={{

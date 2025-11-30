@@ -1,3 +1,5 @@
+//artwork service file
+//in this file I have all the api calls needed for the artworks
 package com.iria.tdam.backend.services;
 
 import org.springframework.cache.annotation.CacheConfig;
@@ -18,6 +20,7 @@ public class ArtworkService {
         public List<Integer> objectIDs;
     }
 
+    // api call to search specific artworks from user input
     public List<Integer> searchArtworks(String query) {
         String url = "https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&q=" + query;
         var response = restTemplate.getForObject(url, MetSearchResponse.class);
@@ -42,7 +45,7 @@ public class ArtworkService {
                 && !response.additionalImages.isEmpty()) {
             imageUrl = response.additionalImages.get(0); // fallback image
         }
-       
+        
         dto.setObjectID(String.valueOf(id));
         dto.setTitle(response.title);
         dto.setArtist(response.artistDisplayName);
@@ -53,11 +56,12 @@ public class ArtworkService {
         return dto;
     }
 
+    // get random artworks for the artwork feed when there is no user interaction
+    // data
     @Cacheable("randomArtworks")
     public List<ArtworkDto> getArtworks(String query) {
         List<Integer> ids = searchArtworks(query);
 
-        // Limit to first 10 items (to avoid API overload)
         return ids.stream()
                 .limit(10)
                 .map(this::getArtworkById)
@@ -66,9 +70,9 @@ public class ArtworkService {
                 .collect(Collectors.toList());
     }
 
+    // the met api object calls (each obkect is an artwork)
     @Cacheable("randomArtworks")
     public List<ArtworkDto> getRandomArtworks() {
-        // The Met API provides a list of all object IDs
         String url = "https://collectionapi.metmuseum.org/public/collection/v1/objects";
         var response = restTemplate.getForObject(url, MetAllObjectsResponse.class);
 
@@ -83,5 +87,4 @@ public class ArtworkService {
                 .filter(a -> a.getImageUrl() != null && !a.getImageUrl().isEmpty())
                 .collect(Collectors.toList());
     }
-
 }

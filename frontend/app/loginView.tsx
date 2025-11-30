@@ -24,12 +24,16 @@ export default function LoginView() {
       />
 
       <View style={styles.form}>
+
+        {/*email button*/}
         <TdamTextInput
           style={styles.input}
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
         />
+
+        {/*password button*/}
         <TdamTextInput
           style={styles.input}
           placeholder="Password"
@@ -37,6 +41,8 @@ export default function LoginView() {
           onChangeText={setPassword}
           secureText
         />
+
+        {/*login button*/}
         <TdamButton
           style={styles.button}
           label="Log in"
