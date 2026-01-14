@@ -1,6 +1,7 @@
 // ArtworkCard Component - 
 // Artword card to display all the artworks from the Museums
 
+import React from "react";
 import { StyleSheet, View, Pressable, Text, StyleProp, ViewStyle, Dimensions, Image } from "react-native";
 import ImageViewer from "./imageViewer";
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -18,7 +19,7 @@ type Props = {
     onSave?: () => void;
 }
 
-export default function TdamArtworkCard({ style, title, artist, imageUrl, year, movement, onPress, isSaved, onSave }: Props) {
+function TdamArtworkCard({ style, title, artist, imageUrl, year, movement, onPress, isSaved, onSave }: Props) {
 
     return (
         <View style={[styles.containter]}>
@@ -85,3 +86,5 @@ const styles = StyleSheet.create({
         height: undefined,
     }
 });
+
+export default React.memo(TdamArtworkCard);

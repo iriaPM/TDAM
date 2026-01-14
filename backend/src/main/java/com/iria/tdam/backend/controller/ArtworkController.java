@@ -5,7 +5,10 @@ package com.iria.tdam.backend.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.iria.tdam.backend.services.ArtworkService;
+import com.iria.tdam.backend.services.HarvardArtworkService;
 import com.iria.tdam.backend.dto.ArtworkDto;
+import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -14,20 +17,28 @@ import java.util.List;
 public class ArtworkController {
     @Autowired
     private ArtworkService artworkService;
-
-    @GetMapping("/artworks")
-    public List<ArtworkDto> getArtworks(@RequestParam(defaultValue = "painting") String query) {
-        return artworkService.getArtworks(query);
-    }
+    @Autowired
+    private HarvardArtworkService harvardArtworkService;
 
     @GetMapping("/artworks/random")
     public List<ArtworkDto> getRandomArtworks() {
-        return artworkService.getRandomArtworks();
+        List<ArtworkDto> result = new ArrayList<>();
+        result.addAll(artworkService.getRandomArtworks());
+        result.addAll(harvardArtworkService.getRandomArtworks());
+        Collections.shuffle(result);
+        return result.stream().limit(10).toList();
     }
 
     @GetMapping("/artworks/search")
     public List<ArtworkDto> searchArtworks(@RequestParam String query) {
-        return artworkService.getArtworks(query);
+        List<ArtworkDto> result = new ArrayList<>();
+        result.addAll(artworkService.getArtworks(query)); // Met
+        result.addAll(harvardArtworkService.searchArtworks(query)); // Harvard
+        Collections.shuffle(result);
+        return result
+                .stream()
+                .limit(10)
+                .toList();
     }
 
 }

@@ -4,6 +4,7 @@
 import TdamButton from "@/components/Button";
 import ImageViewer from "@/components/imageViewer";
 import TdamTextInput from "@/components/TextInput";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import { useRegViewModel } from "../viewmodel/RegistrationViewModel";
 import { View, StyleSheet, Dimensions, Text } from "react-native";
 
@@ -15,6 +16,7 @@ export default function RegistrationScreen() {
 
     return (
         <View style={styles.container}>
+            <LoadingSpinner visible={loading} />
 
             <ImageViewer
                 imgSource={logo}
@@ -54,7 +56,7 @@ export default function RegistrationScreen() {
                     label="Register"
                     theme="secondary"
                     onPress={register}
-                    disabled = {loading}
+                    disabled={loading}
                 />
                 {error && <Text style={styles.errorText}>{error}</Text>}
 

@@ -6,7 +6,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Objects;
 import com.iria.tdam.backend.dto.ArtworkDto;
 import com.iria.tdam.backend.dto.MetObjectResponse;
 import org.springframework.cache.annotation.Cacheable;
@@ -67,32 +67,33 @@ public class ArtworkService {
             return null;
 
         ArtworkDto dto = new ArtworkDto();
-        dto.setObjectID(String.valueOf(id));
+        dto.setObjectID("met-" + id);
         dto.setTitle(response.title);
         dto.setArtist(response.artistDisplayName);
         dto.setMedium(response.medium);
         dto.setObjectDate(response.objectDate);
         dto.setImageUrl(imageUrl);
+        dto.setSource("Met");
 
         return dto;
     }
 
     // --- Search results
     @Cacheable(value = "searchArtworks", key = "#query")
-    public List<ArtworkDto> getArtworks(String query) {
-        List<Integer> ids = searchArtworks(query);
-        if (ids == null || ids.isEmpty())
-            return List.of();
+public List<ArtworkDto> getArtworks(String query) {
+    List<Integer> ids = searchArtworks(query);
+    if (ids.isEmpty()) return List.of();
 
-        return ids.stream()
-                .limit(10)
-                .map(this::getArtworkById)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-    }
+    return ids.stream()
+        .limit(10)
+        .map(this::getArtworkById)
+        .filter(Objects::nonNull)
+        .toList();
+}
+
 
     // --- Random artworks
-    @Cacheable(value = "randomArtworks")
+    @Cacheable("randomArtworks")
     public List<ArtworkDto> getRandomArtworks() {
         String url = "https://collectionapi.metmuseum.org/public/collection/v1/objects";
 
@@ -109,9 +110,11 @@ public class ArtworkService {
         Collections.shuffle(response.objectIDs);
 
         return response.objectIDs.stream()
-                .limit(30)
+                .limit(30) 
                 .map(this::getArtworkById)
                 .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .limit(10) 
+                .toList();
     }
+
 }
