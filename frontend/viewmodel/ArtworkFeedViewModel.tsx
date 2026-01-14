@@ -7,6 +7,7 @@ import { getRandomArtworksAPI, searchArtworksAPI } from "@/services/api";
 export function useArtworksViewModel() {
     const [artworks, setArtworks] = useState<Artwork[]>([]);
     const [searching, setSearching] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     //load default feed
     useEffect(() => {
@@ -15,33 +16,50 @@ export function useArtworksViewModel() {
 
     //load random feed
     const loadRandomArtworks = async () => {
-        setSearching(false);
-        const results = await getRandomArtworksAPI();
-        const mapped = (results ?? []).map(item => ({
-            ...item,
-            isSaved: false
-        }));
+        setSearching(true);
+        setError(null);
 
-        setArtworks(mapped);
-
+        try {
+            const results = await getRandomArtworksAPI();
+            setArtworks(
+                (results ?? []).map(item => ({
+                    ...item,
+                    isSaved: false,
+                }))
+            );
+        } catch {
+            setError("Failed to load artworks. Please try again.");
+            setArtworks([]);
+        } finally {
+            setSearching(false);
+        }
     };
 
     //search feed
     const searchArtworks = async (query: string) => {
         if (!query.trim()) {
-            loadRandomArtworks();  //go back to default feed
+            loadRandomArtworks();
             return;
         }
+
         setSearching(true);
-        const results = await searchArtworksAPI(query);
-        const mapped = (results ?? []).map(item => ({
-            ...item,
-            isSaved: false,
-        }));
+        setError(null);
 
-        setArtworks(mapped);
+        try {
+            const results = await searchArtworksAPI(query);
+            setArtworks(
+                (results ?? []).map(item => ({
+                    ...item,
+                    isSaved: false,
+                }))
+            );
+        } catch {
+            setError("Artwork search failed. Please try again.");
+            setArtworks([]);
+        } finally {
+            setSearching(false);
+        }
     };
-
 
     const toggleSave = (id: string) => {
         setArtworks(prev =>
@@ -51,5 +69,12 @@ export function useArtworksViewModel() {
         );
     };
 
-    return { artworks, toggleSave, searchArtworks, loadRandomArtworks, searching };
+    return {
+        artworks,
+        searching,
+        error,
+        toggleSave,
+        searchArtworks,
+        loadRandomArtworks,
+    };
 }

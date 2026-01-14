@@ -1,6 +1,6 @@
 //Artwork feed view.tsx
 //display all the artworks from the museums in a feed
-import { StyleSheet, FlatList } from "react-native";
+import { StyleSheet, FlatList, Text } from "react-native";
 import TdamArtworkCard from "@/components/ArtworkCard";
 import { useArtworksViewModel } from "@/viewmodel/ArtworkFeedViewModel";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,7 +8,7 @@ import TdamSearchBar from "@/components/SearchBar";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function ArtworkFeedView() {
-    const { artworks, toggleSave, searchArtworks, searching } = useArtworksViewModel();
+    const { artworks, toggleSave, searchArtworks, searching, error } = useArtworksViewModel();
 
     return (
         <SafeAreaView style={styles.container}>
@@ -16,6 +16,12 @@ export default function ArtworkFeedView() {
 
             {/*search bar*/}
             <TdamSearchBar onSearch={searchArtworks} />
+
+            {error && (
+                <Text style={styles.errorText}>
+                    {error}
+                </Text>
+            )}
 
             {/*flatlist where the artworks card will be displayed*/}
             <FlatList
@@ -42,5 +48,10 @@ export default function ArtworkFeedView() {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "#ffffffff",
+    },
+    errorText: {
+        textAlign: "center",
+        color: "#f00d0dff",
+        marginVertical: 8,
     },
 });
