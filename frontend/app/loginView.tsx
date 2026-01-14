@@ -4,6 +4,7 @@
 
 import TdamButton from "@/components/Button";
 import TdamTextInput from "@/components/TextInput";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import React from "react";
 import { View, StyleSheet, Dimensions, Text } from "react-native";
 import ImageViewer from "@/components/imageViewer";
@@ -17,6 +18,7 @@ export default function LoginView() {
 
   return (
     <View style={styles.container}>
+      <LoadingSpinner visible={loading} />
 
       <ImageViewer
         imgSource={logo}

@@ -1,3 +1,6 @@
+//user service 
+// to handle user reg, login, and profile details
+
 package com.iria.tdam.backend.services;
 import java.util.UUID;
 
