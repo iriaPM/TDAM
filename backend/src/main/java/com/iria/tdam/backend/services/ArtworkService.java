@@ -14,38 +14,59 @@ import org.springframework.cache.annotation.Cacheable;
 @Service
 @CacheConfig(cacheNames = "artworks")
 public class ArtworkService {
+
     private final RestTemplate restTemplate = new RestTemplate();
 
+    // --- API DTO for list of all Met objects
     public static class MetAllObjectsResponse {
         public List<Integer> objectIDs;
     }
 
-    // api call to search specific artworks from user input
+    // --- Search for artworks
     public List<Integer> searchArtworks(String query) {
         String url = "https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&q=" + query;
-        var response = restTemplate.getForObject(url, MetSearchResponse.class);
-        return response != null ? response.objectIDs : List.of();
+
+        MetSearchResponse response;
+        try {
+            response = restTemplate.getForObject(url, MetSearchResponse.class);
+        } catch (Exception e) {
+            return List.of();
+        }
+
+        return (response != null && response.objectIDs != null)
+                ? response.objectIDs
+                : List.of();
     }
 
+    // --- Fetch a single artwork details
     public ArtworkDto getArtworkById(int id) {
         String url = "https://collectionapi.metmuseum.org/public/collection/v1/objects/" + id;
 
-        var response = restTemplate.getForObject(url, MetObjectResponse.class);
+        MetObjectResponse response;
+        try {
+            response = restTemplate.getForObject(url, MetObjectResponse.class);
+        } catch (Exception e) {
+            return null;
+        }
 
         if (response == null)
             return null;
 
-        ArtworkDto dto = new ArtworkDto();
+        // pick best image
         String imageUrl = response.primaryImageSmall;
-
         if (imageUrl == null || imageUrl.isEmpty()) {
             imageUrl = response.primaryImage;
         }
-        if ((imageUrl == null || imageUrl.isEmpty()) && response.additionalImages != null
+        if ((imageUrl == null || imageUrl.isEmpty())
+                && response.additionalImages != null
                 && !response.additionalImages.isEmpty()) {
-            imageUrl = response.additionalImages.get(0); // fallback image
+            imageUrl = response.additionalImages.get(0);
         }
-        
+
+        if (imageUrl == null || imageUrl.isEmpty())
+            return null;
+
+        ArtworkDto dto = new ArtworkDto();
         dto.setObjectID(String.valueOf(id));
         dto.setTitle(response.title);
         dto.setArtist(response.artistDisplayName);
@@ -56,35 +77,41 @@ public class ArtworkService {
         return dto;
     }
 
-    // get random artworks for the artwork feed when there is no user interaction
-    // data
-    @Cacheable("randomArtworks")
+    // --- Search results
+    @Cacheable(value = "searchArtworks", key = "#query")
     public List<ArtworkDto> getArtworks(String query) {
         List<Integer> ids = searchArtworks(query);
+        if (ids == null || ids.isEmpty())
+            return List.of();
 
         return ids.stream()
                 .limit(10)
                 .map(this::getArtworkById)
                 .filter(Objects::nonNull)
-                .filter(a -> a.getImageUrl() != null && !a.getImageUrl().isEmpty())
                 .collect(Collectors.toList());
     }
 
-    // the met api object calls (each obkect is an artwork)
-    @Cacheable("randomArtworks")
+    // --- Random artworks
+    @Cacheable(value = "randomArtworks")
     public List<ArtworkDto> getRandomArtworks() {
         String url = "https://collectionapi.metmuseum.org/public/collection/v1/objects";
-        var response = restTemplate.getForObject(url, MetAllObjectsResponse.class);
 
-        if (response == null || response.objectIDs == null)
+        MetAllObjectsResponse response;
+        try {
+            response = restTemplate.getForObject(url, MetAllObjectsResponse.class);
+        } catch (Exception e) {
+            return List.of();
+        }
+
+        if (response == null || response.objectIDs == null || response.objectIDs.isEmpty())
             return List.of();
 
         Collections.shuffle(response.objectIDs);
+
         return response.objectIDs.stream()
-                .limit(10)
+                .limit(30)
                 .map(this::getArtworkById)
                 .filter(Objects::nonNull)
-                .filter(a -> a.getImageUrl() != null && !a.getImageUrl().isEmpty())
                 .collect(Collectors.toList());
     }
 }

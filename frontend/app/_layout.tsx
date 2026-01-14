@@ -1,6 +1,7 @@
 import { Stack } from "expo-router";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect, useState } from 'react';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
+import { View } from "react-native";
 
 export default function RootLayout() {
   const [loading, setLoading] = useState(true);
@@ -8,19 +9,23 @@ export default function RootLayout() {
 
   useEffect(() => {
     const checkToken = async () => {
-      const token = await AsyncStorage.getItem('userToken');
+      const token = await AsyncStorage.getItem("userToken");
       setIsLoggedIn(!!token);
       setLoading(false);
     };
     checkToken();
   }, []);
 
-  if (loading) return null;
+  if (loading) return <View />;
 
   return (
     <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="index" />
-      <Stack.Screen name="(tabs)" />
+      {isLoggedIn ? (
+        <Stack.Screen name="(tabs)" />
+      ) : (
+        <Stack.Screen name="index" />
+      )}
+
       <Stack.Screen name="loginView" />
       <Stack.Screen name="registrationView" />
     </Stack>

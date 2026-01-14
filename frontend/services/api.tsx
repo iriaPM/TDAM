@@ -26,6 +26,11 @@ export async function registerUser(username: string, email: string, password: st
         headers: { 'Content-Type': 'application/json' },
 
     });
+
+    if (!response.ok) {
+        const message = await response.text(); //backend message
+        throw new Error(message || "Registration failed");
+    }
     return response.json();
 }
 
