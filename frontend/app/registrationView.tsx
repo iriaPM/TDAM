@@ -11,7 +11,7 @@ const logo = require("../assets/images/logo.png")
 const { height } = Dimensions.get("window"); //get height relative to the screen size 
 
 export default function RegistrationScreen() {
-    const { email, setEmail, password, setPassword, username, setUsername, register, error } = useRegViewModel();
+    const { email, setEmail, password, setPassword, username, setUsername, register, error, loading } = useRegViewModel();
 
     return (
         <View style={styles.container}>
@@ -54,6 +54,7 @@ export default function RegistrationScreen() {
                     label="Register"
                     theme="secondary"
                     onPress={register}
+                    disabled = {loading}
                 />
                 {error && <Text style={styles.errorText}>{error}</Text>}
 

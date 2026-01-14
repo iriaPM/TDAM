@@ -14,26 +14,33 @@ export function useRegViewModel() {
     const [loading, setLoading] = useState(false);
 
     const register = async () => {
+        if (loading) return;
+        setError(null);
+        setLoading(true);
 
         if (!email.includes('@')) {
             setError('Invalid email');
+            setLoading(false);
             return;
         }
+
         if (password.length < 6) {
-            setError('Password is too short');
+            setError('Password must be at least 6 characters long');
+            setLoading(false);
             return;
         }
-        setLoading(true);
+
         try {
             const user = await registerUser(username, email, password);
             console.log("Successfully Registered :", user);
             alert("Successfully Registered");
             await AsyncStorage.setItem('userToken', user.token);
             router.replace('/loginView');
-        } catch (err) {
-            setError("Failed to register");
-            alert("Failed to register");
-        } finally {
+        } catch (err: any) {
+            const message = err?.message || "Something went wrong";
+            setError(message);
+        }
+        finally {
             setLoading(false);
         }
     }

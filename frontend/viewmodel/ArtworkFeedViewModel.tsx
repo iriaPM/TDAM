@@ -17,7 +17,7 @@ export function useArtworksViewModel() {
     const loadRandomArtworks = async () => {
         setSearching(false);
         const results = await getRandomArtworksAPI();
-        const mapped = results.map(item => ({
+        const mapped = (results ?? []).map(item => ({
             ...item,
             isSaved: false
         }));
@@ -34,7 +34,7 @@ export function useArtworksViewModel() {
         }
         setSearching(true);
         const results = await searchArtworksAPI(query);
-        const mapped = results.map(item => ({
+        const mapped = (results ?? []).map(item => ({
             ...item,
             isSaved: false,
         }));

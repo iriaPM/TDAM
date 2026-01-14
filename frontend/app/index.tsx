@@ -8,21 +8,22 @@ import { useEffect } from "react";
 const logo = require("../assets/images/logo.png")
 const { height, width } = Dimensions.get("window"); //get height relative to the screen size 
 
-//this is to check if the user is logged in
-//and make them go automatically to the home page 
-useEffect(() => {
-  const checkToken = async () => {
-    const token = await AsyncStorage.getItem('userToken');
-    if (token) {
-      router.replace('/home');
-    }
-  };
-  checkToken();
-}, []);
 
 export default function Index() {
   const buttonRowWidth = width * 0.75;
   const buttonWidth = (buttonRowWidth - 16) / 2;
+
+  //this is to check if the user is logged in
+  //and make them go automatically to the home page 
+  useEffect(() => {
+    const checkToken = async () => {
+      const token = await AsyncStorage.getItem('userToken');
+      if (token) {
+        router.replace('/home');
+      }
+    };
+    checkToken();
+  }, []);
 
   return (
     <View style={styles.container}>
