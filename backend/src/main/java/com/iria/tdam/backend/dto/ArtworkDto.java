@@ -11,6 +11,15 @@ public class ArtworkDto {
     private String location;
     private String imageUrl;
     private String objectID;
+    private String source;
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
 
     public String getTitle() {
         return title;
@@ -47,18 +56,23 @@ public class ArtworkDto {
     public String getDimensions() {
         return dimensions;
     }
+
     public void setDimensions(String dimensions) {
         this.dimensions = dimensions;
     }
+
     public String getLocation() {
         return location;
     }
+
     public void setLocation(String location) {
         this.location = location;
     }
+
     public String getImageUrl() {
         return imageUrl;
     }
+
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
@@ -69,6 +83,6 @@ public class ArtworkDto {
 
     public void setObjectID(String objectID) {
         this.objectID = objectID;
-    }  
+    }
 
 }

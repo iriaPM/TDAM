@@ -21,15 +21,9 @@ export function useArtworksViewModel() {
 
         try {
             const results = await getRandomArtworksAPI();
-            setArtworks(
-                (results ?? []).map(item => ({
-                    ...item,
-                    isSaved: false,
-                }))
-            );
+            setArtworks(results.map(a => ({ ...a, isSaved: false })));
         } catch {
-            setError("Failed to load artworks. Please try again.");
-            setArtworks([]);
+            setError("Failed to load artworks");
         } finally {
             setSearching(false);
         }
@@ -47,15 +41,9 @@ export function useArtworksViewModel() {
 
         try {
             const results = await searchArtworksAPI(query);
-            setArtworks(
-                (results ?? []).map(item => ({
-                    ...item,
-                    isSaved: false,
-                }))
-            );
+            setArtworks(results.map(a => ({ ...a, isSaved: false })));
         } catch {
-            setError("Artwork search failed. Please try again.");
-            setArtworks([]);
+            setError("Search failed");
         } finally {
             setSearching(false);
         }
