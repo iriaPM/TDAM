@@ -14,7 +14,7 @@ const logo = require("../assets/images/logo.png")
 const { height } = Dimensions.get("window"); //get height relative to the screen size 
 
 export default function LoginView() {
-  const { email, setEmail, password, setPassword, login, error, loading } = useLoginViewModel();
+  const { identifier, setIdentifier, password, setPassword, login, error, loading } = useLoginViewModel();
 
   return (
     <View style={styles.container}>
@@ -30,9 +30,9 @@ export default function LoginView() {
         {/*email button*/}
         <TdamTextInput
           style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
+          placeholder="Email or Username"
+          value={identifier}
+          onChangeText={setIdentifier}
         />
 
         {/*password button*/}
