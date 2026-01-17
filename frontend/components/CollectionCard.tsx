@@ -26,18 +26,25 @@ function TdamCollectionCard({ style, title, username, imageUrl, avatarUrl, time,
         <View style={[styles.containter]}>
             <View style={[styles.cardContainer, style]}>
 
-                <View style={[styles.titleRow, style]}>
+                <View style={styles.headerRow}>
+                    {/* Avatar on the left */}
                     <ImageViewer
-                        imgSource={imageUrl ? { uri: imageUrl } : require("../assets/images/userPlaceholder.png")}
+                        imgSource={
+                            avatarUrl
+                                ? { uri: avatarUrl }
+                                : require("../assets/images/userPlaceholder.png")
+                        }
                         style={styles.avatar}
                     />
-                    <Text style={styles.username}>{username}</Text>
-                    <Text style={styles.title}>{title}</Text>
-                </View>
-                <View>
-                    <Text style={styles.text}>
-                        {[time].filter(Boolean).join(", ")}
-                    </Text>
+
+                    {/* Text stack on the right */}
+                    <View style={styles.headerText}>
+                        <View style={styles.titleRow}>
+                            <Text style={styles.username}>{username}</Text>
+                            <Text style={styles.title}>{title}</Text>
+                        </View>
+                        {time && <Text style={styles.text}>{time}</Text>}
+                    </View>
                 </View>
                 <ImageViewer
                     imgSource={imageUrl ? { uri: imageUrl } : require("../assets/images/placeholderArt.png")}
@@ -74,7 +81,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: width * 0.050,
         justifyContent: "center",
         alignItems: "flex-start",
-        gap: 2,
+        gap: 5,
         backgroundColor: "#ffffffff",
     },
     separator: {
@@ -102,9 +109,22 @@ const styles = StyleSheet.create({
         width: width * 0.9,
         height: undefined,
     },
+    headerRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 10,
+        paddingBottom: 5,
+    },
+
+    headerText: {
+        flexDirection: "column",
+        justifyContent: "center",
+    },
+
     avatar: {
-        width: 30,
-        height: 30,
+        width: 36,
+        height: 36,
+        borderRadius: 18,
     },
     titleRow: {
         flexDirection: "row",
