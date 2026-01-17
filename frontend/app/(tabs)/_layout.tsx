@@ -35,7 +35,7 @@ export default function TabsLayout() {
                 name="ArtworkFeedView" 
                 options={{
                     headerShown: false,
-                    tabBarLabel: "Explore Art",
+                    tabBarLabel: "Art",
                     tabBarIcon: ({ color }) =>
                         <MaterialCommunityIcons
                             name={"image-frame"}
@@ -47,12 +47,12 @@ export default function TabsLayout() {
                 name="CollectionsFeedView" 
                 options={{
                     headerShown: false,
-                    tabBarLabel: "Collections",
+                    tabBarLabel: "Feed",
                     tabBarIcon: ({ color }) =>
                         <MaterialIcons name="collections" size={24} color={color} />
                 }} />
             <Tabs.Screen
-                name="PublicProfile" 
+                name="UserProfile" 
                 options={{
                     headerShown: false,
                     tabBarLabel: "Profile",

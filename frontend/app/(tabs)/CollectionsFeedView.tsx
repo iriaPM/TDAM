@@ -2,16 +2,24 @@
 //This is the view that shows the feed of collections
 
 import { StyleSheet, FlatList, Text } from "react-native";
-import TdamCollectionCard from "@/components/CollectionCard";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
+
+import TdamCollectionCard from "@/components/CollectionCard";
 import TdamSearchBar from "@/components/SearchBar";
 import LoadingSpinner from "@/components/LoadingSpinner";
+
 import { Collection } from "@/models/Collection";
 import { useCollectionViewModel } from "@/viewmodel/CollectionFeedViewModel";
 
 export default function CollectionsFeedView() {
-   // const { collections, toggleSave, searchCollections, searching, error, loadRandomCollections } = useCollectionViewModel();
-     const { collections } = useCollectionViewModel();
+    const {
+        collections,
+        searching,
+        error,
+        searchCollections,
+        toggleSave,
+    } = useCollectionViewModel();
 
     const renderItem = ({ item }: { item: Collection }) => (
         <TdamCollectionCard
@@ -20,40 +28,38 @@ export default function CollectionsFeedView() {
             time={item.time}
             description={item.description}
             imageUrl={item.imageUrl}
+            avatarUrl={item.avatarUrl}
             isSaved={item.isSaved}
-            onSave={() => {}}
+            onSave={() => toggleSave(item.objectID)}
+            onPress={() => {
+                // open collection
+                router.push("/(tabs)/CollectionsDetailView");
+            }}
+            onUserPress={() => {
+                // open public profile
+                router.push("/(tabs)/PublicProfile");
+            }}
         />
     );
 
     return (
-        <SafeAreaView style={styles.container} >
+        <SafeAreaView style={styles.container}>
+            <LoadingSpinner visible={searching && collections.length === 0} />
 
-            {/*<LoadingSpinner visible={searching && artworks.length === 0} />*/}
+            <TdamSearchBar onSearch={searchCollections} />
 
-            {/*search bar*/}
-            {/* <TdamSearchBar onSearch={"..."} /> */}
+            {error && <Text style={styles.errorText}>{error}</Text>}
 
-            {/* {error && (
-                <Text style={styles.errorText}>
-                    {error}
-                </Text>
-            )} */}
-
-            {/*flatlist where the artworks card will be displayed*/}
             <FlatList
                 data={collections}
                 keyExtractor={(item) => item.objectID}
                 renderItem={renderItem}
                 contentContainerStyle={{ paddingBottom: 16 }}
-                refreshing={false}
-                onRefresh={() => { }}
             />
-
-        </SafeAreaView >
+        </SafeAreaView>
     );
 }
 
-// -- styling -- 
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "#ffffffff",

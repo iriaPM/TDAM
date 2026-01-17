@@ -18,38 +18,60 @@ type Props = {
     onPress?: () => void;
     isSaved?: boolean;
     onSave?: () => void;
+    onUserPress?: () => void;
 }
 
-function TdamCollectionCard({ style, title, username, imageUrl, avatarUrl, time, description, onPress, isSaved, onSave }: Props) {
+function TdamCollectionCard({
+    style,
+    title,
+    username,
+    imageUrl,
+    avatarUrl,
+    time,
+    description,
+    onPress,
+    isSaved,
+    onSave,
+    onUserPress,
+}: Props) {
 
     return (
         <View style={[styles.containter]}>
             <View style={[styles.cardContainer, style]}>
 
                 <View style={styles.headerRow}>
-                    {/* Avatar on the left */}
-                    <ImageViewer
-                        imgSource={
-                            avatarUrl
-                                ? { uri: avatarUrl }
-                                : require("../assets/images/userPlaceholder.png")
-                        }
-                        style={styles.avatar}
-                    />
+                    <Pressable onPress={onUserPress}>
+                        <ImageViewer
+                            imgSource={
+                                avatarUrl
+                                    ? { uri: avatarUrl }
+                                    : require("../assets/images/userPlaceholder.png")
+                            }
+                            style={styles.avatar}
+                        />
+                    </Pressable>
 
-                    {/* Text stack on the right */}
                     <View style={styles.headerText}>
-                        <View style={styles.titleRow}>
+                        <Pressable onPress={onUserPress}>
                             <Text style={styles.username}>{username}</Text>
-                            <Text style={styles.title}>{title}</Text>
-                        </View>
+                        </Pressable>
+
+                        <Text style={styles.title}>{title}</Text>
                         {time && <Text style={styles.text}>{time}</Text>}
                     </View>
                 </View>
-                <ImageViewer
-                    imgSource={imageUrl ? { uri: imageUrl } : require("../assets/images/placeholderArt.png")}
-                    style={styles.image}
-                />
+
+                <Pressable onPress={onPress}>
+                    <ImageViewer
+                        imgSource={
+                            imageUrl
+                                ? { uri: imageUrl }
+                                : require("../assets/images/placeholderArt.png")
+                        }
+                        style={styles.image}
+                    />
+                </Pressable>
+
                 <View>
                     <Text style={styles.text}>
                         {[description].filter(Boolean).join(", ")}
