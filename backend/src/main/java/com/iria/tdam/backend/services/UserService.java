@@ -50,7 +50,7 @@ public class UserService {
 
     public User login(LoginRequest request) {
 
-        User user = userRepository.findByEmail(request.getEmail());
+        User user = userRepository.findByEmailOrUsername(request.getIdentifier(), request.getIdentifier());
 
         if (user == null || !user.getPassword().equals(request.getPassword())) {
             throw new IllegalArgumentException("Invalid credentials");

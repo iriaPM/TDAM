@@ -4,6 +4,7 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons"
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 export default function TabsLayout() {
     return (
@@ -21,6 +22,7 @@ export default function TabsLayout() {
             <Tabs.Screen
                 name="home"
                 options={{
+                    tabBarLabel: "Home",
                     headerShown: false,
                     tabBarIcon: ({ focused, color }) =>
                         <Ionicons
@@ -30,15 +32,32 @@ export default function TabsLayout() {
                         />
                 }} />
             <Tabs.Screen
-                name="ArtworkFeedView"
+                name="ArtworkFeedView" 
                 options={{
                     headerShown: false,
-                    tabBarIcon: ({ focused, color }) =>
+                    tabBarLabel: "Art",
+                    tabBarIcon: ({ color }) =>
                         <MaterialCommunityIcons
-                            name={focused ? "image-filter-frames" : "image-frame"}
+                            name={"image-frame"}
                             size={24}
                             color={color}
                         />
+                }} />
+            <Tabs.Screen
+                name="CollectionsFeedView" 
+                options={{
+                    headerShown: false,
+                    tabBarLabel: "Feed",
+                    tabBarIcon: ({ color }) =>
+                        <MaterialIcons name="collections" size={24} color={color} />
+                }} />
+            <Tabs.Screen
+                name="UserProfile" 
+                options={{
+                    headerShown: false,
+                    tabBarLabel: "Profile",
+                    tabBarIcon: ({ color }) =>
+                        <Ionicons name="person" size={24} color={color} />
                 }} />
         </Tabs>
     );

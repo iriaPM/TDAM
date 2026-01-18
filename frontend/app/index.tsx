@@ -15,15 +15,15 @@ export default function Index() {
 
   //this is to check if the user is logged in
   //and make them go automatically to the home page 
-  useEffect(() => {
-    const checkToken = async () => {
-      const token = await AsyncStorage.getItem('userToken');
-      if (token) {
-        router.replace('/home');
-      }
-    };
-    checkToken();
-  }, []);
+  // useEffect(() => {
+  //   const checkToken = async () => {
+  //     const token = await AsyncStorage.getItem('userToken');
+  //     if (token) {
+  //       router.replace('/home');
+  //     }
+  //   };
+  //   checkToken();
+  // }, []);
 
   return (
     <View style={styles.container}>
@@ -40,8 +40,8 @@ export default function Index() {
           style={[{ width: buttonWidth }]}
           label="Login"
           theme="primary"
-          onPress={() => router.push("/loginView")}
-        //onPress={() => router.push("/home")}
+          //onPress={() => router.push("/loginView")}
+          onPress={() => router.push("/home")}
         />
 
         {/*register button*/}
