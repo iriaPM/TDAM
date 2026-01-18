@@ -10,4 +10,5 @@ export interface CollectionDetail {
     id: string;
     imageUrl: string;
   }[];
+  isPrivate: boolean;
 }

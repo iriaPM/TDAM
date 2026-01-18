@@ -5,12 +5,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import ImageViewer from "@/components/imageViewer";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { useCollectionDetailViewModel } from "@/viewmodel/CollectionDetailViewModel";
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 const { width } = Dimensions.get("window");
 const ITEM_SIZE = (width - 48) / 2;
 
 export default function CollectionDetailView() {
-    const { collection, loading } = useCollectionDetailViewModel();
+    const { collection, loading, isOwnCollection } = useCollectionDetailViewModel();
 
     if (loading || !collection) {
         return <LoadingSpinner visible />;
@@ -37,15 +38,43 @@ export default function CollectionDetailView() {
                     </Pressable>
 
                     <View style={styles.headerText}>
-                        <Text style={styles.title}>{collection.title}</Text>
+                        {/* Title row */}
+                        <View style={styles.inlineRow}>
+                            <Text style={styles.title}>{collection.title}</Text>
+
+                            {isOwnCollection && (
+                                <>
+                                    <Pressable onPress={() => console.log("Edit title")}>
+                                        {/*to open bottomsheet to edit title and description*/}
+                                        <Ionicons name="pencil" size={20} color="blue" />
+                                    </Pressable>
+
+                                    <Pressable
+                                        style={styles.privacyButton}
+                                        onPress={() => console.log("Toggle privacy")}
+                                    >
+                                        <Ionicons
+                                            name={collection.isPrivate ? "lock-closed" : "lock-open"}
+                                            size={20}
+                                            color="#666"
+                                        />
+                                        <Text style={styles.privacyText}>
+                                            {collection.isPrivate ? "Private" : "Public"}
+                                        </Text>
+                                    </Pressable>
+                                </>
+                            )}
+                        </View>
                         <Text style={styles.username}>{collection.username}</Text>
                     </View>
                 </View>
 
                 {collection.description && (
-                    <Text style={styles.description}>
-                        {collection.description}
-                    </Text>
+                    <View style={styles.inlineRow}>
+                        <Text style={styles.description}>
+                            {collection.description}
+                        </Text>
+                    </View>
                 )}
             </View>
 
@@ -87,6 +116,7 @@ const styles = StyleSheet.create({
     header: {
         paddingHorizontal: 16,
         paddingBottom: 16,
+        position: "relative",
     },
     headerRow: {
         flexDirection: "row",
@@ -97,6 +127,7 @@ const styles = StyleSheet.create({
     headerText: {
         flexDirection: "column",
         justifyContent: "center",
+        flex: 1,
     },
     avatar: {
         width: 80,
@@ -124,5 +155,18 @@ const styles = StyleSheet.create({
     },
     image: {
         borderRadius: 6,
+    },
+    inlineRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 6,
+    },
+    privacyButton: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    privacyText: {
+        fontSize: 12,
+        color: "#666",
     },
 });
