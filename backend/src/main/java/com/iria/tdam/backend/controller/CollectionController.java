@@ -73,18 +73,23 @@ public class CollectionController {
 
     @PostMapping
     public CollectionFeedDto createCollection(
-            @RequestHeader("Authorization") String token,
+            @RequestHeader(value = "Authorization", required = false) String token,
             @RequestBody CreateCollectionRequest request) {
+        System.out.println("REQUEST = " + request);
+
+        if (token == null) {
+            throw new IllegalArgumentException("Missing Authorization header");
+        }
 
         User user = userService.getProfile(token.replace("Bearer ", ""));
 
-        return collectionService
-                .toFeedDto(
-                        collectionService.createCollection(
-                                user,
-                                request.getTitle(),
-                                request.getDescription(),
-                                request.isPrivate()));
+        Collection collection = collectionService.createCollection(
+                user,
+                request.getTitle(),
+                request.getDescription(),
+                request.isPrivate());
+
+        return collectionService.toFeedDto(collection);
     }
 
 }
