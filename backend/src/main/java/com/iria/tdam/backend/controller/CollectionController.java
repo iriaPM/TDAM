@@ -1,0 +1,90 @@
+//collection controller
+//handles HTTP requests related to collections
+package com.iria.tdam.backend.controller;
+
+import com.iria.tdam.backend.dto.*;
+import com.iria.tdam.backend.model.*;
+import com.iria.tdam.backend.services.CollectionService;
+import com.iria.tdam.backend.services.UserService;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
+
+@RestController
+@RequestMapping("/api/collections")
+@CrossOrigin(origins = "*")
+public class CollectionController {
+
+    private final CollectionService collectionService;
+    private final UserService userService;
+
+    public CollectionController(
+            CollectionService collectionService,
+            UserService userService) {
+        this.collectionService = collectionService;
+        this.userService = userService;
+    }
+
+    // public collections
+    @GetMapping("/public")
+    public List<CollectionFeedDto> getPublicCollections() {
+        return collectionService.getPublicCollections();
+    }
+
+    // user collections
+    @GetMapping("/me")
+    public List<CollectionFeedDto> getMyCollections(
+            @RequestHeader("Authorization") String token) {
+        User user = userService.getProfile(token.replace("Bearer ", ""));
+        return collectionService.getUserCollections(user);
+    }
+
+    // collection detail
+    @GetMapping("/{id}")
+    public CollectionDetailDto getCollectionDetail(
+            @PathVariable UUID id) {
+        return collectionService.getCollectionDetail(id);
+    }
+
+    // toggle artwork in collection
+    @PostMapping("/{id}/artworks")
+    public void toggleArtworkInCollection(
+            @RequestHeader("Authorization") String token,
+            @PathVariable UUID id,
+            @RequestBody ToggleArtworkRequest request) {
+        User user = userService.getProfile(token.replace("Bearer ", ""));
+
+        collectionService.toggleArtwork(
+                user,
+                id,
+                request.getArtworkId(),
+                request.getImageUrl());
+    }
+
+    // toogle privacy
+    @PatchMapping("/{id}/privacy")
+    public CollectionFeedDto togglePrivacy(
+            @RequestHeader("Authorization") String token,
+            @PathVariable UUID id) {
+        User user = userService.getProfile(token.replace("Bearer ", ""));
+        return collectionService.togglePrivacy(user, id);
+    }
+
+    @PostMapping
+    public CollectionFeedDto createCollection(
+            @RequestHeader("Authorization") String token,
+            @RequestBody CreateCollectionRequest request) {
+
+        User user = userService.getProfile(token.replace("Bearer ", ""));
+
+        return collectionService
+                .toFeedDto(
+                        collectionService.createCollection(
+                                user,
+                                request.getTitle(),
+                                request.getDescription(),
+                                request.isPrivate()));
+    }
+
+}

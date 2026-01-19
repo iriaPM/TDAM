@@ -1,4 +1,4 @@
-//add securty parameters since i was getting CORS errors when trying to log in 
+//CORS security implementation
 
 package com.iria.tdam.backend.config;
 

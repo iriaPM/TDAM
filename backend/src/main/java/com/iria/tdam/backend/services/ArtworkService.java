@@ -80,17 +80,17 @@ public class ArtworkService {
 
     // --- Search results
     @Cacheable(value = "searchArtworks", key = "#query")
-public List<ArtworkDto> getArtworks(String query) {
-    List<Integer> ids = searchArtworks(query);
-    if (ids.isEmpty()) return List.of();
+    public List<ArtworkDto> getArtworks(String query) {
+        List<Integer> ids = searchArtworks(query);
+        if (ids.isEmpty())
+            return List.of();
 
-    return ids.stream()
-        .limit(10)
-        .map(this::getArtworkById)
-        .filter(Objects::nonNull)
-        .toList();
-}
-
+        return ids.stream()
+                .limit(10)
+                .map(this::getArtworkById)
+                .filter(Objects::nonNull)
+                .toList();
+    }
 
     // --- Random artworks
     @Cacheable("randomArtworks")
@@ -110,10 +110,10 @@ public List<ArtworkDto> getArtworks(String query) {
         Collections.shuffle(response.objectIDs);
 
         return response.objectIDs.stream()
-                .limit(30) 
+                .limit(30)
                 .map(this::getArtworkById)
                 .filter(Objects::nonNull)
-                .limit(10) 
+                .limit(10)
                 .toList();
     }
 

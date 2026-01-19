@@ -8,9 +8,21 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import TdamSearchBar from "@/components/SearchBar";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Artwork } from "@/models/Artwork";
+import RBSheet from 'react-native-raw-bottom-sheet';
+import { useRef, useState } from "react";
+import SaveArtworkBottomsheet from "@/components/SaveArtworkBottomsheet";
+import CreateCollectionBottomsheet from "@/components/CreateCollectionBottomsheet";
+
 
 export default function ArtworkFeedView() {
     const { artworks, toggleSave, searchArtworks, searching, error, loadRandomArtworks } = useArtworksViewModel();
+    const saveSheetRef = useRef<any>(null);
+    const createSheetRef = useRef<any>(null);
+
+    const [newCollectionName, setNewCollectionName] = useState("");
+    const [newCollectionDescription, setNewCollectionDescription] = useState("");
+    const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
+    
     const renderItem = ({ item }: { item: Artwork }) => (
         <TdamArtworkCard
             title={item.title}
@@ -19,9 +31,44 @@ export default function ArtworkFeedView() {
             movement={item.movement}
             imageUrl={item.imageUrl}
             isSaved={item.isSaved}
-            onSave={() => toggleSave(item.objectID)}
-        />
+            //onSave={() => toggleSave(item.objectID)}
+            onSave={() => {
+                setSelectedArtwork(item);//sets the selected artwork 
+                saveSheetRef.current?.open()//opensbottomsheet
+            }
+            } />
     );
+
+    const handleToggleCollection = (collectionId: string) => {
+        if (!selectedArtwork) return;
+
+        //later:
+        // await api.toggleArtworkInCollection({
+        //   artworkId: selectedArtwork.objectID,
+        //   collectionId
+        // });
+
+        console.log("Toggle", {
+            artworkId: selectedArtwork.objectID,
+            collectionId,
+        });
+    };
+
+    const handleCreateCollection = () => {
+        if (!newCollectionName.trim()) return;
+
+        console.log("Create collection:", {
+            name: newCollectionName,
+            description: newCollectionDescription,
+        });
+
+        //later:
+        // await api.createCollection({ name, description });
+
+        setNewCollectionName("");
+        setNewCollectionDescription("");
+        createSheetRef.current?.close();
+    };
 
     return (
         <SafeAreaView style={styles.container} >
@@ -46,7 +93,57 @@ export default function ArtworkFeedView() {
                 refreshing={searching}
                 onRefresh={loadRandomArtworks}
             />
-
+            <RBSheet
+                ref={saveSheetRef}
+                height={500}
+                openDuration={250}
+                customStyles={{
+                    container: {
+                        borderTopLeftRadius: 16,
+                        borderTopRightRadius: 16,
+                    },
+                }}
+            >
+                {selectedArtwork && (
+                    <SaveArtworkBottomsheet
+                        artworkTitle={selectedArtwork.title}
+                        artworkArtist={selectedArtwork.artist}
+                        artworkImageUrl={selectedArtwork.imageUrl}
+                        collections={[]} // mock for now
+                        onCreateNew={() => {
+                            saveSheetRef.current?.close();
+                            createSheetRef.current?.open()
+                        }}
+                        onToggleCollection={(id) => { handleToggleCollection(id) }}
+                    />
+                )}
+            </RBSheet>
+            <RBSheet
+                ref={createSheetRef}
+                height={500}
+                // draggable={true}
+                // useNativeDriver={true}
+                customStyles={{
+                    // wrapper: {
+                    //     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    // },
+                    container: {
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                    },
+                    // draggableIcon: {
+                    //     backgroundColor: '#999',
+                    // },
+                }}
+            >
+                <CreateCollectionBottomsheet
+                    name={newCollectionName}
+                    description={newCollectionDescription}
+                    onChangeName={setNewCollectionName}
+                    onChangeDescription={setNewCollectionDescription}
+                    onSubmit={handleCreateCollection}
+                />
+            </RBSheet>
         </SafeAreaView >
     );
 }
