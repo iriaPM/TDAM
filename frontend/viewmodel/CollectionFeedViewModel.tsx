@@ -2,6 +2,7 @@
 //This viewmodel manages the state and logic for the collections feed
 import { useEffect, useState } from "react";
 import { Collection } from "@/models/Collection";
+import { getPublicCollections } from "@/services/api";
 
 export function useCollectionViewModel() {
     const [collections, setCollections] = useState<Collection[]>([]);
@@ -17,19 +18,18 @@ export function useCollectionViewModel() {
         setError(null);
 
         try {
-            // mocked data
-            setCollections([
-                {
-                    objectID: "1",
-                    title: "My First Collection",
-                    username: "artlover123",
-                    time: "3 days ago",
-                    description: "A collection of my favorite artworks",
-                    imageUrl: "",
-                    avatarUrl: "",
+            const data = await getPublicCollections();
+
+            setCollections(
+                data.map((c: any) => ({
+                    id: c.id,
+                    title: c.title,
+                    username: c.username,
+                    imageUrl: c.coverImageUrl ?? "",
+                    avatarUrl: c.avatarUrl ?? "",
                     isSaved: false,
-                },
-            ]);
+                }))
+            );
         } catch {
             setError("Failed to load collections");
         } finally {
@@ -59,7 +59,7 @@ export function useCollectionViewModel() {
     const toggleSave = (id: string) => {
         setCollections((prev) =>
             prev.map((c) =>
-                c.objectID === id ? { ...c, isSaved: !c.isSaved } : c
+                c.id === id ? { ...c, isSaved: !c.isSaved } : c
             )
         );
     };

@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { CollectionDetail } from "@/models/CollectionDetails";
+import { getCollectionDetail  } from "@/services/api";
 
-export function useCollectionDetailViewModel() {
+export function useCollectionDetailViewModel(collectionId: string) {
     const [collection, setCollection] = useState<CollectionDetail | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -12,26 +13,29 @@ export function useCollectionDetailViewModel() {
     const isOwnCollection = true;
 
     useEffect(() => {
-        // mocked data
-        setCollection({
-            id: "1",
-            title: "Collection 1",
-            avatarUrl: "",
-            username: "username",
-            description:
-                "description description description qkjgberbrjeboerjborborbgoqerbrbrogbrbeor ergkergrkgr...",
-            artworks: [
-                { id: "1", imageUrl: "" },
-                { id: "2", imageUrl: "" },
-                { id: "3", imageUrl: "" },
-                { id: "4", imageUrl: "" },
-                { id: "5", imageUrl: "" },
-                { id: "6", imageUrl: "" },
-            ],
-            isPrivate: false
-        });
-        setLoading(false);
-    }, []);
+        const load = async () => {
+            try {
+                const data = await getCollectionDetail(collectionId);
+                setCollection({
+                    id: data.id,
+                    title: data.title,
+                    username: data.username,
+                    avatarUrl: data.avatarUrl ?? "",
+                    description: data.description,
+                    isPrivate: data.private,
+                    artworks: data.artworks.map((a: any) => ({
+                        id: a.artworkId,
+                        imageUrl: a.imageUrl,
+                    })),
+                });
+            } catch {
+                setError("Failed to load collection");
+            } finally {
+                setLoading(false);
+            }
+        };
 
+        load();
+    }, [collectionId]);
     return { collection, loading, isOwnCollection, error };
 }

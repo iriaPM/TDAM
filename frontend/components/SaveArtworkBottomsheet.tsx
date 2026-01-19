@@ -60,11 +60,11 @@ export default function SaveArtworkBottomsheet({
             {/* Collections list */}
             <FlatList
                 data={collections}
-                keyExtractor={(item) => item.objectID}
+                keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <Pressable
                         style={styles.collectionItem}
-                        onPress={() => onToggleCollection(item.objectID)}
+                        onPress={() => onToggleCollection(item.id)}
                     >
                         <Image
                             source={

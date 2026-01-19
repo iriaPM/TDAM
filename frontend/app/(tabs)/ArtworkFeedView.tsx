@@ -12,6 +12,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import { useRef, useState } from "react";
 import SaveArtworkBottomsheet from "@/components/SaveArtworkBottomsheet";
 import CreateCollectionBottomsheet from "@/components/CreateCollectionBottomsheet";
+import { toggleArtworkInCollection, createCollection } from "@/services/api";
 
 
 export default function ArtworkFeedView() {
@@ -22,7 +23,7 @@ export default function ArtworkFeedView() {
     const [newCollectionName, setNewCollectionName] = useState("");
     const [newCollectionDescription, setNewCollectionDescription] = useState("");
     const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
-    
+
     const renderItem = ({ item }: { item: Artwork }) => (
         <TdamArtworkCard
             title={item.title}
@@ -39,35 +40,36 @@ export default function ArtworkFeedView() {
             } />
     );
 
-    const handleToggleCollection = (collectionId: string) => {
+    const handleToggleCollection = async (collectionId: string) => {
         if (!selectedArtwork) return;
 
-        //later:
-        // await api.toggleArtworkInCollection({
-        //   artworkId: selectedArtwork.objectID,
-        //   collectionId
-        // });
-
-        console.log("Toggle", {
-            artworkId: selectedArtwork.objectID,
-            collectionId,
-        });
+        try {
+            await toggleArtworkInCollection(
+                collectionId,
+                selectedArtwork.objectID,
+                selectedArtwork.imageUrl
+            );
+        } catch (e) {
+            console.error("Failed to toggle artwork", e);
+        }
     };
 
-    const handleCreateCollection = () => {
+    const handleCreateCollection = async () => {
         if (!newCollectionName.trim()) return;
 
-        console.log("Create collection:", {
-            name: newCollectionName,
-            description: newCollectionDescription,
-        });
+        try {
+            await createCollection(
+                newCollectionName,
+                newCollectionDescription,
+                false
+            );
 
-        //later:
-        // await api.createCollection({ name, description });
-
-        setNewCollectionName("");
-        setNewCollectionDescription("");
-        createSheetRef.current?.close();
+            createSheetRef.current?.close();
+            setNewCollectionName("");
+            setNewCollectionDescription("");
+        } catch (e) {
+            console.error("Failed to create collection", e);
+        }
     };
 
     return (
