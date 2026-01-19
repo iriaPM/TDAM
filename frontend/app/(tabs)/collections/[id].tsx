@@ -1,5 +1,6 @@
 //collections detail view.tsx
 
+import { useLocalSearchParams } from "expo-router";
 import { StyleSheet, View, Text, FlatList, Pressable, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ImageViewer from "@/components/imageViewer";
@@ -11,7 +12,8 @@ const { width } = Dimensions.get("window");
 const ITEM_SIZE = (width - 48) / 2;
 
 export default function CollectionDetailView() {
-    const { collection, loading, isOwnCollection } = useCollectionDetailViewModel();
+    const { id } = useLocalSearchParams<{ id: string }>();
+    const { collection, loading, isOwnCollection } = useCollectionDetailViewModel(id);//Expected 0 arguments, but got 1.
 
     if (loading || !collection) {
         return <LoadingSpinner visible />;

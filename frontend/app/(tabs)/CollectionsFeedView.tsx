@@ -3,7 +3,7 @@
 
 import { StyleSheet, FlatList, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { router } from "expo-router";
+import { Href, router } from "expo-router";
 import TdamCollectionCard from "@/components/CollectionCard";
 import TdamSearchBar from "@/components/SearchBar";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -28,10 +28,10 @@ export default function CollectionsFeedView() {
             imageUrl={item.imageUrl}
             avatarUrl={item.avatarUrl}
             isSaved={item.isSaved}
-            onSave={() => toggleSave(item.objectID)}
+            onSave={() => toggleSave(item.id)}
             onPress={() => {
                 // open collection
-                router.push("/(tabs)/CollectionsDetailView");
+                router.push(`/(tabs)/collections/${item.id}` as Href);
             }}
             onUserPress={() => {
                 // open public profile
@@ -50,7 +50,7 @@ export default function CollectionsFeedView() {
 
             <FlatList
                 data={collections}
-                keyExtractor={(item) => item.objectID}
+                keyExtractor={(item) => item.id}
                 renderItem={renderItem}
                 contentContainerStyle={{ paddingBottom: 16 }}
             />
