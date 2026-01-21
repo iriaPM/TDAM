@@ -17,7 +17,8 @@ import java.util.UUID;
 @Service
 public class CollectionService {
 
-    //this is a mapper method to convert Collection entity to CollectionFeedDto(what is shown in feeds)
+    // this is a mapper method to convert Collection entity to
+    // CollectionFeedDto(what is shown in feeds)
     public CollectionFeedDto toFeedDto(Collection c) {
         CollectionFeedDto dto = new CollectionFeedDto();
         dto.setId(c.getId());
@@ -34,7 +35,8 @@ public class CollectionService {
         return dto;
     }
 
-    //this is a mapper method to convert Collection entity to CollectionDetailDto(what is shown when user clicks on a collection)
+    // this is a mapper method to convert Collection entity to
+    // CollectionDetailDto(what is shown when user clicks on a collection)
     private CollectionDetailDto toDetailDto(Collection c) {
         CollectionDetailDto dto = new CollectionDetailDto();
         dto.setId(c.getId());
@@ -137,4 +139,21 @@ public class CollectionService {
         Collection saved = collectionRepository.save(collection);
         return toFeedDto(saved);
     }
+
+    // update collection (name and description)
+    public Collection updateCollection(
+            User user,
+            UUID collectionId,
+            String title,
+            String description) {
+        Collection collection = collectionRepository
+                .findByIdAndOwner(collectionId, user)
+                .orElseThrow(() -> new IllegalArgumentException("Collection not found"));
+
+        collection.setTitle(title);
+        collection.setDescription(description);
+
+        return collectionRepository.save(collection);
+    }
+
 }

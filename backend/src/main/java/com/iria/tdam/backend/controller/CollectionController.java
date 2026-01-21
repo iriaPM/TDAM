@@ -71,6 +71,23 @@ public class CollectionController {
         return collectionService.togglePrivacy(user, id);
     }
 
+    //update edit collection name and description
+    @PatchMapping("/{id}")
+    public CollectionDetailDto updateCollection(
+            @RequestHeader("Authorization") String token,
+            @PathVariable UUID id,
+            @RequestBody CreateCollectionRequest request) {
+        User user = userService.getProfile(token.replace("Bearer ", ""));
+
+        Collection updated = collectionService.updateCollection(
+                user,
+                id,
+                request.getTitle(),
+                request.getDescription());
+
+        return collectionService.getCollectionDetail(updated.getId());
+    }
+
     @PostMapping
     public CollectionFeedDto createCollection(
             @RequestHeader(value = "Authorization", required = false) String token,
