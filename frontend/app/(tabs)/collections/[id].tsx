@@ -13,7 +13,7 @@ const ITEM_SIZE = (width - 48) / 2;
 
 export default function CollectionDetailView() {
     const { id } = useLocalSearchParams<{ id: string }>();
-    const { collection, loading, isOwnCollection } = useCollectionDetailViewModel(id);//Expected 0 arguments, but got 1.
+    const { collection, loading, isOwnCollection } = useCollectionDetailViewModel(id);
 
     if (loading || !collection) {
         return <LoadingSpinner visible />;

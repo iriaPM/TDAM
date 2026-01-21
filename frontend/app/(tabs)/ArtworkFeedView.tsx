@@ -12,7 +12,9 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import { useRef, useState } from "react";
 import SaveArtworkBottomsheet from "@/components/SaveArtworkBottomsheet";
 import CreateCollectionBottomsheet from "@/components/CreateCollectionBottomsheet";
-import { toggleArtworkInCollection, createCollection } from "@/services/api";
+import { toggleArtworkInCollection, createCollection, getMyCollections } from "@/services/api";
+import { router } from "@/.expo/types/router";
+import { Collection } from "@/models/Collection";
 
 
 export default function ArtworkFeedView() {
@@ -23,6 +25,8 @@ export default function ArtworkFeedView() {
     const [newCollectionName, setNewCollectionName] = useState("");
     const [newCollectionDescription, setNewCollectionDescription] = useState("");
     const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
+    const [collections, setCollections] = useState<Collection[]>([]);
+
 
     const renderItem = ({ item }: { item: Artwork }) => (
         <TdamArtworkCard
@@ -32,12 +36,26 @@ export default function ArtworkFeedView() {
             movement={item.movement}
             imageUrl={item.imageUrl}
             isSaved={item.isSaved}
-            //onSave={() => toggleSave(item.objectID)}
-            onSave={() => {
-                setSelectedArtwork(item);//sets the selected artwork 
-                saveSheetRef.current?.open()//opensbottomsheet
-            }
-            } />
+            onSave={async () => {
+                setSelectedArtwork(item);
+
+                try {
+                    const data = await getMyCollections();
+                    setCollections(
+                        data.map((c: any) => ({
+                            id: c.id,
+                            title: c.title,
+                            imageUrl: c.coverImageUrl ?? "",
+                            isSaved: false,
+                        }))
+                    );
+                } catch (e) {
+                    console.error("Failed to load collections", e);
+                }
+
+                saveSheetRef.current?.open();
+            }}
+        />
     );
 
     const handleToggleCollection = async (collectionId: string) => {
@@ -58,7 +76,7 @@ export default function ArtworkFeedView() {
         if (!newCollectionName.trim()) return;
 
         try {
-            await createCollection(
+            const created = await createCollection(
                 newCollectionName,
                 newCollectionDescription,
                 false
@@ -67,6 +85,12 @@ export default function ArtworkFeedView() {
             createSheetRef.current?.close();
             setNewCollectionName("");
             setNewCollectionDescription("");
+
+            router.replace({
+                pathname: "/collections/[id]",
+                params: { id: created.id },
+            });
+
         } catch (e) {
             console.error("Failed to create collection", e);
         }
@@ -111,7 +135,7 @@ export default function ArtworkFeedView() {
                         artworkTitle={selectedArtwork.title}
                         artworkArtist={selectedArtwork.artist}
                         artworkImageUrl={selectedArtwork.imageUrl}
-                        collections={[]} // mock for now
+                        collections={collections} 
                         onCreateNew={() => {
                             saveSheetRef.current?.close();
                             createSheetRef.current?.open()

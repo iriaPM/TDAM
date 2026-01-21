@@ -17,6 +17,7 @@ import java.util.UUID;
 @Service
 public class CollectionService {
 
+    //this is a mapper method to convert Collection entity to CollectionFeedDto(what is shown in feeds)
     public CollectionFeedDto toFeedDto(Collection c) {
         CollectionFeedDto dto = new CollectionFeedDto();
         dto.setId(c.getId());
@@ -33,6 +34,7 @@ public class CollectionService {
         return dto;
     }
 
+    //this is a mapper method to convert Collection entity to CollectionDetailDto(what is shown when user clicks on a collection)
     private CollectionDetailDto toDetailDto(Collection c) {
         CollectionDetailDto dto = new CollectionDetailDto();
         dto.setId(c.getId());
@@ -77,7 +79,7 @@ public class CollectionService {
         return collectionRepository.save(collection);
     }
 
-    // toggle artwork in collection
+    // toggle artwork in collection (add if not exists, remove if exists)
     public void toggleArtwork(
             User user,
             UUID collectionId,
