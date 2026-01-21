@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { CollectionDetail } from "@/models/CollectionDetails";
-import { getCollectionDetail  } from "@/services/api";
+import { getCollectionDetail, toggleCollectionPrivacy } from "@/services/api";
 
 export function useCollectionDetailViewModel(collectionId: string) {
     const [collection, setCollection] = useState<CollectionDetail | null>(null);
@@ -11,6 +11,21 @@ export function useCollectionDetailViewModel(collectionId: string) {
 
     //flag for logged in user or other user
     const isOwnCollection = true;
+
+    const togglePrivacy = async () => {
+        if (!collection) return;
+
+        try {
+            await toggleCollectionPrivacy(collection.id);
+
+            setCollection((prev) =>
+                prev ? { ...prev, isPrivate: !prev.isPrivate } : prev
+            );
+        } catch {
+            setError("Failed to toggle privacy");
+        }
+    };
+
 
     useEffect(() => {
         const load = async () => {
@@ -37,5 +52,5 @@ export function useCollectionDetailViewModel(collectionId: string) {
 
         load();
     }, [collectionId]);
-    return { collection, loading, isOwnCollection, error };
+    return { collection, loading, isOwnCollection, error, togglePrivacy };
 }

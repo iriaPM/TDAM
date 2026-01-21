@@ -69,6 +69,7 @@ export async function getPublicCollections() {
 
 export async function getMyCollections() {
     const token = await AsyncStorage.getItem("userToken");
+    console.log("MY COLLECTIONS TOKEN:", token);
 
     const response = await fetch(`${BASE_URL}/collections/me`, {
         headers: {
@@ -141,6 +142,26 @@ export async function getCollectionDetail(collectionId: string) {
 
     if (!response.ok) {
         throw new Error("Failed to load collection detail");
+    }
+
+    return response.json();
+}
+
+export async function toggleCollectionPrivacy(collectionId: string) {
+    const token = await AsyncStorage.getItem("userToken");
+
+    const response = await fetch(
+        `${BASE_URL}/collections/${collectionId}/privacy`,
+        {
+            method: "PATCH",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error("Failed to toggle privacy");
     }
 
     return response.json();

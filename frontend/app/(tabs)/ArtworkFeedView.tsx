@@ -13,8 +13,8 @@ import { useRef, useState } from "react";
 import SaveArtworkBottomsheet from "@/components/SaveArtworkBottomsheet";
 import CreateCollectionBottomsheet from "@/components/CreateCollectionBottomsheet";
 import { toggleArtworkInCollection, createCollection, getMyCollections } from "@/services/api";
-import { router } from "@/.expo/types/router";
 import { Collection } from "@/models/Collection";
+import { router } from "expo-router";
 
 
 export default function ArtworkFeedView() {
@@ -67,6 +67,14 @@ export default function ArtworkFeedView() {
                 selectedArtwork.objectID,
                 selectedArtwork.imageUrl
             );
+
+            setCollections((prev) =>
+                prev.map((c) =>
+                    c.id === collectionId
+                        ? { ...c, isSaved: !c.isSaved }
+                        : c
+                )
+            );
         } catch (e) {
             console.error("Failed to toggle artwork", e);
         }
@@ -81,6 +89,14 @@ export default function ArtworkFeedView() {
                 newCollectionDescription,
                 false
             );
+
+            if (selectedArtwork) {
+                await toggleArtworkInCollection(
+                    created.id,
+                    selectedArtwork.objectID,
+                    selectedArtwork.imageUrl
+                );
+            }
 
             createSheetRef.current?.close();
             setNewCollectionName("");
@@ -135,7 +151,7 @@ export default function ArtworkFeedView() {
                         artworkTitle={selectedArtwork.title}
                         artworkArtist={selectedArtwork.artist}
                         artworkImageUrl={selectedArtwork.imageUrl}
-                        collections={collections} 
+                        collections={collections}
                         onCreateNew={() => {
                             saveSheetRef.current?.close();
                             createSheetRef.current?.open()
