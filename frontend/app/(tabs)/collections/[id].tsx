@@ -17,6 +17,7 @@ import ImageViewer from "@/components/imageViewer";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import CreateCollectionBottomsheet from "@/components/CreateCollectionBottomsheet";
 import { useCollectionDetailViewModel } from "@/viewmodel/CollectionDetailViewModel";
+import { updateCollection } from "@/services/api";
 
 const { width } = Dimensions.get("window");
 const ITEM_SIZE = (width - 48) / 2;
@@ -45,6 +46,20 @@ export default function CollectionDetailView() {
     if (loading || !collection) {
         return <LoadingSpinner visible />;
     }
+
+    const handleUpdateCollection = async () => {
+        try {
+            await updateCollection(
+                collection.id,
+                editName,
+                editDescription
+            );
+
+            editSheetRef.current?.close();
+        } catch (e) {
+            console.error("Failed to update collection", e);
+        }
+    };
 
     return (
         <SafeAreaView style={styles.container}>
