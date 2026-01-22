@@ -1,21 +1,66 @@
 //collections detail view.tsx
 
-import { StyleSheet, View, Text, FlatList, Pressable, Dimensions } from "react-native";
+import { useLocalSearchParams } from "expo-router";
+import {
+    StyleSheet,
+    View,
+    Text,
+    FlatList,
+    Pressable,
+    Dimensions,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useEffect, useRef, useState } from "react";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import RBSheet from "react-native-raw-bottom-sheet";
 import ImageViewer from "@/components/imageViewer";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { useCollectionDetailViewModel } from "@/viewmodel/CollectionDetailViewModel";
-import Ionicons from '@expo/vector-icons/Ionicons';
+import CreateCollectionBottomsheet from "@/components/CreateCollectionBottomsheet";
+import { useCollectionsViewModel } from "@/viewmodel/CollectionsViewModel";
+import { updateCollection } from "@/services/api";
 
 const { width } = Dimensions.get("window");
 const ITEM_SIZE = (width - 48) / 2;
 
 export default function CollectionDetailView() {
-    const { collection, loading, isOwnCollection } = useCollectionDetailViewModel();
+    const editSheetRef = useRef<any>(null);
+
+    const { id } = useLocalSearchParams<{ id: string }>();
+    const {
+        collection,
+        loading,
+        isOwnCollection,
+        togglePrivacy,
+        updateDetails
+    } = useCollectionsViewModel(id);
+
+    const [editName, setEditName] = useState("");
+    const [editDescription, setEditDescription] = useState("");
+
+    const openEditSheet = () => {
+        if (!collection) return;
+
+        setEditName(collection.title);
+        setEditDescription(collection.description ?? "");
+        editSheetRef.current?.open();
+    };
+
+
+    useEffect(() => {
+        if (collection) {
+            setEditName(collection.title);
+            setEditDescription(collection.description ?? "");
+        }
+    }, [collection]);
 
     if (loading || !collection) {
         return <LoadingSpinner visible />;
     }
+
+    const handleUpdateCollection = async () => {
+        await updateDetails(editName, editDescription);
+        editSheetRef.current?.close();
+    };
 
     return (
         <SafeAreaView style={styles.container}>
@@ -44,14 +89,13 @@ export default function CollectionDetailView() {
 
                             {isOwnCollection && (
                                 <>
-                                    <Pressable onPress={() => console.log("Edit title")}>
-                                        {/*to open bottomsheet to edit title and description*/}
+                                    <Pressable onPress={openEditSheet}>
                                         <Ionicons name="pencil" size={20} color="blue" />
                                     </Pressable>
 
                                     <Pressable
                                         style={styles.privacyButton}
-                                        onPress={() => console.log("Toggle privacy")}
+                                        onPress={togglePrivacy}
                                     >
                                         <Ionicons
                                             name={collection.isPrivate ? "lock-closed" : "lock-open"}
@@ -103,6 +147,24 @@ export default function CollectionDetailView() {
                 )}
                 contentContainerStyle={{ paddingBottom: 24 }}
             />
+            <RBSheet
+                ref={editSheetRef}
+                height={500}
+                customStyles={{
+                    container: {
+                        borderTopLeftRadius: 20,
+                        borderTopRightRadius: 20,
+                    },
+                }}
+            >
+                <CreateCollectionBottomsheet
+                    name={editName}
+                    description={editDescription}
+                    onChangeName={setEditName}
+                    onChangeDescription={setEditDescription}
+                    onSubmit={handleUpdateCollection}
+                />
+            </RBSheet>
         </SafeAreaView>
     );
 }

@@ -13,13 +13,14 @@ public class CollectionArtwork {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
+    @JoinColumn(name = "collection_id", nullable = false)
     private Collection collection;
 
-    @Column(nullable = false)
+    @Column
     private String artworkId;
 
-    @Column(nullable = false)
+    @Column
     private String imageUrl;
 
     // getters & setters

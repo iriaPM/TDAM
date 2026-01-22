@@ -12,6 +12,9 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import { useRef, useState } from "react";
 import SaveArtworkBottomsheet from "@/components/SaveArtworkBottomsheet";
 import CreateCollectionBottomsheet from "@/components/CreateCollectionBottomsheet";
+import { toggleArtworkInCollection, createCollection, getMyCollections } from "@/services/api";
+import { Collection } from "@/models/Collection";
+import { router } from "expo-router";
 
 
 export default function ArtworkFeedView() {
@@ -22,7 +25,9 @@ export default function ArtworkFeedView() {
     const [newCollectionName, setNewCollectionName] = useState("");
     const [newCollectionDescription, setNewCollectionDescription] = useState("");
     const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
-    
+    const [collections, setCollections] = useState<Collection[]>([]);
+
+
     const renderItem = ({ item }: { item: Artwork }) => (
         <TdamArtworkCard
             title={item.title}
@@ -31,43 +36,80 @@ export default function ArtworkFeedView() {
             movement={item.movement}
             imageUrl={item.imageUrl}
             isSaved={item.isSaved}
-            //onSave={() => toggleSave(item.objectID)}
-            onSave={() => {
-                setSelectedArtwork(item);//sets the selected artwork 
-                saveSheetRef.current?.open()//opensbottomsheet
-            }
-            } />
+            onSave={async () => {
+                setSelectedArtwork(item);
+
+                try {
+                    const data = await getMyCollections();
+                    setCollections(
+                        data.map((c: any) => ({
+                            id: c.id,
+                            title: c.title,
+                            imageUrl: c.coverImageUrl ?? "",
+                            isSaved: false,
+                        }))
+                    );
+                } catch (e) {
+                    console.error("Failed to load collections", e);
+                }
+
+                saveSheetRef.current?.open();
+            }}
+        />
     );
 
-    const handleToggleCollection = (collectionId: string) => {
+    const handleToggleCollection = async (collectionId: string) => {
         if (!selectedArtwork) return;
 
-        //later:
-        // await api.toggleArtworkInCollection({
-        //   artworkId: selectedArtwork.objectID,
-        //   collectionId
-        // });
+        try {
+            await toggleArtworkInCollection(
+                collectionId,
+                selectedArtwork.objectID,
+                selectedArtwork.imageUrl
+            );
 
-        console.log("Toggle", {
-            artworkId: selectedArtwork.objectID,
-            collectionId,
-        });
+            setCollections((prev) =>
+                prev.map((c) =>
+                    c.id === collectionId
+                        ? { ...c, isSaved: !c.isSaved }
+                        : c
+                )
+            );
+        } catch (e) {
+            console.error("Failed to toggle artwork", e);
+        }
     };
 
-    const handleCreateCollection = () => {
+    const handleCreateCollection = async () => {
         if (!newCollectionName.trim()) return;
 
-        console.log("Create collection:", {
-            name: newCollectionName,
-            description: newCollectionDescription,
-        });
+        try {
+            const created = await createCollection(
+                newCollectionName,
+                newCollectionDescription,
+                false
+            );
 
-        //later:
-        // await api.createCollection({ name, description });
+            if (selectedArtwork) {
+                await toggleArtworkInCollection(
+                    created.id,
+                    selectedArtwork.objectID,
+                    selectedArtwork.imageUrl
+                );
+            }
 
-        setNewCollectionName("");
-        setNewCollectionDescription("");
-        createSheetRef.current?.close();
+            createSheetRef.current?.close();
+            setNewCollectionName("");
+            setNewCollectionDescription("");
+
+            router.replace({
+                pathname: "/collections/[id]",
+                params: { id: created.id },
+            });
+
+        } catch (e) {
+            console.error("Failed to create collection", e);
+        }
     };
 
     return (
@@ -109,7 +151,7 @@ export default function ArtworkFeedView() {
                         artworkTitle={selectedArtwork.title}
                         artworkArtist={selectedArtwork.artist}
                         artworkImageUrl={selectedArtwork.imageUrl}
-                        collections={[]} // mock for now
+                        collections={collections}
                         onCreateNew={() => {
                             saveSheetRef.current?.close();
                             createSheetRef.current?.open()

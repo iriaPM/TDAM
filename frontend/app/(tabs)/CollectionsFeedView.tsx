@@ -3,21 +3,21 @@
 
 import { StyleSheet, FlatList, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { router } from "expo-router";
+import { Href, router } from "expo-router";
 import TdamCollectionCard from "@/components/CollectionCard";
 import TdamSearchBar from "@/components/SearchBar";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Collection } from "@/models/Collection";
-import { useCollectionViewModel } from "@/viewmodel/CollectionFeedViewModel";
+import { useCollectionsViewModel } from "@/viewmodel/CollectionsViewModel";
 
 export default function CollectionsFeedView() {
     const {
         collections,
         searching,
-        error,
+        feedError,
         searchCollections,
         toggleSave,
-    } = useCollectionViewModel();
+    } = useCollectionsViewModel();
 
     const renderItem = ({ item }: { item: Collection }) => (
         <TdamCollectionCard
@@ -28,10 +28,10 @@ export default function CollectionsFeedView() {
             imageUrl={item.imageUrl}
             avatarUrl={item.avatarUrl}
             isSaved={item.isSaved}
-            onSave={() => toggleSave(item.objectID)}
+            onSave={() => toggleSave(item.id)}
             onPress={() => {
                 // open collection
-                router.push("/(tabs)/CollectionsDetailView");
+                router.push(`/(tabs)/collections/${item.id}` as Href);
             }}
             onUserPress={() => {
                 // open public profile
@@ -46,11 +46,11 @@ export default function CollectionsFeedView() {
 
             <TdamSearchBar onSearch={searchCollections} />
 
-            {error && <Text style={styles.errorText}>{error}</Text>}
+            {feedError && <Text style={styles.errorText}>{feedError}</Text>}
 
             <FlatList
                 data={collections}
-                keyExtractor={(item) => item.objectID}
+                keyExtractor={(item) => item.id}
                 renderItem={renderItem}
                 contentContainerStyle={{ paddingBottom: 16 }}
             />

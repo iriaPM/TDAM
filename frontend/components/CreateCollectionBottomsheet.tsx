@@ -15,6 +15,8 @@ interface CreateCollectionBottomsheetProps {
     description: string;
     loading?: boolean;
     error?: string | null;
+    submitLabel?: string;
+    title?: string;
     onChangeName: (name: string) => void;
     onChangeDescription: (description: string) => void;
     onSubmit: () => void;
@@ -29,12 +31,14 @@ export default function CreateCollectionBottomsheet({
     onChangeName,
     onChangeDescription,
     onSubmit,
+    submitLabel,
+    title
 }: CreateCollectionBottomsheetProps) {
 
     return (
         <View style={styles.container}>
             {/* Header */}
-            <Text style={styles.headerTitle}>Create a new collection!</Text>
+            <Text style={styles.headerTitle}>{title ?? "Create a new collection!"}</Text>
 
             <View style={styles.form}>
 
@@ -56,7 +60,7 @@ export default function CreateCollectionBottomsheet({
 
                 {/*submit button*/}
                 <TdamButton
-                    label="Create"
+                    label={submitLabel ?? "Create"}
                     onPress={onSubmit}
                     disabled={loading}
                 />
