@@ -37,7 +37,7 @@ public class CollectionService {
 
     // this is a mapper method to convert Collection entity to
     // CollectionDetailDto(what is shown when user clicks on a collection)
-    private CollectionDetailDto toDetailDto(Collection c) {
+    private CollectionDetailDto toDetailDto(Collection c, User currentUser) {
         CollectionDetailDto dto = new CollectionDetailDto();
         dto.setId(c.getId());
         dto.setTitle(c.getTitle());
@@ -45,6 +45,9 @@ public class CollectionService {
         dto.setUsername(c.getOwner().getUsername());
         dto.setAvatarUrl(null);
         dto.setPrivate(c.isPrivate());
+
+        dto.setOwner(
+                c.getOwner().getId().equals(currentUser.getId()));
 
         dto.setArtworks(
                 c.getArtworks().stream()
@@ -121,11 +124,11 @@ public class CollectionService {
     }
 
     // user collection detail
-    public CollectionDetailDto getCollectionDetail(UUID id) {
+    public CollectionDetailDto getCollectionDetail(UUID id, User currentUser) {
         Collection collection = collectionRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Collection not found"));
 
-        return toDetailDto(collection);
+        return toDetailDto(collection, currentUser);
     }
 
     // privacy toggle

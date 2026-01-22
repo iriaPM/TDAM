@@ -15,6 +15,7 @@ public class CollectionDetailDto {
     private String avatarUrl;
     private boolean isPrivate;
     private List<ArtworkThumbnailDto> artworks;
+    private boolean isOwner;
 
     // getters & setters
     public UUID getId() {
@@ -71,5 +72,13 @@ public class CollectionDetailDto {
 
     public void setArtworks(List<ArtworkThumbnailDto> artworks) {
         this.artworks = artworks;
+    }
+
+    public boolean isOwner() {
+        return isOwner;
+    }
+
+    public void setOwner(boolean isOwner) {
+        this.isOwner = isOwner;
     }
 }

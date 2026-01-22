@@ -136,8 +136,20 @@ export async function toggleArtworkInCollection(
 }
 
 export async function getCollectionDetail(collectionId: string) {
+    const token = await AsyncStorage.getItem("userToken");
+
+    if (!token) {
+        throw new Error("User not authenticated");
+    }
+
     const response = await fetch(
-        `${BASE_URL}/collections/${collectionId}`
+        `${BASE_URL}/collections/${collectionId}`,
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+        }
     );
 
     if (!response.ok) {
@@ -146,6 +158,7 @@ export async function getCollectionDetail(collectionId: string) {
 
     return response.json();
 }
+
 
 export async function toggleCollectionPrivacy(collectionId: string) {
     const token = await AsyncStorage.getItem("userToken");

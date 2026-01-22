@@ -31,10 +31,20 @@ export default function CollectionDetailView() {
         loading,
         isOwnCollection,
         togglePrivacy,
+        updateDetails
     } = useCollectionDetailViewModel(id);
 
     const [editName, setEditName] = useState("");
     const [editDescription, setEditDescription] = useState("");
+
+    const openEditSheet = () => {
+        if (!collection) return;
+
+        setEditName(collection.title);
+        setEditDescription(collection.description ?? "");
+        editSheetRef.current?.open();
+    };
+
 
     useEffect(() => {
         if (collection) {
@@ -48,17 +58,8 @@ export default function CollectionDetailView() {
     }
 
     const handleUpdateCollection = async () => {
-        try {
-            await updateCollection(
-                collection.id,
-                editName,
-                editDescription
-            );
-
-            editSheetRef.current?.close();
-        } catch (e) {
-            console.error("Failed to update collection", e);
-        }
+        await updateDetails(editName, editDescription);
+        editSheetRef.current?.close();
     };
 
     return (
@@ -88,7 +89,7 @@ export default function CollectionDetailView() {
 
                             {isOwnCollection && (
                                 <>
-                                    <Pressable onPress={() => editSheetRef.current?.open()}>
+                                    <Pressable onPress={openEditSheet}>
                                         <Ionicons name="pencil" size={20} color="blue" />
                                     </Pressable>
 
@@ -161,10 +162,7 @@ export default function CollectionDetailView() {
                     description={editDescription}
                     onChangeName={setEditName}
                     onChangeDescription={setEditDescription}
-                    onSubmit={() => {
-                        console.log("Save edit", editName, editDescription);
-                        editSheetRef.current?.close();
-                    }}
+                    onSubmit={() => { handleUpdateCollection }}
                 />
             </RBSheet>
         </SafeAreaView>

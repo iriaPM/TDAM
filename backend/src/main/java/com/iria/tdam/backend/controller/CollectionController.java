@@ -43,8 +43,11 @@ public class CollectionController {
     // collection detail
     @GetMapping("/{id}")
     public CollectionDetailDto getCollectionDetail(
+            @RequestHeader("Authorization") String token,
             @PathVariable UUID id) {
-        return collectionService.getCollectionDetail(id);
+
+        User user = userService.getProfile(token.replace("Bearer ", ""));
+        return collectionService.getCollectionDetail(id, user);
     }
 
     // toggle artwork in collection
@@ -71,7 +74,7 @@ public class CollectionController {
         return collectionService.togglePrivacy(user, id);
     }
 
-    //update edit collection name and description
+    // update edit collection name and description
     @PatchMapping("/{id}")
     public CollectionDetailDto updateCollection(
             @RequestHeader("Authorization") String token,
@@ -85,7 +88,7 @@ public class CollectionController {
                 request.getTitle(),
                 request.getDescription());
 
-        return collectionService.getCollectionDetail(updated.getId());
+        return collectionService.getCollectionDetail(updated.getId(), user);
     }
 
     @PostMapping
