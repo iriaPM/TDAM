@@ -6,7 +6,7 @@ import { StyleSheet, View, Pressable, Text, StyleProp, ViewStyle } from "react-n
 
 type Props = {
     label: string;
-    theme?: "primary" | "secondary";
+    theme?: "primary" | "secondary" | "tertiary";
     style?: StyleProp<ViewStyle>;
     onPress?: () => void;
     disabled?: boolean;
@@ -52,6 +52,19 @@ export default function TdamButton({ label, theme, onPress, disabled, style }: P
             </View>
         );
     }
+    if (theme === "tertiary") {
+        return (
+            <View style={[styles.buttonContainer, style]}>
+                <Pressable
+                    style={[styles.button, styles.tertiaryButton]}
+                    onPress={onPress}
+                    disabled={disabled}
+                >
+                    <Text style={styles.tertiarybuttonLabel}>{label}</Text>
+                </Pressable>
+            </View>
+        );
+    }
     return null;
 }
 
@@ -80,8 +93,16 @@ const styles = StyleSheet.create({
     secondaryButton: {
         backgroundColor: "#C2E2FA",
     },
+    tertiaryButton: {
+        backgroundColor: "#736AA6",
+    },
     buttonLabel: {
         color: "#000",
+        fontSize: 16,
+        fontWeight: "600",
+    },
+    tertiarybuttonLabel: {
+        color: "#ffffff",
         fontSize: 16,
         fontWeight: "600",
     },

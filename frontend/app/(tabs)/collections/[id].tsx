@@ -158,6 +158,8 @@ export default function CollectionDetailView() {
                 }}
             >
                 <CreateCollectionBottomsheet
+                    title="Edit collection details :)"
+                    submitLabel = "Update"
                     name={editName}
                     description={editDescription}
                     onChangeName={setEditName}

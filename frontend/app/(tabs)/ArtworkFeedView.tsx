@@ -184,6 +184,8 @@ export default function ArtworkFeedView() {
                     onChangeName={setNewCollectionName}
                     onChangeDescription={setNewCollectionDescription}
                     onSubmit={handleCreateCollection}
+                    submitLabel="Create"
+                    title="Create a new collection!"
                 />
             </RBSheet>
         </SafeAreaView >

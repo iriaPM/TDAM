@@ -38,7 +38,7 @@ export default function CreateCollectionBottomsheet({
     return (
         <View style={styles.container}>
             {/* Header */}
-            <Text style={styles.headerTitle}>{title ?? "Create a new collection!"}</Text>
+            <Text style={styles.headerTitle}>{title ?? ""}</Text>
 
             <View style={styles.form}>
 
@@ -48,6 +48,7 @@ export default function CreateCollectionBottomsheet({
                     placeholder="Name of the collection"
                     value={name}
                     onChangeText={onChangeName}
+                    maxLength={50}
                 />
 
                 {/*description button*/}
@@ -56,15 +57,18 @@ export default function CreateCollectionBottomsheet({
                     placeholder="Description"
                     value={description}
                     onChangeText={onChangeDescription}
+                    multiline={true}
+                    maxLength={500}
                 />
 
                 {/*submit button*/}
                 <TdamButton
-                    label={submitLabel ?? "Create"}
+                    style={styles.button}
+                    label={submitLabel ?? ""}
+                    theme="tertiary"
                     onPress={onSubmit}
                     disabled={loading}
                 />
-
                 {error && <Text style={styles.errorText}>{error}</Text>}
 
             </View>
@@ -85,6 +89,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 16,
         marginBottom: 16,
+        paddingBottom: 16
     },
     input: {
         width: "100%",
@@ -93,7 +98,8 @@ const styles = StyleSheet.create({
     button: {
         width: "100%",
         marginTop: 10,
-        paddingHorizontal: 16
+        paddingHorizontal: 16,
+        paddingTop:20,
     },
     form: {
         width: "100%",

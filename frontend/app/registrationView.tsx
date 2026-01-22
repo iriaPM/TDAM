@@ -7,6 +7,7 @@ import TdamTextInput from "@/components/TextInput";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { useRegViewModel } from "../viewmodel/RegistrationViewModel";
 import { View, StyleSheet, Dimensions, Text } from "react-native";
+import { router } from 'expo-router';
 
 const logo = require("../assets/images/logo.png")
 const { height } = Dimensions.get("window"); //get height relative to the screen size 
@@ -56,6 +57,13 @@ export default function RegistrationScreen() {
                     label="Register"
                     theme="secondary"
                     onPress={register}
+                    disabled={loading}
+                />
+                <TdamButton
+                    style={styles.button}
+                    label="Log in"
+                    theme="primary"
+                    onPress={() => router.replace('/loginView')}
                     disabled={loading}
                 />
                 {error && <Text style={styles.errorText}>{error}</Text>}
