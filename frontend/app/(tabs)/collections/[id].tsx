@@ -16,7 +16,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import ImageViewer from "@/components/imageViewer";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import CreateCollectionBottomsheet from "@/components/CreateCollectionBottomsheet";
-import { useCollectionDetailViewModel } from "@/viewmodel/CollectionDetailViewModel";
+import { useCollectionsViewModel } from "@/viewmodel/CollectionsViewModel";
 import { updateCollection } from "@/services/api";
 
 const { width } = Dimensions.get("window");
@@ -32,7 +32,7 @@ export default function CollectionDetailView() {
         isOwnCollection,
         togglePrivacy,
         updateDetails
-    } = useCollectionDetailViewModel(id);
+    } = useCollectionsViewModel(id);
 
     const [editName, setEditName] = useState("");
     const [editDescription, setEditDescription] = useState("");
@@ -162,7 +162,7 @@ export default function CollectionDetailView() {
                     description={editDescription}
                     onChangeName={setEditName}
                     onChangeDescription={setEditDescription}
-                    onSubmit={() => { handleUpdateCollection }}
+                    onSubmit={handleUpdateCollection}
                 />
             </RBSheet>
         </SafeAreaView>

@@ -8,16 +8,16 @@ import TdamCollectionCard from "@/components/CollectionCard";
 import TdamSearchBar from "@/components/SearchBar";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Collection } from "@/models/Collection";
-import { useCollectionViewModel } from "@/viewmodel/CollectionFeedViewModel";
+import { useCollectionsViewModel } from "@/viewmodel/CollectionsViewModel";
 
 export default function CollectionsFeedView() {
     const {
         collections,
         searching,
-        error,
+        feedError,
         searchCollections,
         toggleSave,
-    } = useCollectionViewModel();
+    } = useCollectionsViewModel();
 
     const renderItem = ({ item }: { item: Collection }) => (
         <TdamCollectionCard
@@ -46,7 +46,7 @@ export default function CollectionsFeedView() {
 
             <TdamSearchBar onSearch={searchCollections} />
 
-            {error && <Text style={styles.errorText}>{error}</Text>}
+            {feedError && <Text style={styles.errorText}>{feedError}</Text>}
 
             <FlatList
                 data={collections}

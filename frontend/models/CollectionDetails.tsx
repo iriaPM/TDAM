@@ -11,4 +11,5 @@ export interface CollectionDetail {
     imageUrl: string;
   }[];
   isPrivate: boolean;
+  owner: boolean;
 }
