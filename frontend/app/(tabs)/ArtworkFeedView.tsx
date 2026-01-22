@@ -137,13 +137,13 @@ export default function ArtworkFeedView() {
             />
             <RBSheet
                 ref={saveSheetRef}
-                height={500}
-                openDuration={250}
+                height={700}
+                draggable={true}
+                dragOnContent={true}
                 customStyles={{
-                    container: {
-                        borderTopLeftRadius: 16,
-                        borderTopRightRadius: 16,
-                    },
+                    wrapper: styles.BSwrapper,
+                    container: styles.BScontainerAdd,
+                    draggableIcon: styles.BSdraggableIcon
                 }}
             >
                 {selectedArtwork && (
@@ -162,20 +162,13 @@ export default function ArtworkFeedView() {
             </RBSheet>
             <RBSheet
                 ref={createSheetRef}
-                height={500}
-                // draggable={true}
-                // useNativeDriver={true}
+                height={700}
+                draggable={true}
+                dragOnContent={true}
                 customStyles={{
-                    // wrapper: {
-                    //     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    // },
-                    container: {
-                        borderTopLeftRadius: 20,
-                        borderTopRightRadius: 20,
-                    },
-                    // draggableIcon: {
-                    //     backgroundColor: '#999',
-                    // },
+                    wrapper: styles.BSwrapper,
+                    container: styles.BScontainerCreate,
+                    draggableIcon: styles.BSdraggableIcon
                 }}
             >
                 <CreateCollectionBottomsheet
@@ -201,5 +194,21 @@ const styles = StyleSheet.create({
         textAlign: "center",
         color: "#f00d0dff",
         marginVertical: 8,
+    },
+    BSwrapper: {
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    BScontainerAdd: {
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        backgroundColor: '#FF8F8F',
+    },
+    BScontainerCreate: {
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        backgroundColor: '#C2E2FA',
+    },
+    BSdraggableIcon: {
+        backgroundColor: '#999',
     },
 });

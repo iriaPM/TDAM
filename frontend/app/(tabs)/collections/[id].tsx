@@ -149,17 +149,18 @@ export default function CollectionDetailView() {
             />
             <RBSheet
                 ref={editSheetRef}
-                height={500}
+                height={700}
+                draggable={true}
+                dragOnContent={true}
                 customStyles={{
-                    container: {
-                        borderTopLeftRadius: 20,
-                        borderTopRightRadius: 20,
-                    },
+                    wrapper: styles.BSwrapper,
+                    container: styles.BScontainer,
+                    draggableIcon: styles.BSdraggableIcon
                 }}
             >
                 <CreateCollectionBottomsheet
                     title="Edit collection details :)"
-                    submitLabel = "Update"
+                    submitLabel="Update"
                     name={editName}
                     description={editDescription}
                     onChangeName={setEditName}
@@ -232,5 +233,16 @@ const styles = StyleSheet.create({
     privacyText: {
         fontSize: 12,
         color: "#666",
+    },
+    BSwrapper: {
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    BScontainer: {
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        backgroundColor: '#C2E2FA',
+    },
+    BSdraggableIcon: {
+        backgroundColor: '#999',
     },
 });
