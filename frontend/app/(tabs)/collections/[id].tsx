@@ -1,6 +1,6 @@
 //collections detail view.tsx
 
-import { useLocalSearchParams } from "expo-router";
+import { Href, router, useLocalSearchParams } from "expo-router";
 import {
     StyleSheet,
     View,
@@ -17,7 +17,7 @@ import ImageViewer from "@/components/imageViewer";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import CreateCollectionBottomsheet from "@/components/CreateCollectionBottomsheet";
 import { useCollectionsViewModel } from "@/viewmodel/CollectionsViewModel";
-import { updateCollection } from "@/services/api";
+import MasonryList from '@react-native-seoul/masonry-list';
 
 const { width } = Dimensions.get("window");
 const ITEM_SIZE = (width - 48) / 2;
@@ -71,6 +71,7 @@ export default function CollectionDetailView() {
                     <Pressable onPress={() => {
                         // TODO: navigate to user profile
                         console.log("User pressed:", collection.username);
+                        router.push("/(tabs)/UserProfile" as Href);
                     }}>
                         <ImageViewer
                             imgSource={
@@ -85,16 +86,24 @@ export default function CollectionDetailView() {
                     <View style={styles.headerText}>
                         {/* Title row */}
                         <View style={styles.inlineRow}>
-                            <Text style={styles.title}>{collection.title}</Text>
+                            <Text
+                                style={styles.title}
+                                numberOfLines={2}
+                                ellipsizeMode="tail"
+                            >
+                                {collection.title}
+                            </Text>
 
                             {isOwnCollection && (
-                                <>
-                                    <Pressable onPress={openEditSheet}>
-                                        <Ionicons name="pencil" size={20} color="blue" />
+                                <View style={styles.iconsContainer}>
+                                    <Pressable
+                                        style={styles.icons}
+                                        onPress={openEditSheet}>
+                                        <Ionicons name="pencil" size={20} color="#666" />
                                     </Pressable>
 
                                     <Pressable
-                                        style={styles.privacyButton}
+                                        style={styles.icons}
                                         onPress={togglePrivacy}
                                     >
                                         <Ionicons
@@ -106,7 +115,7 @@ export default function CollectionDetailView() {
                                             {collection.isPrivate ? "Private" : "Public"}
                                         </Text>
                                     </Pressable>
-                                </>
+                                </View>
                             )}
                         </View>
                         <Text style={styles.username}>{collection.username}</Text>
@@ -123,13 +132,13 @@ export default function CollectionDetailView() {
             </View>
 
             {/* Artwork grid */}
-            <FlatList
+            <MasonryList
                 data={collection.artworks}
                 keyExtractor={(item) => item.id}
                 numColumns={2}
-                columnWrapperStyle={styles.row}
-                renderItem={({ item }) => (
+                renderItem={({ item }: { item: any }) => (
                     <Pressable
+                    style={{ paddingHorizontal: 4 }}
                         onPress={() => {
                             // TODO: open artwork detail later
                             console.log("Artwork pressed:", item.id);
@@ -141,11 +150,11 @@ export default function CollectionDetailView() {
                                     ? { uri: item.imageUrl }
                                     : require("@/assets/images/placeholderArt.png")
                             }
-                            style={[styles.image, { width: ITEM_SIZE, height: ITEM_SIZE }]}
+                            style={styles.masonryImage}
                         />
                     </Pressable>
                 )}
-                contentContainerStyle={{ paddingBottom: 24 }}
+                containerStyle={styles.masonryContainer}
             />
             <RBSheet
                 ref={editSheetRef}
@@ -199,9 +208,16 @@ const styles = StyleSheet.create({
         height: 80,
         borderRadius: 18,
     },
+    inlineRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 6,
+    },
     title: {
         fontSize: 16,
         fontWeight: "bold",
+        flex: 1,
+        flexShrink: 1,
     },
     username: {
         fontSize: 12,
@@ -213,26 +229,48 @@ const styles = StyleSheet.create({
         marginTop: 8,
         color: "#333",
     },
+    iconsContainer: {
+        flexDirection: "row",
+        gap: 6,
+        flexShrink: 0,
+    },
+    icons: {
+        flexDirection: "row",
+        alignItems: "center",
+        padding: 8,
+        borderRadius: 20,
+        backgroundColor: "#f2f2f2",
+    },
+    privacyText: {
+        fontSize: 12,
+        color: "#666",
+    },
+    masonryContainer: {
+        paddingHorizontal: 16,
+        paddingBottom: 24,
+    },
+    masonryImage: {
+        width: '100%',
+        borderRadius: 6,
+        marginBottom: 8,
+    },
     row: {
         justifyContent: "space-between",
         paddingHorizontal: 16,
         marginBottom: 16,
     },
+    artworkContainer: {
+        width: ITEM_SIZE,
+    },
     image: {
+        width: "100%",
+        aspectRatio: 1,
         borderRadius: 6,
+        objectFit: 'cover',
     },
-    inlineRow: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 6,
-    },
-    privacyButton: {
-        flexDirection: "row",
-        alignItems: "center",
-    },
-    privacyText: {
-        fontSize: 12,
-        color: "#666",
+    imageContainer: {
+        borderRadius: 6,
+        overflow: 'hidden',
     },
     BSwrapper: {
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
