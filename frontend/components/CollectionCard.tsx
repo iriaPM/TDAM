@@ -80,7 +80,7 @@ function TdamCollectionCard({
                 <View style={styles.saveIcon}>
                     <Pressable onPress={onSave}>
                         <Ionicons
-                            name={isSaved ? "add-circle" : "add-circle-outline"}
+                            name={isSaved ? "heart-sharp" : "heart-outline"}
                             size={24}
                             color="black"
                         />
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     text: {
-        fontSize: 11,
+        fontSize: 12,
     },
     saveIcon: {
         flexDirection: "row",

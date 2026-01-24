@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Collection } from "@/models/Collection";
 import { CollectionDetail } from "@/models/CollectionDetails";
+import { formatDistanceToNow } from "date-fns";
 import {
     getPublicCollections,
     getCollectionDetail,
@@ -40,6 +41,11 @@ export function useCollectionsViewModel(collectionId?: string) {
                     imageUrl: c.coverImageUrl ?? "",
                     avatarUrl: c.avatarUrl ?? "",
                     isSaved: false,
+                    time: c.time
+                        ? formatDistanceToNow(new Date(c.time), { addSuffix: true })
+                        : undefined,
+
+                    description: c.description ?? "",
                 }))
             );
         } catch {

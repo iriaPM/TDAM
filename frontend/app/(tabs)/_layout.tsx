@@ -59,6 +59,11 @@ export default function TabsLayout() {
                     tabBarIcon: ({ color }) =>
                         <Ionicons name="person" size={24} color={color} />
                 }} />
+            <Tabs.Screen
+                name="collections/[id]"
+                options={{
+                    href: null,
+                }} />
         </Tabs>
     );
 }
