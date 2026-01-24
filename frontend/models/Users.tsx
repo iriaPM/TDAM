@@ -9,3 +9,11 @@ export interface User {
     avatarUrl: string;
 }
 
+export interface UserProfile {
+    id: number;
+    userName: string;
+    description?: string;
+    avatarUrl?: string;
+    isMe: boolean;
+    collections: any[];
+}

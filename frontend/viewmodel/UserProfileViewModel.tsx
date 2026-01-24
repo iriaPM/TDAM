@@ -2,23 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { Collection } from "@/models/Collection";
-import { User } from "@/models/Users";
-import {
-    mockGetUser,
-    mockGetUserCollections,
-    mockUpdateUser,
-} from "@/services/userProfile.mock";
+import { UserProfile } from "@/models/Users";
+import { getUserProfile, updateUserProfile } from "@/services/api";
 
-const AUTH_USER_ID = "me"; // replace later with auth context
 
 export function useUserProfileViewModel(userId?: string) {
-    const isMe = !userId || userId === AUTH_USER_ID;
-    const resolvedUserId = userId ?? AUTH_USER_ID;
-
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<UserProfile | null>(null);
     const [collections, setCollections] = useState<Collection[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string>();
+
+    const isMe = user?.isMe ?? false;
 
     useEffect(() => {
         load();
@@ -27,25 +21,42 @@ export function useUserProfileViewModel(userId?: string) {
     const load = async () => {
         try {
             setLoading(true);
-            const userData = await mockGetUser(resolvedUserId);
-            const collectionsData = await mockGetUserCollections(
-                resolvedUserId,
-                isMe
-            );
+            setError(undefined);
 
-            setUser(userData);
-            setCollections(collectionsData);
-        } catch {
+            const profileData = await getUserProfile(userId);
+
+            setUser({
+                id: profileData.id,
+                userName: profileData.userName,
+                description: profileData.description,
+                avatarUrl: profileData.avatarUrl,
+                isMe: profileData.me,
+                collections: profileData.collections || [],
+            });
+            setCollections(profileData.collections || []);
+        } catch (err) {
             setError("Failed to load profile");
+            console.error("Profile load error:", err);
         } finally {
             setLoading(false);
         }
     };
 
-    const updateProfile = async (name: string, description: string) => {
+    const updateProfile = async (username: string, description: string) => {
         if (!user) return;
-        const updated = await mockUpdateUser(user.id, name, description);
-        setUser(updated);
+
+        try {
+            const updated = await updateUserProfile(username, description);
+            setUser({
+                ...user,
+                userName: updated.username,
+                description: updated.description,
+            });
+        } catch (err) {
+            setError("Failed to update profile");
+            console.error("Profile update error:", err);
+            throw err;
+        }
     };
 
     return {

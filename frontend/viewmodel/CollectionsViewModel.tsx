@@ -41,6 +41,7 @@ export function useCollectionsViewModel(collectionId?: string) {
                     imageUrl: c.coverImageUrl ?? "",
                     avatarUrl: c.avatarUrl ?? "",
                     isSaved: false,
+                    userId: c.userId,
                     time: c.time
                         ? formatDistanceToNow(new Date(c.time), { addSuffix: true })
                         : undefined,

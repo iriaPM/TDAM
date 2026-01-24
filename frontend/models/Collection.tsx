@@ -9,4 +9,5 @@ export interface Collection {
     imageUrl: string;  
     isSaved: boolean;
     avatarUrl?: string;
+    userId: string;
 }

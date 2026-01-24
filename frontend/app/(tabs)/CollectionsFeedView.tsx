@@ -35,7 +35,7 @@ export default function CollectionsFeedView() {
             }}
             onUserPress={() => {
                 // open  profile page of user
-                router.push("/(tabs)/UserProfile" as Href);
+                router.push(`/(tabs)/UserProfile?id=${item.userId}` as Href);
             }}
         />
     );

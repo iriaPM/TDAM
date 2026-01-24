@@ -205,3 +205,58 @@ export async function updateCollection(
 
     return response.json();
 }
+//--------- USER PROFILE -----------
+export async function getUserProfile(userId?: string) {
+    const token = await AsyncStorage.getItem("userToken");
+
+    if (!token) {
+        throw new Error("User not authenticated");
+    }
+
+    const url = userId
+        ? `${BASE_URL}/users/profile?id=${userId}`
+        : `${BASE_URL}/users/profile`;
+
+    const response = await fetch(url, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to load user profile");
+    }
+
+    return response.json();
+}
+
+export async function updateUserProfile(
+    username: string,
+    description: string
+) {
+    const token = await AsyncStorage.getItem("userToken");
+
+    if (!token) {
+        throw new Error("User not authenticated");
+    }
+
+    const response = await fetch(`${BASE_URL}/users/profile`, {
+        method: "PUT",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            userName: username,
+            description: description,
+        }),
+    });
+
+    if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || "Failed to update profile");
+    }
+
+    return response.json();
+}

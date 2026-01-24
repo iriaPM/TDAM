@@ -1,9 +1,8 @@
 //UserProfile.tsx
 //This is the logged user profile and other users profile view 
 
-import { useCollectionsViewModel } from "@/viewmodel/CollectionsViewModel";
 import { useEffect, useRef, useState } from "react";
-import { useLocalSearchParams } from "expo-router";
+import { Href, router, useLocalSearchParams } from "expo-router";
 import RBSheet from "react-native-raw-bottom-sheet";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import ImageViewer from "@/components/imageViewer";
@@ -41,6 +40,13 @@ export default function UserProfile() {
     const [editName, setEditName] = useState("");
     const [editDescription, setEditDescription] = useState("");
 
+    useEffect(() => {
+        if (user) {
+            setEditName(user.userName);
+            setEditDescription(user.description ?? "");
+        }
+    }, [user]);
+
     if (loading || !user) {
         return <LoadingSpinner visible />;
     }
@@ -51,23 +57,33 @@ export default function UserProfile() {
         editSheetRef.current?.open();
     };
 
-    if (loading || !user) {
-        return <LoadingSpinner visible />;
-    }
-
+    const handleUpdateProfile = async () => {
+        try {
+            await updateProfile(editName, editDescription);
+            editSheetRef.current?.close();
+        } catch (err) {
+            console.error("Update failed:", err);
+        }
+    };
 
     const renderCollection = ({ item }: any) => (
         <View style={styles.card}>
-            <ImageViewer
-                imgSource={item.imageUrl
-                    ? { uri: item.imageUrl }
-                    : require("@/assets/images/placeholderArt.png")}
-                style={styles.cardImage}
-            />
-            <Text style={styles.cardTitle} numberOfLines={1}>
-                {item.title}
-            </Text>
-        </View>
+            <Pressable
+                onPress={() => {
+                    router.push(`/(tabs)/collections/${item.id}` as Href);
+                }}
+            >
+                <ImageViewer
+                    imgSource={item.imageUrl
+                        ? { uri: item.imageUrl }
+                        : require("@/assets/images/placeholderArt.png")}
+                    style={styles.cardImage}
+                />
+                <Text style={styles.cardTitle} numberOfLines={1}>
+                    {item.title}
+                </Text>
+            </Pressable>
+        </View >
     );
 
     return (
@@ -146,8 +162,7 @@ export default function UserProfile() {
                     onChangeName={setEditName}
                     onChangeDescription={setEditDescription}
                     onSubmit={async () => {
-                        await updateProfile(editName, editDescription);
-                        editSheetRef.current?.close();
+                        handleUpdateProfile();
                     }}
                 />
             </RBSheet>
