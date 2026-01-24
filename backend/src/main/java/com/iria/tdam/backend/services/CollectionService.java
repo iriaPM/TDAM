@@ -28,6 +28,7 @@ public class CollectionService {
         dto.setPrivate(c.isPrivate());
         dto.setDescription(c.getDescription());
         dto.setTime(c.getCreatedAt().toString());
+        dto.setUserId(c.getOwner().getId());
 
         // cover image = first artwork image if exists
         if (c.getArtworks() != null && !c.getArtworks().isEmpty()) {

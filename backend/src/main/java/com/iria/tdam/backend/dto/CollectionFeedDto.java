@@ -15,6 +15,7 @@ public class CollectionFeedDto {
     private boolean isPrivate;
     private String description;
     private String time;
+    private Long userId;
 
     // getters & setters
     public UUID getId() {
@@ -79,5 +80,13 @@ public class CollectionFeedDto {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }
