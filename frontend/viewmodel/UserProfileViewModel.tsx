@@ -33,7 +33,13 @@ export function useUserProfileViewModel(userId?: string) {
                 isMe: profileData.me,
                 collections: profileData.collections || [],
             });
-            setCollections(profileData.collections || []);
+
+            const mappedCollections = (profileData.collections || []).map((col: any) => ({
+                ...col,
+                imageUrl: col.coverImageUrl,
+            }));
+            
+            setCollections(mappedCollections);
         } catch (err) {
             setError("Failed to load profile");
             console.error("Profile load error:", err);

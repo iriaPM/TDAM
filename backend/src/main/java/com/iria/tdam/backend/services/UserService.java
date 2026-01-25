@@ -94,7 +94,6 @@ public class UserService {
 
         dto.setCollections(
                 collectionService.getUserCollections(profileUser));
-
         return dto;
     }
 
