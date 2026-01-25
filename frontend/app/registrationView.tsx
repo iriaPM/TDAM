@@ -32,6 +32,7 @@ export default function RegistrationScreen() {
                     placeholder="Username"
                     value={username}
                     onChangeText={setUsername}
+                    secureText={false}
                 />
 
                 {/*email button*/}
@@ -40,6 +41,7 @@ export default function RegistrationScreen() {
                     placeholder="Email"
                     value={email}
                     onChangeText={setEmail}
+                    secureText={false}
                 />
 
                 {/*password button*/}
@@ -48,7 +50,7 @@ export default function RegistrationScreen() {
                     placeholder="Password"
                     value={password}
                     onChangeText={setPassword}
-                    secureText
+                    secureText={true}
                 />
 
                 {/*registration button*/}

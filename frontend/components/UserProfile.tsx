@@ -1,5 +1,5 @@
 //UserProfile.tsx
-//This is the logged user profile and other users profile view 
+//This is the logged user profile and other users profile component 
 
 import { useEffect, useRef, useState } from "react";
 import { Href, router, useLocalSearchParams } from "expo-router";
@@ -18,15 +18,18 @@ import {
 } from "react-native";
 import { useUserProfileViewModel } from "@/viewmodel/UserProfileViewModel";
 import CreateCollectionBottomsheet from "@/components/CreateCollectionBottomsheet";
-import { logout } from "../../utils/logout";
+import { logout } from "../utils/logout";
 
 const NUM_COLUMNS = 2;
 const SCREEN_WIDTH = Dimensions.get("window").width;
 const CARD_GAP = 12;
 const CARD_WIDTH = (SCREEN_WIDTH - CARD_GAP * (NUM_COLUMNS + 1)) / NUM_COLUMNS;
 
-export default function UserProfile() {
-    const { id } = useLocalSearchParams<{ id?: string }>();
+interface UserProfileProps {
+    id?: string;
+}
+
+export default function UserProfile({ id }: UserProfileProps) {
 
     const {
         user,

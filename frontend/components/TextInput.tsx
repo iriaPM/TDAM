@@ -12,7 +12,7 @@ interface TdamTextInputProps {
     onChangeText?: (text: string) => void;
     style?: StyleProp<TextStyle>;
     containerStyle?: StyleProp<ViewStyle>;
-    secureText?: boolean;
+    secureText: boolean;
     multiline?: boolean;
     maxLength?: number;
 }
@@ -23,7 +23,7 @@ const TdamTextInput = ({
     onChangeText = () => { },
     style,
     containerStyle,
-    secureText,
+    secureText=false,
     multiline = false,
     maxLength,
 }: TdamTextInputProps) => {
@@ -36,8 +36,8 @@ const TdamTextInput = ({
                 value={value}
                 onChangeText={onChangeText}
                 secureTextEntry={secureText}
-                multiline={true}
-                maxLength={500}
+                multiline={multiline}
+                maxLength={maxLength}
             />
         </View>
     );

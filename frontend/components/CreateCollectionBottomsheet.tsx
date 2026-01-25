@@ -49,6 +49,7 @@ export default function CreateCollectionBottomsheet({
                     value={name}
                     onChangeText={onChangeName}
                     maxLength={50}
+                    secureText={false}
                 />
 
                 {/*description button*/}
@@ -59,6 +60,7 @@ export default function CreateCollectionBottomsheet({
                     onChangeText={onChangeDescription}
                     multiline={true}
                     maxLength={500}
+                    secureText={false}
                 />
 
                 {/*submit button*/}

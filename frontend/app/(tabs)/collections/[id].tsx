@@ -70,8 +70,7 @@ export default function CollectionDetailView() {
                 <View style={styles.headerRow}>
                     <Pressable onPress={() => {
                         // TODO: navigate to user profile
-                        console.log("User pressed:", collection.username);
-                        router.push("/(tabs)/UserProfile" as Href);
+                        router.push(`/(tabs)/user/[id]` as Href);
                     }}>
                         <ImageViewer
                             imgSource={

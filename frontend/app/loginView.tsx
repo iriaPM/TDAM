@@ -34,6 +34,7 @@ export default function LoginView() {
           placeholder="Email or Username"
           value={identifier}
           onChangeText={setIdentifier}
+          secureText={false}
         />
 
         {/*password button*/}
@@ -42,7 +43,7 @@ export default function LoginView() {
           placeholder="Password"
           value={password}
           onChangeText={setPassword}
-          secureText
+          secureText={true}
         />
 
         {/*login button*/}

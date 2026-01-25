@@ -32,7 +32,7 @@ export default function TabsLayout() {
                         />
                 }} />
             <Tabs.Screen
-                name="ArtworkFeedView" 
+                name="ArtworkFeedView"
                 options={{
                     headerShown: false,
                     tabBarLabel: "Art",
@@ -44,7 +44,7 @@ export default function TabsLayout() {
                         />
                 }} />
             <Tabs.Screen
-                name="CollectionsFeedView" 
+                name="CollectionsFeedView"
                 options={{
                     headerShown: false,
                     tabBarLabel: "Feed",
@@ -52,12 +52,17 @@ export default function TabsLayout() {
                         <MaterialIcons name="collections" size={24} color={color} />
                 }} />
             <Tabs.Screen
-                name="UserProfile" 
+                name="MyUserProfile"
                 options={{
                     headerShown: false,
                     tabBarLabel: "Profile",
                     tabBarIcon: ({ color }) =>
                         <Ionicons name="person" size={24} color={color} />
+                }} />
+            <Tabs.Screen
+                name="user/[id]"
+                options={{
+                    href: null,
                 }} />
             <Tabs.Screen
                 name="collections/[id]"
