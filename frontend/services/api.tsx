@@ -48,14 +48,45 @@ export async function getProfile(): Promise<User> {
 }
 
 export async function searchArtworksAPI(query: string): Promise<Artwork[]> {
-    const response = await fetch(`${BASE_URL}/artworks/search?query=${query}`);
+    const token = await AsyncStorage.getItem("userToken");
+
+    const response = await fetch(`${BASE_URL}/artworks/search?query=${query}`, {
+        headers: token
+            ? { Authorization: `Bearer ${token}` }
+            : {},
+    });
     if (!response.ok) return [];
     return response.json();
 }
 
 export async function getRandomArtworksAPI(): Promise<Artwork[]> {
-    const response = await fetch(`${BASE_URL}/artworks/random`);
+    const token = await AsyncStorage.getItem("userToken");
+
+    const response = await fetch(`${BASE_URL}/artworks/random`, {
+        headers: token
+            ? { Authorization: `Bearer ${token}` }
+            : {},
+    });
     if (!response.ok) return [];
+    return response.json();
+}
+
+export async function toggleSaveArtwork(
+    artworkId: string,
+    imageUrl: string
+): Promise<{ isSaved: boolean }> {
+    const token = await AsyncStorage.getItem("userToken");
+
+    const response = await fetch(`${BASE_URL}/artworks/save`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ artworkId, imageUrl }),
+    });
+
+    if (!response.ok) throw new Error("Failed to save artwork");
     return response.json();
 }
 

@@ -47,7 +47,7 @@ export default function TabsLayout() {
                 name="CollectionsFeedView"
                 options={{
                     headerShown: false,
-                    tabBarLabel: "Feed",
+                    tabBarLabel: "Collections",
                     tabBarIcon: ({ color }) =>
                         <MaterialIcons name="collections" size={24} color={color} />
                 }} />

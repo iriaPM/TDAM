@@ -4,8 +4,6 @@
 import React from "react";
 import { StyleSheet, View, Pressable, Text, StyleProp, ViewStyle, Dimensions, Image } from "react-native";
 import ImageViewer from "./imageViewer";
-import Ionicons from '@expo/vector-icons/Ionicons';
-const { height, width } = Dimensions.get("window"); //get height/width relative to the screen size 
 
 type Props = {
     style?: StyleProp<ViewStyle>;
@@ -30,40 +28,16 @@ function TdamCollectionCard({
     time,
     description,
     onPress,
-    isSaved,
-    onSave,
     onUserPress,
 }: Props) {
 
     return (
-        <View style={[styles.containter]}>
+        <View style={[styles.container]}>
             <View style={[styles.cardContainer, style]}>
 
-                <View style={styles.headerRow}>
-                    <Pressable onPress={onUserPress}>
-                        <ImageViewer
-                            imgSource={
-                                avatarUrl
-                                    ? { uri: avatarUrl }
-                                    : require("../assets/images/userPlaceholder.png")
-                            }
-                            style={styles.avatar}
-                        />
-                    </Pressable>
-
-                    <View style={styles.headerText}>
-                        <Pressable onPress={onUserPress}>
-                            <Text style={styles.username}>{username}</Text>
-                        </Pressable>
-
-                        <Text style={styles.title}>{title}</Text>
-                        {time && <Text style={styles.text}>{time}</Text>}
-                    </View>
-                </View>
-
                 <Pressable onPress={onPress}>
-                    <ImageViewer
-                        imgSource={
+                    <Image
+                        source={
                             imageUrl
                                 ? { uri: imageUrl }
                                 : require("../assets/images/placeholderArt.png")
@@ -72,87 +46,77 @@ function TdamCollectionCard({
                     />
                 </Pressable>
 
-                <View>
-                    <Text style={styles.text}>
-                        {[description].filter(Boolean).join(", ")}
-                    </Text>
-                </View>
-                <View style={styles.saveIcon}>
-                    <Pressable onPress={onSave}>
-                        <Ionicons
-                            name={isSaved ? "heart-sharp" : "heart-outline"}
-                            size={24}
-                            color="black"
+                <View style={styles.infoContainer}>
+                    <Pressable onPress={onUserPress} style={styles.userRow}>
+                        <ImageViewer
+                            imgSource={
+                                avatarUrl
+                                    ? { uri: avatarUrl }
+                                    : require("../assets/images/userPlaceholder.png")
+                            }
+                            style={styles.avatar}
                         />
+                        <Text style={styles.username}>{username}</Text>
                     </Pressable>
-                    <Text style={styles.text}> {isSaved ? "Saved" : "Save collection"}</Text>
+
+                    <Text style={styles.title}>{title}</Text>
+                    {time && <Text style={styles.text}>{time}</Text>}
                 </View>
             </View>
-            <View style={styles.separator} />
         </View>
     );
 }
 
 // -- styling -- 
 const styles = StyleSheet.create({
-    containter: {
-        backgroundColor: "#ffffffff",
-        width: width,
+    container: {
+        backgroundColor: "#fff",
+        marginBottom: 16,
+        marginHorizontal: 16,
     },
     cardContainer: {
-        paddingHorizontal: width * 0.050,
-        justifyContent: "center",
-        alignItems: "flex-start",
-        gap: 5,
-        backgroundColor: "#ffffffff",
+        backgroundColor: "#fff",
+        borderRadius: 12,
+        overflow: "hidden",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
     },
-    separator: {
-        height: 1,
-        backgroundColor: "#ccc",
+    image: {
         width: "100%",
-        marginVertical: 20,
+        height: 150
     },
-    title: {
-        fontSize: 12,
+    infoContainer: {
+        padding: 12,
+        backgroundColor: "#fff",
+    },
+    userRow: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 8,
+        marginBottom: 6,
+    },
+    avatar: {
+        width: 30,
+        height: 30,
+        borderRadius: 12,
     },
     username: {
-        fontSize: 12,
-        fontWeight: "bold",
+        fontSize: 13,
+        fontWeight: "500",
+        color: "#333",
+    },
+    title: {
+        fontSize: 15,
+        fontWeight: "600",
+        color: "#000",
+        marginBottom: 4,
     },
     text: {
         fontSize: 12,
-    },
-    saveIcon: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 2,
-    },
-    image: {
-        width: width * 0.9,
-        height: undefined,
-    },
-    headerRow: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 10,
-        paddingBottom: 5,
-    },
-
-    headerText: {
-        flexDirection: "column",
-        justifyContent: "center",
-    },
-
-    avatar: {
-        width: 36,
-        height: 36,
-        borderRadius: 18,
-    },
-    titleRow: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        gap: 3,
+        color: "#666",
     },
 });
 

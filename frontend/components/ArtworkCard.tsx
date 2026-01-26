@@ -17,9 +17,10 @@ type Props = {
     onPress?: () => void;
     isSaved?: boolean;
     onSave?: () => void;
+    onAddToCollection?: () => void;
 }
 
-function TdamArtworkCard({ style, title, artist, imageUrl, year, movement, onPress, isSaved, onSave }: Props) {
+function TdamArtworkCard({ style, title, artist, imageUrl, year, movement, onPress, isSaved, onSave, onAddToCollection }: Props) {
 
     return (
         <View style={[styles.containter]}>
@@ -37,7 +38,14 @@ function TdamArtworkCard({ style, title, artist, imageUrl, year, movement, onPre
                 <View style={styles.saveIcon}>
                     <Pressable onPress={onSave}>
                         <Ionicons
-                            name={isSaved ? "add-circle" : "add-circle-outline"}
+                            name={isSaved ? "heart" : "heart-outline"}
+                            size={24}
+                            color="black"
+                        />
+                    </Pressable>
+                    <Pressable onPress={onAddToCollection}>
+                        <Ionicons
+                            name={"add-circle-outline"}
                             size={24}
                             color="black"
                         />

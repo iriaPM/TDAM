@@ -12,7 +12,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import { useRef, useState } from "react";
 import SaveArtworkBottomsheet from "@/components/SaveArtworkBottomsheet";
 import CreateCollectionBottomsheet from "@/components/CreateCollectionBottomsheet";
-import { toggleArtworkInCollection, createCollection, getMyCollections } from "@/services/api";
+import { toggleArtworkInCollection, createCollection, getMyCollections, toggleSaveArtwork } from "@/services/api";
 import { Collection } from "@/models/Collection";
 import { router } from "expo-router";
 
@@ -37,6 +37,17 @@ export default function ArtworkFeedView() {
             imageUrl={item.imageUrl}
             isSaved={item.isSaved}
             onSave={async () => {
+                try {
+                    const result = await toggleSaveArtwork(
+                        item.objectID,
+                        item.imageUrl
+                    );
+                    toggleSave(item.objectID, result.isSaved);
+                } catch (e) {
+                    console.error("Failed to toggle save", e);
+                }
+            }}
+            onAddToCollection={async () => {
                 setSelectedArtwork(item);
 
                 try {
@@ -46,7 +57,7 @@ export default function ArtworkFeedView() {
                             id: c.id,
                             title: c.title,
                             imageUrl: c.coverImageUrl ?? "",
-                            isSaved: false,
+                            isSaved: c.isSaved,
                         }))
                     );
                 } catch (e) {

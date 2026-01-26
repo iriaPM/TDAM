@@ -12,6 +12,7 @@ public class ArtworkDto {
     private String imageUrl;
     private String objectID;
     private String source;
+    private boolean isSaved;
 
     public String getSource() {
         return source;
@@ -83,6 +84,14 @@ public class ArtworkDto {
 
     public void setObjectID(String objectID) {
         this.objectID = objectID;
+    }
+
+    public boolean getIsSaved() {
+        return isSaved;
+    }
+
+    public void setIsSaved(boolean isSaved) {
+        this.isSaved = isSaved;
     }
 
 }
