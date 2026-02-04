@@ -5,7 +5,6 @@ import {
     StyleSheet,
     View,
     Text,
-    FlatList,
     Pressable,
     Dimensions,
 } from "react-native";
