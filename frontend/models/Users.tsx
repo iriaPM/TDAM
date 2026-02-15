@@ -7,6 +7,7 @@ export interface User {
     token: string;
     description: string;
     avatarUrl: string;
+    hasCompletedSurvey: boolean;
 }
 
 export interface UserProfile {

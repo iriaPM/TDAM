@@ -12,7 +12,13 @@ import {
 import TdamButton from './Button';
 
 interface PreferenceSurveyBottomsheetProps {
-    onSubmit: () => void;
+    onSubmit: (preferences: {
+        styles: string[];
+        movements: string[];
+        categories: string[];
+        artists: string[];
+        periods: string[];
+    }) => void;
 }
 
 export default function PreferenceSurveyBottomsheet({ onSubmit }: PreferenceSurveyBottomsheetProps) {
@@ -70,6 +76,8 @@ export default function PreferenceSurveyBottomsheet({ onSubmit }: PreferenceSurv
 
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+            <Text style={styles.mainTitle}>Let us know what you like...</Text>
+
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Art Styles</Text>
                 <View style={styles.buttonGrid}>
@@ -109,7 +117,14 @@ export default function PreferenceSurveyBottomsheet({ onSubmit }: PreferenceSurv
                 style={styles.Subutton}
                 label="Submit"
                 theme="primary"
-                onPress={onSubmit}
+                onPress={() =>
+                    onSubmit({
+                        styles: selectedStyles,
+                        movements: selectedMovements,
+                        categories: selectedCategories,
+                        artists: selectedArtists,
+                        periods: selectedPeriod,
+                    })}
             />
         </ScrollView>
     );
@@ -124,13 +139,20 @@ const styles = StyleSheet.create({
         padding: 20,
         paddingBottom: 40,
     },
+    mainTitle: {
+        fontSize: 22,
+        fontWeight: "bold",
+        textAlign: "center",
+        marginBottom: 6,
+        color: "#000",
+    },
     section: {
         marginBottom: 32,
     },
     sectionTitle: {
         color: '#000000',
         fontSize: 16,
-        fontWeight: '600',
+        fontWeight: "bold",
         marginBottom: 16,
         letterSpacing: 0.3,
     },
@@ -155,7 +177,7 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#000000',
         fontSize: 14,
-        fontWeight: '500',
+        fontWeight: "bold",
     },
     buttonTextSelected: {
         color: '#ff00f7',
