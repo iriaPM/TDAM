@@ -26,6 +26,11 @@ public class User {
 
     private String token;
 
+    @Column(length = 500)
+    private String description;
+
+    private String avatarUrl;
+
     public Long getId() {
         return id;
     }
@@ -65,4 +70,21 @@ public class User {
     public void setToken(String token) {
         this.token = token;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
 }

@@ -24,4 +24,8 @@ public interface CollectionRepository extends JpaRepository<Collection, UUID> {
 
     // making sure collection belongs to user
     Optional<Collection> findByIdAndOwner(UUID id, User owner);
+
+    // to find "all collections" collection
+    Optional<Collection> findByOwnerAndTitle( User owner, String title);
+
 }

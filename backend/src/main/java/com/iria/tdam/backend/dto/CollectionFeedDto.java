@@ -13,6 +13,9 @@ public class CollectionFeedDto {
     private String avatarUrl;
     private String coverImageUrl;
     private boolean isPrivate;
+    private String description;
+    private String time;
+    private Long userId;
 
     // getters & setters
     public UUID getId() {
@@ -61,5 +64,29 @@ public class CollectionFeedDto {
 
     public void setPrivate(boolean isPrivate) {
         this.isPrivate = isPrivate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

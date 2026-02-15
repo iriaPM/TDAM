@@ -11,8 +11,8 @@ import com.iria.tdam.backend.repository.CollectionArtworkRepository;
 import com.iria.tdam.backend.repository.CollectionRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 public class CollectionService {
@@ -26,6 +26,9 @@ public class CollectionService {
         dto.setUsername(c.getOwner().getUsername());
         dto.setAvatarUrl(null); // future
         dto.setPrivate(c.isPrivate());
+        dto.setDescription(c.getDescription());
+        dto.setTime(c.getCreatedAt().toString());
+        dto.setUserId(c.getOwner().getId());
 
         // cover image = first artwork image if exists
         if (c.getArtworks() != null && !c.getArtworks().isEmpty()) {
@@ -157,6 +160,49 @@ public class CollectionService {
         collection.setDescription(description);
 
         return collectionRepository.save(collection);
+    }
+
+    private Collection getOrCreateAllArtworksCollection(User user) {
+        return collectionRepository
+                .findByOwnerAndTitle(user, "All artworks")
+                .orElseGet(() -> {
+                    Collection c = new Collection();
+                    c.setOwner(user);
+                    c.setTitle("All artworks");
+                    c.setDescription("All saved artworks");
+                    c.setPrivate(true);
+                    return collectionRepository.save(c);
+                });
+    }
+
+    public boolean toggleSavedArtwork(
+            User user,
+            String artworkId,
+            String imageUrl) {
+        Collection all = getOrCreateAllArtworksCollection(user);
+
+        return artworkRepository
+                .findByCollectionAndArtworkId(all, artworkId)
+                .map(existing -> {
+                    artworkRepository.delete(existing);
+                    return false;
+                })
+                .orElseGet(() -> {
+                    CollectionArtwork ca = new CollectionArtwork();
+                    ca.setCollection(all);
+                    ca.setArtworkId(artworkId);
+                    ca.setImageUrl(imageUrl);
+                    artworkRepository.save(ca);
+                    return true;
+                });
+    }
+
+    public Set<String> getSavedArtworkIds(User user) {
+        Collection all = getOrCreateAllArtworksCollection(user);
+        return artworkRepository.findByCollection(all)
+                .stream()
+                .map(CollectionArtwork::getArtworkId)
+                .collect(Collectors.toSet());
     }
 
 }

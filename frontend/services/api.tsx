@@ -3,6 +3,7 @@
 
 import { User } from "../models/Users";
 import { Artwork } from "@/models/Artwork";
+import { UserPreferences } from "@/models/userPreferences";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 //172.18.219.154
 //const BASE_URL = "http://172.18.219.154:8080/api";
@@ -48,14 +49,45 @@ export async function getProfile(): Promise<User> {
 }
 
 export async function searchArtworksAPI(query: string): Promise<Artwork[]> {
-    const response = await fetch(`${BASE_URL}/artworks/search?query=${query}`);
+    const token = await AsyncStorage.getItem("userToken");
+
+    const response = await fetch(`${BASE_URL}/artworks/search?query=${query}`, {
+        headers: token
+            ? { Authorization: `Bearer ${token}` }
+            : {},
+    });
     if (!response.ok) return [];
     return response.json();
 }
 
 export async function getRandomArtworksAPI(): Promise<Artwork[]> {
-    const response = await fetch(`${BASE_URL}/artworks/random`);
+    const token = await AsyncStorage.getItem("userToken");
+
+    const response = await fetch(`${BASE_URL}/artworks/random`, {
+        headers: token
+            ? { Authorization: `Bearer ${token}` }
+            : {},
+    });
     if (!response.ok) return [];
+    return response.json();
+}
+
+export async function toggleSaveArtwork(
+    artworkId: string,
+    imageUrl: string
+): Promise<{ isSaved: boolean }> {
+    const token = await AsyncStorage.getItem("userToken");
+
+    const response = await fetch(`${BASE_URL}/artworks/save`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ artworkId, imageUrl }),
+    });
+
+    if (!response.ok) throw new Error("Failed to save artwork");
     return response.json();
 }
 
@@ -204,4 +236,117 @@ export async function updateCollection(
     }
 
     return response.json();
+}
+//--------- USER PROFILE -----------
+export async function getUserProfile(userId?: string) {
+    const token = await AsyncStorage.getItem("userToken");
+
+    if (!token) {
+        throw new Error("User not authenticated");
+    }
+
+    const url = userId
+        ? `${BASE_URL}/users/profile?id=${userId}`
+        : `${BASE_URL}/users/profile`;
+
+    const response = await fetch(url, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to load user profile");
+    }
+
+    return response.json();
+}
+
+export async function updateUserProfile(
+    username: string,
+    description: string
+) {
+    const token = await AsyncStorage.getItem("userToken");
+
+    if (!token) {
+        throw new Error("User not authenticated");
+    }
+
+    const response = await fetch(`${BASE_URL}/users/profile`, {
+        method: "PUT",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            userName: username,
+            description: description,
+        }),
+    });
+
+    if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || "Failed to update profile");
+    }
+
+    return response.json();
+}
+
+
+export async function submitUserPreferences(
+    preferences: UserPreferences
+) {
+    const token = await AsyncStorage.getItem("userToken");
+
+    if (!token) throw new Error("User not authenticated");
+
+    const response = await fetch(`${BASE_URL}/users/preferences`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(preferences),
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to submit preferences");
+    }
+
+    return response.json();
+}
+
+export async function getArtworkDetail(artworkId: string) {
+    const token = await AsyncStorage.getItem("userToken");
+
+    const response = await fetch(
+        `${BASE_URL}/artworks/${artworkId}`,
+        {
+            headers: token
+                ? { Authorization: `Bearer ${token}` }
+                : {},
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error("Failed to load artwork detail");
+    }
+
+    return response.json();
+}
+
+export async function markArtworkViewed(artworkId: string) {
+    const token = await AsyncStorage.getItem("userToken");
+
+    if (!token) return;
+
+    await fetch(`${BASE_URL}/artworks/viewed`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ artworkId }),
+    });
 }

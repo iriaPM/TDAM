@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "collections")
@@ -22,6 +23,9 @@ public class Collection {
     @Column(length = 500)
     private String description;
 
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
     @Column(nullable = false)
     private boolean isPrivate = false;
 
@@ -31,6 +35,11 @@ public class Collection {
 
     @OneToMany(mappedBy = "collection", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CollectionArtwork> artworks = new ArrayList<>();
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+    }
 
     // getters & setters
     public UUID getId() {
@@ -71,5 +80,17 @@ public class Collection {
 
     public List<CollectionArtwork> getArtworks() {
         return artworks;
+    }
+
+    public void createAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

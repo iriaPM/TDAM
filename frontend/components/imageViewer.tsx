@@ -16,7 +16,7 @@ export default function ImageViewer({ imgSource, style }: Props) {
 
     return (
         <Image
-            source={imgSource}
+            source={imgSource || require("@/assets/images/placeholderArt.png")}
             style={[style, { aspectRatio: aspect }]}
             contentFit="cover"
             onLoad={({ source }) => {

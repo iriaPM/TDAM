@@ -9,6 +9,7 @@ import React from "react";
 import { View, StyleSheet, Dimensions, Text } from "react-native";
 import ImageViewer from "@/components/imageViewer";
 import { useLoginViewModel } from "../viewmodel/LoginViewModel";
+import { router } from 'expo-router';
 
 const logo = require("../assets/images/logo.png")
 const { height } = Dimensions.get("window"); //get height relative to the screen size 
@@ -33,6 +34,7 @@ export default function LoginView() {
           placeholder="Email or Username"
           value={identifier}
           onChangeText={setIdentifier}
+          secureText={false}
         />
 
         {/*password button*/}
@@ -41,7 +43,7 @@ export default function LoginView() {
           placeholder="Password"
           value={password}
           onChangeText={setPassword}
-          secureText
+          secureText={true}
         />
 
         {/*login button*/}
@@ -50,6 +52,13 @@ export default function LoginView() {
           label="Log in"
           theme="primary"
           onPress={login}
+          disabled={loading}
+        />
+        <TdamButton
+          style={styles.button}
+          label="Register"
+          theme="secondary"
+          onPress={() => router.replace('/registrationView')}
           disabled={loading}
         />
         {error && <Text style={styles.errorText}>{error}</Text>}

@@ -17,6 +17,7 @@ export default function CollectionsFeedView() {
         feedError,
         searchCollections,
         toggleSave,
+        loadCollections,
     } = useCollectionsViewModel();
 
     const renderItem = ({ item }: { item: Collection }) => (
@@ -34,8 +35,8 @@ export default function CollectionsFeedView() {
                 router.push(`/(tabs)/collections/${item.id}` as Href);
             }}
             onUserPress={() => {
-                // open public profile
-                router.push("/(tabs)/PublicProfile");
+                // open  profile page of user
+                router.push(`/(tabs)/user/${item.userId}` as Href);
             }}
         />
     );
@@ -53,6 +54,8 @@ export default function CollectionsFeedView() {
                 keyExtractor={(item) => item.id}
                 renderItem={renderItem}
                 contentContainerStyle={{ paddingBottom: 16 }}
+                refreshing={searching}
+                onRefresh={loadCollections}
             />
         </SafeAreaView>
     );

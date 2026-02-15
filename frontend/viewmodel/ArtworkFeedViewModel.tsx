@@ -21,7 +21,7 @@ export function useArtworksViewModel() {
 
         try {
             const results = await getRandomArtworksAPI();
-            setArtworks(results.map(a => ({ ...a, isSaved: false })));
+            setArtworks(results);
         } catch {
             setError("Failed to load artworks");
         } finally {
@@ -41,7 +41,7 @@ export function useArtworksViewModel() {
 
         try {
             const results = await searchArtworksAPI(query);
-            setArtworks(results.map(a => ({ ...a, isSaved: false })));
+            setArtworks(results);
         } catch {
             setError("Search failed");
         } finally {
@@ -49,10 +49,10 @@ export function useArtworksViewModel() {
         }
     };
 
-    const toggleSave = (id: string) => {
+    const toggleSave = (id: string, newSavedState: boolean) => {
         setArtworks(prev =>
             prev.map(a =>
-                a.objectID === id ? { ...a, isSaved: !a.isSaved } : a
+                a.objectID === id ? { ...a, isSaved: newSavedState } : a
             )
         );
     };

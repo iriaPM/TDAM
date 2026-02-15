@@ -6,7 +6,10 @@ package com.iria.tdam.backend.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "collection_artworks")
+@Table( name = "collection_artworks", 
+        uniqueConstraints = @UniqueConstraint(columnNames = { "collection_id",
+        "artworkId" })
+    )
 public class CollectionArtwork {
 
     @Id
