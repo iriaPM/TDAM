@@ -6,10 +6,13 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import java.util.*;
-import java.util.Objects;
 import com.iria.tdam.backend.dto.ArtworkDto;
 import com.iria.tdam.backend.dto.MetObjectResponse;
 import org.springframework.cache.annotation.Cacheable;
+import com.iria.tdam.backend.repository.ArtworkViewRepository;
+import com.iria.tdam.backend.model.ArtworkView;
+import com.iria.tdam.backend.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 @CacheConfig(cacheNames = "artworks")
@@ -67,13 +70,44 @@ public class ArtworkService {
             return null;
 
         ArtworkDto dto = new ArtworkDto();
+
+        // Basic fields
         dto.setObjectID("met-" + id);
         dto.setTitle(response.title);
         dto.setArtist(response.artistDisplayName);
-        dto.setMedium(response.medium);
-        dto.setObjectDate(response.objectDate);
         dto.setImageUrl(imageUrl);
         dto.setSource("Met");
+
+        // Date fields
+        dto.setObjectDate(response.objectDate);
+        dto.setObjectBeginDate(response.objectBeginDate);
+        dto.setObjectEndDate(response.objectEndDate);
+
+        // Physical properties
+        dto.setMedium(response.medium);
+        dto.setDimensions(response.dimensions);
+
+        // Artist details
+        dto.setArtistBio(response.artistDisplayBio);
+        dto.setArtistNationality(response.artistNationality);
+
+        // Cultural context
+        dto.setCulture(response.culture);
+        dto.setPeriod(response.period);
+        dto.setDynasty(response.dynasty);
+        dto.setClassification(response.classification);
+        dto.setDepartment(response.department);
+
+        // Geography
+        dto.setGeographyType(response.geographyType);
+        dto.setCity(response.city);
+        dto.setCountry(response.country);
+        dto.setRegion(response.region);
+
+        // Institutional
+        dto.setCreditLine(response.creditLine);
+        dto.setObjectURL(response.objectURL);
+        dto.setRepository(response.repository);
 
         return dto;
     }
@@ -117,4 +151,21 @@ public class ArtworkService {
                 .toList();
     }
 
+    @Autowired
+    private ArtworkViewRepository artworkViewRepository;
+
+    public void recordArtworkView(User user, String artworkId) {
+        ArtworkView view = new ArtworkView(user, artworkId);
+        artworkViewRepository.save(view);
+
+        System.out.println("Recorded view: User " + user.getUsername() + " viewed " + artworkId);
+    }
+
+    public long getViewCount(User user, String artworkId) {
+        return artworkViewRepository.countByUserAndArtworkId(user, artworkId);
+    }
+
+    public List<ArtworkView> getUserViewHistory(User user) {
+        return artworkViewRepository.findByUser(user);
+    }
 }

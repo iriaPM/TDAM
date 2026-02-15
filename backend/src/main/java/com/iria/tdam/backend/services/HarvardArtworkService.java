@@ -48,18 +48,47 @@ public class HarvardArtworkService {
         }
 
         ArtworkDto dto = new ArtworkDto();
+
+        // Basic fields
         dto.setObjectID("harvard-" + artwork.id);
         dto.setTitle(artwork.title);
-        dto.setMedium(artwork.medium);
-        dto.setObjectDate(artwork.dated);
         dto.setImageUrl(imageUrl);
         dto.setSource("Harvard");
 
+        // Date fields
+        dto.setObjectDate(artwork.dated);
+        dto.setCentury(artwork.century);
+
+        // Physical properties
+        dto.setMedium(artwork.medium);
+        dto.setTechnique(artwork.technique);
+        dto.setDimensions(artwork.dimensions);
+
+        // Artist info
         if (artwork.people != null && !artwork.people.isEmpty()) {
             dto.setArtist(artwork.people.get(0).name);
+            if (artwork.people.get(0).culture != null) {
+                dto.setArtistNationality(artwork.people.get(0).culture);
+            }
         } else {
             dto.setArtist("Unknown");
         }
+
+        // Cultural context
+        dto.setCulture(artwork.culture);
+        dto.setPeriod(artwork.period);
+        dto.setClassification(artwork.classification);
+        dto.setDepartment(artwork.department);
+
+        // Institutional
+        dto.setCreditLine(artwork.creditline);
+        dto.setObjectURL(artwork.url);
+        dto.setRepository(artwork.division != null ? artwork.division : "Harvard Art Museums");
+
+        // Descriptive text (often null in Harvard API)
+        dto.setDescription(artwork.description);
+        dto.setCommentary(artwork.commentary);
+        dto.setProvenance(artwork.provenance);
 
         return dto;
     }
@@ -82,4 +111,24 @@ public class HarvardArtworkService {
                 .toList();
     }
 
+    public ArtworkDto getArtworkById(int id) {
+        String url = String.format(
+                "https://api.harvardartmuseums.org/object/%d?apikey=%s",
+                id,
+                harvardApiKey);
+
+        try {
+            HarvardArtwork response = restTemplate.getForObject(url, HarvardArtwork.class);
+
+            if (response == null) {
+                return null;
+            }
+
+            return mapToArtworkDto(response);
+        } catch (Exception e) {
+            System.err.println("Failed to fetch Harvard artwork: " + id);
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
