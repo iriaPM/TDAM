@@ -316,3 +316,37 @@ export async function submitUserPreferences(
 
     return response.json();
 }
+
+export async function getArtworkDetail(artworkId: string) {
+    const token = await AsyncStorage.getItem("userToken");
+
+    const response = await fetch(
+        `${BASE_URL}/artworks/${artworkId}`,
+        {
+            headers: token
+                ? { Authorization: `Bearer ${token}` }
+                : {},
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error("Failed to load artwork detail");
+    }
+
+    return response.json();
+}
+
+export async function markArtworkViewed(artworkId: string) {
+    const token = await AsyncStorage.getItem("userToken");
+
+    if (!token) return;
+
+    await fetch(`${BASE_URL}/artworks/viewed`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ artworkId }),
+    });
+}

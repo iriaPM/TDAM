@@ -24,35 +24,37 @@ function TdamArtworkCard({ style, title, artist, imageUrl, year, movement, onPre
 
     return (
         <View style={[styles.containter]}>
-            <View style={[styles.cardContainer, style]}>
-                <Text style={styles.title}>{title}</Text>
-                <ImageViewer
-                    imgSource={imageUrl ? { uri: imageUrl } : require("../assets/images/placeholderArt.png")}
-                    style={styles.image}
-                />
-                <View>
-                    <Text style={styles.text}>
-                        {[artist, year, movement].filter(Boolean).join(", ")}
-                    </Text>
+            <Pressable onPress={onPress}>
+                <View style={[styles.cardContainer, style]}>
+                    <Text style={styles.title}>{title}</Text>
+                    <ImageViewer
+                        imgSource={imageUrl ? { uri: imageUrl } : require("../assets/images/placeholderArt.png")}
+                        style={styles.image}
+                    />
+                    <View>
+                        <Text style={styles.text}>
+                            {[artist, year, movement].filter(Boolean).join(", ")}
+                        </Text>
+                    </View>
+                    <View style={styles.saveIcon}>
+                        <Pressable onPress={onSave}>
+                            <Ionicons
+                                name={isSaved ? "heart" : "heart-outline"}
+                                size={24}
+                                color="black"
+                            />
+                        </Pressable>
+                        <Pressable onPress={onAddToCollection}>
+                            <Ionicons
+                                name={"add-circle-outline"}
+                                size={24}
+                                color="black"
+                            />
+                        </Pressable>
+                        <Text style={styles.text}> {isSaved ? "Saved" : "Add to collection"}</Text>
+                    </View>
                 </View>
-                <View style={styles.saveIcon}>
-                    <Pressable onPress={onSave}>
-                        <Ionicons
-                            name={isSaved ? "heart" : "heart-outline"}
-                            size={24}
-                            color="black"
-                        />
-                    </Pressable>
-                    <Pressable onPress={onAddToCollection}>
-                        <Ionicons
-                            name={"add-circle-outline"}
-                            size={24}
-                            color="black"
-                        />
-                    </Pressable>
-                    <Text style={styles.text}> {isSaved ? "Saved" : "Add to collection"}</Text>
-                </View>
-            </View>
+            </Pressable>
             <View style={styles.separator} />
         </View>
     );

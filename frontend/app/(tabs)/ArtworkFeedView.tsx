@@ -14,7 +14,7 @@ import SaveArtworkBottomsheet from "@/components/SaveArtworkBottomsheet";
 import CreateCollectionBottomsheet from "@/components/CreateCollectionBottomsheet";
 import { toggleArtworkInCollection, createCollection, getMyCollections, toggleSaveArtwork } from "@/services/api";
 import { Collection } from "@/models/Collection";
-import { router } from "expo-router";
+import { Href, router } from "expo-router";
 
 
 export default function ArtworkFeedView() {
@@ -65,6 +65,9 @@ export default function ArtworkFeedView() {
                 }
 
                 saveSheetRef.current?.open();
+            }}
+            onPress={() => {
+                router.push(`/(tabs)/artwork/${item.objectID}` as Href);
             }}
         />
     );
