@@ -1,5 +1,4 @@
 //home.tsx
-import { router } from "expo-router";
 import { View, StyleSheet, Dimensions, Text } from "react-native";
 import ImageViewer from "@/components/imageViewer";
 import TdamButton from "@/components/Button";
@@ -7,27 +6,40 @@ import { logout } from "../../utils/logout";
 import { useEffect, useRef, useState } from "react";
 import RBSheet from 'react-native-raw-bottom-sheet';
 import PreferenceSurveyBottomsheet from "@/components/PreferenceSurveyBottomsheet";
+import { getUserProfile, submitUserPreferences } from "@/services/api";
 
 const logo = require("../../assets/images/logo.png")
 const { height, width } = Dimensions.get("window"); //get height relative to the screen size 
 
 export default function home() {
   const PrefSheetRef = useRef<any>(null);
-  const [hasShownSheet, setHasShownSheet] = useState(false);
 
   useEffect(() => {
-    if (!hasShownSheet) {
-      const timer = setTimeout(() => {
-        PrefSheetRef.current?.open();
-        setHasShownSheet(true);
-      }, 300);
+    const checkSurveyStatus = async () => {
+      try {
+        const user = await getUserProfile();
 
-      return () => clearTimeout(timer);
+        if (!user.hasCompletedSurvey) {
+          PrefSheetRef.current?.open();
+        }
+      } catch (error) {
+        console.log("Failed to check survey status");
+      }
+    };
+
+    checkSurveyStatus();
+  }, []);
+
+  const handleSubmit = async (preferences: any) => {
+    try {
+      await submitUserPreferences(preferences);
+      PrefSheetRef.current?.close();
+
+    } catch (error) {
+      console.log("Failed to submit preferences");
     }
-  }, [hasShownSheet]);
-  const handleSubmit = () => {
-    PrefSheetRef.current?.close();
   };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to TDAM!</Text>

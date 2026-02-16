@@ -68,7 +68,6 @@ export default function CollectionDetailView() {
             <View style={styles.header}>
                 <View style={styles.headerRow}>
                     <Pressable onPress={() => {
-                        // TODO: navigate to user profile
                         router.push(`/(tabs)/user/[id]` as Href);
                     }}>
                         <ImageViewer
@@ -136,10 +135,9 @@ export default function CollectionDetailView() {
                 numColumns={2}
                 renderItem={({ item }: { item: any }) => (
                     <Pressable
-                    style={{ paddingHorizontal: 4 }}
+                        style={{ paddingHorizontal: 4 }}
                         onPress={() => {
-                            // TODO: open artwork detail later
-                            console.log("Artwork pressed:", item.id);
+                            router.push(`/(tabs)/artwork/${item.id}` as Href);
                         }}
                     >
                         <ImageViewer

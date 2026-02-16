@@ -12,6 +12,7 @@ import com.iria.tdam.backend.dto.RegisterRequest;
 import com.iria.tdam.backend.dto.UpdateProfileRequest;
 import com.iria.tdam.backend.services.UserService;
 import com.iria.tdam.backend.services.CollectionService;
+import com.iria.tdam.backend.dto.UserPreferencesDto;
 
 @RestController
 @RequestMapping("/api")
@@ -83,4 +84,18 @@ public class UserController {
         }
     }
 
+    @PostMapping("/users/preferences")
+    public ResponseEntity<?> submitPreferences(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody UserPreferencesDto preferences) {
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            User user = userService.submitUserPreferences(token, preferences);
+            return ResponseEntity.ok(user);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(e.getMessage());
+        }
+    }
 }

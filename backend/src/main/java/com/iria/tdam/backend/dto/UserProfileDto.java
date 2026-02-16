@@ -10,6 +10,7 @@ public class UserProfileDto {
     private String avatarUrl;
     private boolean isMe;
     private List<CollectionFeedDto> collections;
+    private boolean hasCompletedSurvey;
 
     // getters & setters
     public Long getId() {
@@ -58,5 +59,13 @@ public class UserProfileDto {
 
     public void setCollections(List<CollectionFeedDto> collections) {
         this.collections = collections;
+    }
+
+    public boolean isHasCompletedSurvey() {
+        return hasCompletedSurvey;
+    }
+
+    public void setHasCompletedSurvey(boolean hasCompletedSurvey) {
+        this.hasCompletedSurvey = hasCompletedSurvey;
     }
 }
