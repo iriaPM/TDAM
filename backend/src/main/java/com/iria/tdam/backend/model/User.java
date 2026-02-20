@@ -31,6 +31,24 @@ public class User {
 
     private String avatarUrl;
 
+    @Column(columnDefinition = "TEXT")
+    private String preferredMovements;
+
+    @Column(columnDefinition = "TEXT")
+    private String preferredTimePeriods;
+
+    @Column(columnDefinition = "TEXT")
+    private String preferredStyles;
+
+    @Column(columnDefinition = "TEXT")
+    private String preferredArtists;
+
+    @Column(columnDefinition = "TEXT")
+    private String preferredMediums;
+
+    @Column(nullable = false)
+    private boolean hasCompletedSurvey = false;
+
     public Long getId() {
         return id;
     }
@@ -87,4 +105,51 @@ public class User {
         this.avatarUrl = avatarUrl;
     }
 
+    public String getPreferredMovements() {
+        return preferredMovements;
+    }
+
+    public void setPreferredMovements(String preferredMovements) {
+        this.preferredMovements = preferredMovements;
+    }
+
+    public String getPreferredTimePeriods() {
+        return preferredTimePeriods;
+    }
+
+    public void setPreferredTimePeriods(String preferredTimePeriods) {
+        this.preferredTimePeriods = preferredTimePeriods;
+    }
+
+    public String getPreferredStyles() {
+        return preferredStyles;
+    }
+
+    public void setPreferredStyles(String preferredStyles) {
+        this.preferredStyles = preferredStyles;
+    }
+
+    public String getPreferredArtists() {
+        return preferredArtists;
+    }
+
+    public void setPreferredArtists(String preferredArtists) {
+        this.preferredArtists = preferredArtists;
+    }
+
+    public String getPreferredMediums() {
+        return preferredMediums;
+    }
+
+    public void setPreferredMediums(String preferredMediums) {
+        this.preferredMediums = preferredMediums;
+    }
+
+    public boolean isHasCompletedSurvey() {
+        return hasCompletedSurvey;
+    }
+
+    public void setHasCompletedSurvey(boolean hasCompletedSurvey) {
+        this.hasCompletedSurvey = hasCompletedSurvey;
+    }
 }

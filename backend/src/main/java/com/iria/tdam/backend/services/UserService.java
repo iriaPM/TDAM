@@ -13,6 +13,7 @@ import com.iria.tdam.backend.dto.LoginRequest;
 import com.iria.tdam.backend.dto.RegisterRequest;
 import com.iria.tdam.backend.dto.UpdateProfileRequest;
 import com.iria.tdam.backend.dto.UserProfileDto;
+import com.iria.tdam.backend.dto.UserPreferencesDto;
 
 @Service
 public class UserService {
@@ -91,6 +92,7 @@ public class UserService {
         dto.setDescription(profileUser.getDescription());
         dto.setAvatarUrl(profileUser.getAvatarUrl());
         dto.setMe(profileUser.getId().equals(currentUser.getId()));
+        dto.setHasCompletedSurvey(profileUser.isHasCompletedSurvey());
 
         dto.setCollections(
                 collectionService.getUserCollections(profileUser));
@@ -109,4 +111,31 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public User submitUserPreferences(String token, UserPreferencesDto preferences) {
+        User user = userRepository.findByToken(token);
+        if (user == null) {
+            throw new IllegalArgumentException("Invalid token");
+        }
+
+        // Store preferences as comma-separated strings for easy retrieval later
+        user.setPreferredMovements(preferences.getMovements() != null
+                ? String.join(",", preferences.getMovements())
+                : null);
+        user.setPreferredTimePeriods(preferences.getTimePeriods() != null
+                ? String.join(",", preferences.getTimePeriods())
+                : null);
+        user.setPreferredStyles(preferences.getStyles() != null
+                ? String.join(",", preferences.getStyles())
+                : null);
+        user.setPreferredArtists(preferences.getArtists() != null
+                ? String.join(",", preferences.getArtists())
+                : null);
+        user.setPreferredMediums(preferences.getMediums() != null
+                ? String.join(",", preferences.getMediums())
+                : null);
+
+        user.setHasCompletedSurvey(true);
+
+        return userRepository.save(user);
+    }
 }
