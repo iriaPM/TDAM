@@ -1,7 +1,7 @@
 // [id].tsx 
 // displays fields that are actually returned by the APIs
 
-import { useLocalSearchParams, router } from "expo-router";
+import { useLocalSearchParams, router, Href } from "expo-router";
 import { useEffect, useState } from "react";
 import {
     View,
@@ -9,6 +9,7 @@ import {
     StyleSheet,
     ScrollView,
     Image,
+    Pressable,
 } from "react-native";
 import { getArtworkDetail, markArtworkViewed } from "@/services/api";
 import { Ionicons } from '@expo/vector-icons';
@@ -68,7 +69,12 @@ export default function ArtworkDetailView() {
 
                             {artwork.artist && (
                                 <View style={styles.artistInfo}>
-                                    <Text style={styles.artistName}>{artwork.artist}</Text>
+                                    <Pressable onPress={() => {
+                                        if (!artwork.artist) return;
+                                        router.push(`/(tabs)/artist/${encodeURIComponent(artwork.artist)}` as Href);
+                                    }}>
+                                        <Text style={styles.artistName}>{artwork.artist}</Text>
+                                    </Pressable>
                                     {artwork.artistNationality && (
                                         <Text style={styles.artistNationality}>{artwork.artistNationality}</Text>
                                     )}

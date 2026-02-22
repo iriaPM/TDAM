@@ -60,20 +60,21 @@ export default function TabsLayout() {
                         <Ionicons name="person" size={24} color={color} />
                 }} />
             <Tabs.Screen
-                name="user/[id]"
-                options={{
-                    href: null,
-                }} />
+                name="artwork"
+                options={{ href: null }}
+            />
             <Tabs.Screen
-                name="collections/[id]"
-                options={{
-                    href: null,
-                }} />
+                name="artist"
+                options={{ href: null }}
+            />
             <Tabs.Screen
-                name="artwork/[id]"
-                options={{
-                    href: null,
-                }} />
+                name="collections"
+                options={{ href: null }}
+            />
+            <Tabs.Screen
+                name="user"
+                options={{ href: null }}
+            />
         </Tabs>
     );
 }

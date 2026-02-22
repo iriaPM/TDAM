@@ -125,11 +125,7 @@ export default function ArtworkFeedView() {
             createSheetRef.current?.close();
             setNewCollectionName("");
             setNewCollectionDescription("");
-
-            router.replace({
-                pathname: "/collections/[id]",
-                params: { id: created.id },
-            });
+            router.push(`/collections/${created.id}` as Href);
 
         } catch (e) {
             console.error("Failed to create collection", e);
