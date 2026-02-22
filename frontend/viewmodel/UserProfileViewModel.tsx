@@ -14,10 +14,6 @@ export function useUserProfileViewModel(userId?: string) {
 
     const isMe = user?.isMe ?? false;
 
-    useEffect(() => {
-        load();
-    }, [userId]);
-
     const load = async () => {
         try {
             setLoading(true);
@@ -34,11 +30,15 @@ export function useUserProfileViewModel(userId?: string) {
                 collections: profileData.collections || [],
             });
 
-            const mappedCollections = (profileData.collections || []).map((col: any) => ({
-                ...col,
-                imageUrl: col.coverImageUrl,
-            }));
-            
+            const mappedCollections = (profileData.collections || [])
+                .filter((col: any) => {
+                   return profileData.me || !col.private;
+                })
+                .map((col: any) => ({
+                    ...col,
+                    imageUrl: col.coverImageUrl,
+                }));
+
             setCollections(mappedCollections);
         } catch (err) {
             setError("Failed to load profile");
@@ -71,6 +71,7 @@ export function useUserProfileViewModel(userId?: string) {
         isMe,
         loading,
         error,
+        load,
         updateProfile,
     };
 }

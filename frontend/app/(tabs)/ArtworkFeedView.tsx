@@ -9,12 +9,12 @@ import TdamSearchBar from "@/components/SearchBar";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Artwork } from "@/models/Artwork";
 import RBSheet from 'react-native-raw-bottom-sheet';
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import SaveArtworkBottomsheet from "@/components/SaveArtworkBottomsheet";
 import CreateCollectionBottomsheet from "@/components/CreateCollectionBottomsheet";
 import { toggleArtworkInCollection, createCollection, getMyCollections, toggleSaveArtwork } from "@/services/api";
 import { Collection } from "@/models/Collection";
-import { Href, router } from "expo-router";
+import { Href, router, useFocusEffect } from "expo-router";
 
 
 export default function ArtworkFeedView() {
@@ -26,7 +26,12 @@ export default function ArtworkFeedView() {
     const [newCollectionDescription, setNewCollectionDescription] = useState("");
     const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
     const [collections, setCollections] = useState<Collection[]>([]);
-
+   
+    useFocusEffect(
+        useCallback(() => {
+            loadRandomArtworks();
+        }, [])
+    );
 
     const renderItem = ({ item }: { item: Artwork }) => (
         <TdamArtworkCard
@@ -57,7 +62,8 @@ export default function ArtworkFeedView() {
                             id: c.id,
                             title: c.title,
                             imageUrl: c.coverImageUrl ?? "",
-                            isSaved: c.isSaved,
+                            isSaved: Array.isArray(c.artworkIds)
+                                ? c.artworkIds.includes(item.objectID) : false,
                         }))
                     );
                 } catch (e) {

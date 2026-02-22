@@ -3,14 +3,22 @@
 
 import { StyleSheet, FlatList, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Href, router } from "expo-router";
+import { Href, router, useFocusEffect } from "expo-router";
 import TdamCollectionCard from "@/components/CollectionCard";
 import TdamSearchBar from "@/components/SearchBar";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Collection } from "@/models/Collection";
 import { useCollectionsViewModel } from "@/viewmodel/CollectionsViewModel";
+import { useCallback } from "react";
 
 export default function CollectionsFeedView() {
+    
+     useFocusEffect(
+        useCallback(() => {
+            loadCollections();
+        }, [])
+    );
+
     const {
         collections,
         searching,

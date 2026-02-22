@@ -1,6 +1,6 @@
 //Artwork feed  view model
 //retrieve and manage artworks data for the feed
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Artwork } from "@/models/Artwork";
 import { getRandomArtworksAPI, searchArtworksAPI } from "@/services/api";
 
@@ -8,6 +8,8 @@ export function useArtworksViewModel() {
     const [artworks, setArtworks] = useState<Artwork[]>([]);
     const [searching, setSearching] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    const searchIdRef = useRef(0);
 
     //load default feed
     useEffect(() => {
@@ -36,13 +38,16 @@ export function useArtworksViewModel() {
             return;
         }
 
+        const currentId = ++searchIdRef.current;
         setSearching(true);
         setError(null);
 
         try {
             const results = await searchArtworksAPI(query);
-            setArtworks(results);
-        } catch {
+            if (currentId === searchIdRef.current) {
+                setArtworks(results);
+            }
+        } catch (err) {
             setError("Search failed");
         } finally {
             setSearching(false);
