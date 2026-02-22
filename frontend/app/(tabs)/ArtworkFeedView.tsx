@@ -26,7 +26,7 @@ export default function ArtworkFeedView() {
     const [newCollectionDescription, setNewCollectionDescription] = useState("");
     const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
     const [collections, setCollections] = useState<Collection[]>([]);
-   
+
     useFocusEffect(
         useCallback(() => {
             loadRandomArtworks();
@@ -74,6 +74,10 @@ export default function ArtworkFeedView() {
             }}
             onPress={() => {
                 router.push(`/(tabs)/artwork/${item.objectID}` as Href);
+            }}
+            onArtistPress={() => {
+                if (!item.artist) return;
+                router.push(`/(tabs)/artist/${encodeURIComponent(item.artist)}` as Href);
             }}
         />
     );
