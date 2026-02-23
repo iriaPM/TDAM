@@ -71,7 +71,7 @@ export default function ArtworkDetailView() {
                                 <View style={styles.artistInfo}>
                                     <Pressable onPress={() => {
                                         if (!artwork.artist) return;
-                                        router.push(`/(tabs)/artist/${encodeURIComponent(artwork.artist)}` as Href);
+                                        router.push(`/artist/${encodeURIComponent(artwork.artist)}` as Href);
                                     }}>
                                         <Text style={styles.artistName}>{artwork.artist}</Text>
                                     </Pressable>

@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import { useLocalSearchParams, router, Href } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import TdamArtistDetail from "../../../components/ArtistCard";
+import TdamArtistDetail from "../../components/ArtistCard";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { useArtistDetailViewModel } from "@/viewmodel/ArtistViewModel";
 
@@ -34,7 +34,7 @@ export default function ArtistDetailScreen() {
                 wikipediaUrl={artist.wikipediaUrl}
                 artworks={artist.artworks ?? []}
                 onArtworkPress={(id) =>
-                    router.push(`/(tabs)/artwork/${id}` as Href)
+                    router.push(`/artwork/${id}` as Href)
                 }
             />
         </SafeAreaView>

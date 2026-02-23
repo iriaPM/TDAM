@@ -40,11 +40,11 @@ export default function CollectionsFeedView() {
             onSave={() => toggleSave(item.id)}
             onPress={() => {
                 // open collection
-                router.push(`/(tabs)/collections/${item.id}` as Href);
+                router.push(`collections/${item.id}` as Href);
             }}
             onUserPress={() => {
                 // open  profile page of user
-                router.push(`/(tabs)/user/${item.userId}` as Href);
+                router.push(`user/${item.userId}` as Href);
             }}
         />
     );

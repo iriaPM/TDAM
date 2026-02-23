@@ -80,7 +80,7 @@ export default function UserProfile({ id }: UserProfileProps) {
         <View style={styles.card}>
             <Pressable
                 onPress={() => {
-                    router.push(`/(tabs)/collections/${item.id}` as Href);
+                    router.push(`collections/${item.id}` as Href);
                 }}
             >
                 <ImageViewer

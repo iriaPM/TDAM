@@ -73,11 +73,11 @@ export default function ArtworkFeedView() {
                 saveSheetRef.current?.open();
             }}
             onPress={() => {
-                router.push(`/(tabs)/artwork/${item.objectID}` as Href);
+                router.push(`artwork/${item.objectID}` as Href);
             }}
             onArtistPress={() => {
                 if (!item.artist) return;
-                router.push(`/(tabs)/artist/${encodeURIComponent(item.artist)}` as Href);
+                router.push(`artist/${encodeURIComponent(item.artist)}` as Href);
             }}
         />
     );
@@ -125,7 +125,7 @@ export default function ArtworkFeedView() {
             createSheetRef.current?.close();
             setNewCollectionName("");
             setNewCollectionDescription("");
-            router.push(`/collections/${created.id}` as Href);
+            router.push(`collections/${created.id}` as Href);
 
         } catch (e) {
             console.error("Failed to create collection", e);
