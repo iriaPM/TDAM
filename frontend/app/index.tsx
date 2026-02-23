@@ -19,7 +19,7 @@ export default function Index() {
     const checkToken = async () => {
       const token = await AsyncStorage.getItem('userToken');
       if (token) {
-        router.replace('/home');
+        router.push('/home');
       }
     };
     checkToken();

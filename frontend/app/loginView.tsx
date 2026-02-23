@@ -58,7 +58,7 @@ export default function LoginView() {
           style={styles.button}
           label="Register"
           theme="secondary"
-          onPress={() => router.replace('/registrationView')}
+          onPress={() => router.push('/registrationView')}
           disabled={loading}
         />
         {error && <Text style={styles.errorText}>{error}</Text>}

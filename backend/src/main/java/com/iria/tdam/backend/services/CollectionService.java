@@ -33,8 +33,18 @@ public class CollectionService {
         // cover image = first artwork image if exists
         if (c.getArtworks() != null && !c.getArtworks().isEmpty()) {
             dto.setCoverImageUrl(c.getArtworks().get(0).getImageUrl());
+            dto.setArtworkIds(
+                    c.getArtworks().stream()
+                            .map(CollectionArtwork::getArtworkId)
+                            .toList());
         }
 
+        dto.setArtworkIds(
+                c.getArtworks() != null
+                        ? c.getArtworks().stream()
+                                .map(CollectionArtwork::getArtworkId)
+                                .toList()
+                        : List.of());
         return dto;
     }
 

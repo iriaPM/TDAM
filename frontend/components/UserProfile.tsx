@@ -1,8 +1,8 @@
 //UserProfile.tsx
 //This is the logged user profile and other users profile component 
 
-import { useEffect, useRef, useState } from "react";
-import { Href, router, useLocalSearchParams } from "expo-router";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Href, router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import RBSheet from "react-native-raw-bottom-sheet";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import ImageViewer from "@/components/imageViewer";
@@ -36,8 +36,15 @@ export default function UserProfile({ id }: UserProfileProps) {
         collections,
         isMe,
         loading,
+        load,
         updateProfile,
     } = useUserProfileViewModel(id);
+    
+    useFocusEffect(
+        useCallback(() => {
+            load();
+        }, [id])
+    );
 
     const editSheetRef = useRef<any>(null);
     const [editName, setEditName] = useState("");
@@ -73,7 +80,7 @@ export default function UserProfile({ id }: UserProfileProps) {
         <View style={styles.card}>
             <Pressable
                 onPress={() => {
-                    router.push(`/(tabs)/collections/${item.id}` as Href);
+                    router.push(`collections/${item.id}` as Href);
                 }}
             >
                 <ImageViewer

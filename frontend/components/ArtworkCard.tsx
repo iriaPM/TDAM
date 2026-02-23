@@ -6,6 +6,7 @@ import { StyleSheet, View, Pressable, Text, StyleProp, ViewStyle, Dimensions, Im
 import ImageViewer from "./imageViewer";
 import Ionicons from '@expo/vector-icons/Ionicons';
 const { height, width } = Dimensions.get("window"); //get height/width relative to the screen size 
+const SMALL_CARD_SIZE = width * 0.42;
 
 type Props = {
     style?: StyleProp<ViewStyle>;
@@ -18,10 +19,22 @@ type Props = {
     isSaved?: boolean;
     onSave?: () => void;
     onAddToCollection?: () => void;
+    onArtistPress?: () => void;
+    size?: "small" | "large";
 }
 
-function TdamArtworkCard({ style, title, artist, imageUrl, year, movement, onPress, isSaved, onSave, onAddToCollection }: Props) {
-
+function TdamArtworkCard({ style, title, artist, imageUrl, year, movement, onPress, isSaved, onSave, onAddToCollection, onArtistPress, size }: Props) {
+    if (size === "small") {
+        return (
+            <Pressable style={[styles.smallContainer, style]} onPress={onPress}>
+                <ImageViewer
+                    imgSource={imageUrl ? { uri: imageUrl } : require("../assets/images/placeholderArt.png")}
+                    style={styles.smallImage}
+                />
+                <Text style={styles.smallTitle} numberOfLines={2}>{title}</Text>
+            </Pressable>
+        );
+    }
     return (
         <View style={[styles.containter]}>
             <Pressable onPress={onPress}>
@@ -32,9 +45,11 @@ function TdamArtworkCard({ style, title, artist, imageUrl, year, movement, onPre
                         style={styles.image}
                     />
                     <View>
-                        <Text style={styles.text}>
-                            {[artist, year, movement].filter(Boolean).join(", ")}
-                        </Text>
+                        <Pressable onPress={onArtistPress}>
+                            <Text style={styles.text}>
+                                {[artist, year, movement].filter(Boolean).join(", ")}
+                            </Text>
+                        </Pressable>
                     </View>
                     <View style={styles.saveIcon}>
                         <Pressable onPress={onSave}>
@@ -94,7 +109,38 @@ const styles = StyleSheet.create({
     image: {
         width: width * 0.9,
         height: undefined,
-    }
+    },
+    smallContainer: {
+        width: SMALL_CARD_SIZE,
+        backgroundColor: "#fff",
+    },
+    smallImage: {
+    width: SMALL_CARD_SIZE,
+    height: SMALL_CARD_SIZE,
+    borderRadius: 8,
+    backgroundColor: "#eee",
+    resizeMode: "cover",
+},
+    smallTitle: {
+        fontSize: 12,
+        fontWeight: "600",
+        marginTop: 4,
+        color: "#111",
+    },
+    smallArtist: {
+        fontSize: 11,
+        color: "#555",
+        marginTop: 2,
+    },
+    smallMeta: {
+        fontSize: 10,
+        color: "#888",
+    },
+    smallActions: {
+        flexDirection: "row",
+        gap: 8,
+        marginTop: 4,
+    },
 });
 
 export default React.memo(TdamArtworkCard);

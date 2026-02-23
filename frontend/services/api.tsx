@@ -350,3 +350,17 @@ export async function markArtworkViewed(artworkId: string) {
         body: JSON.stringify({ artworkId }),
     });
 }
+
+export async function getArtistDetail(artistName: string) {
+    const token = await AsyncStorage.getItem("userToken");
+
+    const response = await fetch(
+        `${BASE_URL}/artists/search?name=${encodeURIComponent(artistName)}`,
+        {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+        }
+    );
+
+    if (!response.ok) throw new Error("Failed to load artist detail");
+    return response.json();
+}
