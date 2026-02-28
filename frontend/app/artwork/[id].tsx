@@ -2,7 +2,7 @@
 // displays fields that are actually returned by the APIs
 
 import { useLocalSearchParams, router, Href } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
     View,
     Text,
@@ -11,14 +11,24 @@ import {
     Image,
     Pressable,
 } from "react-native";
-import { getArtworkDetail, markArtworkViewed } from "@/services/api";
-import { Ionicons } from '@expo/vector-icons';
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { getArtworkDetail, markArtworkViewed, toggleSaveArtwork, getMyCollections, toggleArtworkInCollection, createCollection } from "@/services/api";
+import { Ionicons } from '@expo/vector-icons';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import SaveArtworkBottomsheet from "@/components/SaveArtworkBottomsheet";
+import CreateCollectionBottomsheet from "@/components/CreateCollectionBottomsheet";
+import { Collection } from "@/models/Collection";
 
 export default function ArtworkDetailView() {
     const { id } = useLocalSearchParams();
     const [artwork, setArtwork] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [isSaved, setIsSaved] = useState(false);
+    const [collections, setCollections] = useState<Collection[]>([]);
+    const [newCollectionName, setNewCollectionName] = useState("");
+    const [newCollectionDescription, setNewCollectionDescription] = useState("");
+    const saveSheetRef = useRef<any>(null);
+    const createSheetRef = useRef<any>(null);
 
     useEffect(() => {
         if (!id) return;
@@ -27,6 +37,7 @@ export default function ArtworkDetailView() {
             try {
                 const data = await getArtworkDetail(id as string);
                 setArtwork(data);
+                setIsSaved(data.isSaved ?? false);
                 await markArtworkViewed(id as string);
             } catch (e) {
                 console.error("Failed to load artwork detail", e);
@@ -83,6 +94,56 @@ export default function ArtworkDetailView() {
                                     )}
                                 </View>
                             )}
+                        </View>
+                        {/* Save / Add to Collection Buttons */}
+                        <View style={styles.actionRow}>
+                            <Pressable
+                                style={styles.actionButton}
+                                onPress={async () => {
+                                    if (!artwork) return;
+                                    try {
+                                        const result = await toggleSaveArtwork(artwork.objectID, artwork.imageUrl);
+                                        setIsSaved(result.isSaved);
+                                    } catch (e) {
+                                        console.error("Failed to save artwork", e);
+                                    }
+                                }}
+                            >
+                                <Ionicons
+                                    name={isSaved ? "heart" : "heart-outline"}
+                                    size={24}
+                                    color={isSaved ? "#EF4444" : "#475569"}
+                                />
+                                <Text style={[styles.actionLabel, isSaved && styles.actionLabelSaved]}>
+                                    {isSaved ? "Saved" : "Save"}
+                                </Text>
+                            </Pressable>
+
+                            <Pressable
+                                style={styles.actionButton}
+                                onPress={async () => {
+                                    if (!artwork) return;
+                                    try {
+                                        const data = await getMyCollections();
+                                        setCollections(
+                                            data.map((c: any) => ({
+                                                id: c.id,
+                                                title: c.title,
+                                                imageUrl: c.coverImageUrl ?? "",
+                                                isSaved: Array.isArray(c.artworkIds)
+                                                    ? c.artworkIds.includes(artwork.objectID)
+                                                    : false,
+                                            }))
+                                        );
+                                    } catch (e) {
+                                        console.error("Failed to load collections", e);
+                                    }
+                                    saveSheetRef.current?.open();
+                                }}
+                            >
+                                <Ionicons name="add-circle-outline" size={24} color="#475569" />
+                                <Text style={styles.actionLabel}>Add to collection</Text>
+                            </Pressable>
                         </View>
 
                         {/* Primary Info Grid */}
@@ -247,6 +308,73 @@ export default function ArtworkDetailView() {
                     </View>
                 </ScrollView>
             )}
+            <RBSheet
+                ref={saveSheetRef}
+                height={700}
+                draggable={true}
+                dragOnContent={true}
+                customStyles={{
+                    wrapper: { backgroundColor: 'rgba(0,0,0,0.5)' },
+                    container: { borderTopLeftRadius: 20, borderTopRightRadius: 20, backgroundColor: '#FF8F8F' },
+                    draggableIcon: { backgroundColor: '#999' },
+                }}
+            >
+                {artwork && (
+                    <SaveArtworkBottomsheet
+                        artworkTitle={artwork.title}
+                        artworkArtist={artwork.artist}
+                        artworkImageUrl={artwork.imageUrl}
+                        collections={collections}
+                        onCreateNew={() => {
+                            saveSheetRef.current?.close();
+                            createSheetRef.current?.open();
+                        }}
+                        onToggleCollection={async (collectionId) => {
+                            try {
+                                await toggleArtworkInCollection(collectionId, artwork.objectID, artwork.imageUrl);
+                                setCollections(prev =>
+                                    prev.map(c => c.id === collectionId ? { ...c, isSaved: !c.isSaved } : c)
+                                );
+                            } catch (e) {
+                                console.error("Failed to toggle artwork in collection", e);
+                            }
+                        }}
+                    />
+                )}
+            </RBSheet>
+
+            <RBSheet
+                ref={createSheetRef}
+                height={700}
+                draggable={true}
+                dragOnContent={true}
+                customStyles={{
+                    wrapper: { backgroundColor: 'rgba(0,0,0,0.5)' },
+                    container: { borderTopLeftRadius: 20, borderTopRightRadius: 20, backgroundColor: '#C2E2FA' },
+                    draggableIcon: { backgroundColor: '#999' },
+                }}
+            >
+                <CreateCollectionBottomsheet
+                    name={newCollectionName}
+                    description={newCollectionDescription}
+                    onChangeName={setNewCollectionName}
+                    onChangeDescription={setNewCollectionDescription}
+                    onSubmit={async () => {
+                        if (!newCollectionName.trim() || !artwork) return;
+                        try {
+                            const created = await createCollection(newCollectionName, newCollectionDescription, false);
+                            await toggleArtworkInCollection(created.id, artwork.objectID, artwork.imageUrl);
+                            createSheetRef.current?.close();
+                            setNewCollectionName("");
+                            setNewCollectionDescription("");
+                        } catch (e) {
+                            console.error("Failed to create collection", e);
+                        }
+                    }}
+                    submitLabel="Create"
+                    title="Create a new collection!"
+                />
+            </RBSheet>
         </>
     );
 }
@@ -430,5 +558,25 @@ const styles = StyleSheet.create({
     },
     spacer: {
         height: 24,
+    },
+    actionRow: {
+        flexDirection: "row",
+        gap: 16,
+        marginBottom: 24,
+        paddingVertical: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: "#E2E8F0",
+    },
+    actionButton: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: 6,
+    },
+    actionLabel: {
+        fontSize: 14,
+        color: "#475569",
+    },
+    actionLabelSaved: {
+        color: "#EF4444",
     },
 });
