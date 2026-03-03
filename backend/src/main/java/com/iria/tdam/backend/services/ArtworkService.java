@@ -127,7 +127,7 @@ public class ArtworkService {
     }
 
     // --- Random artworks
-    @Cacheable("randomArtworks")
+    //@Cacheable("randomArtworks")
     public List<ArtworkDto> getRandomArtworks() {
         String url = "https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&q=painting&isHighlight=true";
 
