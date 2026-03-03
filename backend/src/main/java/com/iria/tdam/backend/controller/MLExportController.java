@@ -1,3 +1,5 @@
+//mlexport controller
+//endpoint to export the dataset with all interactions (artwork views, likes, saved) to training the recommendation model
 package com.iria.tdam.backend.controller;
 
 import com.iria.tdam.backend.services.MLExportService;

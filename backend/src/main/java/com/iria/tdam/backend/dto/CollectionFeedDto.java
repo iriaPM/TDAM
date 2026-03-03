@@ -3,6 +3,7 @@
 
 package com.iria.tdam.backend.dto;
 
+import java.util.*;
 import java.util.UUID;
 
 public class CollectionFeedDto {
@@ -16,6 +17,7 @@ public class CollectionFeedDto {
     private String description;
     private String time;
     private Long userId;
+    private List<String> artworkIds = new ArrayList<>();
 
     // getters & setters
     public UUID getId() {
@@ -88,5 +90,13 @@ public class CollectionFeedDto {
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public List<String> getArtworkIds() {
+        return artworkIds;
+    }
+
+    public void setArtworkIds(List<String> artworkIds) {
+        this.artworkIds = artworkIds;
     }
 }

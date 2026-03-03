@@ -12,12 +12,14 @@ type Props = {
     onSearch: (query: string) => void;
 }
 
-export default function TdamSearchBar({ onSearch }:Props) {
+export default function TdamSearchBar({ onSearch }: Props) {
     const [searchQuery, setSearchQuery] = useState("");
 
     const handleChange = (text: string) => {
         setSearchQuery(text);
-        onSearch(text); //call the onSearch prop with the current query
+        if (!text.trim()) {
+            onSearch("");
+        }
     }
 
     return (

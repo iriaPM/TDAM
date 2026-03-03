@@ -68,7 +68,7 @@ export default function CollectionDetailView() {
             <View style={styles.header}>
                 <View style={styles.headerRow}>
                     <Pressable onPress={() => {
-                        router.push(`/(tabs)/user/[id]` as Href);
+                        router.push(`/user/[id]` as Href);
                     }}>
                         <ImageViewer
                             imgSource={
@@ -137,7 +137,7 @@ export default function CollectionDetailView() {
                     <Pressable
                         style={{ paddingHorizontal: 4 }}
                         onPress={() => {
-                            router.push(`/(tabs)/artwork/${item.id}` as Href);
+                            router.push(`/artwork/${item.id}` as Href);
                         }}
                     >
                         <ImageViewer

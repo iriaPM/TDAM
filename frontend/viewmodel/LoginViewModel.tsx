@@ -30,7 +30,7 @@ export function useLoginViewModel() {
             alert("Successfully Logged in!");
 
             await AsyncStorage.setItem('userToken', user.token);
-            router.replace('/home');
+            router.push('/home');
         } catch (err) {
             setError("Failed to login");
             alert("Failed to login :(");

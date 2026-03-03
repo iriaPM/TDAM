@@ -55,7 +55,7 @@ public class ArtworkController {
                 Collections.shuffle(result);
 
                 return result.stream()
-                                .limit(10)
+                                .limit(50)
                                 .peek(a -> a.setIsSaved(savedIds.contains(a.getObjectID())))
                                 .toList();
         }
@@ -77,7 +77,7 @@ public class ArtworkController {
                 result.addAll(artworkService.getArtworks(query)); // Met
                 result.addAll(harvardArtworkService.searchArtworks(query)); // Harvard
                 Collections.shuffle(result);
-
+                
                 return result.stream()
                                 .limit(10)
                                 .peek(a -> a.setIsSaved(savedIds.contains(a.getObjectID())))

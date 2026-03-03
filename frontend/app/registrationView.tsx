@@ -65,7 +65,7 @@ export default function RegistrationScreen() {
                     style={styles.button}
                     label="Log in"
                     theme="primary"
-                    onPress={() => router.replace('/loginView')}
+                    onPress={() => router.push('/loginView')}
                     disabled={loading}
                 />
                 {error && <Text style={styles.errorText}>{error}</Text>}
