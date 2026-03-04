@@ -3,6 +3,7 @@
 package com.iria.tdam.backend.controller;
 
 import com.iria.tdam.backend.services.MLExportService;
+import com.iria.tdam.backend.dto.MlCollectionDto;
 import com.iria.tdam.backend.dto.MlInteractionDto;
 
 import org.springframework.web.bind.annotation.*;
@@ -24,5 +25,10 @@ public class MLExportController {
     @GetMapping("/dataset")
     public ResponseEntity<List<MlInteractionDto>> getDataset() {
         return ResponseEntity.ok(mlExportService.getDataset());
+    }
+
+    @GetMapping("/collections")
+    public ResponseEntity<List<MlCollectionDto>> getCollectionDataset() {
+        return ResponseEntity.ok(mlExportService.getCollectionDataset());
     }
 }
