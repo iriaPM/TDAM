@@ -11,11 +11,38 @@ vectorizer = joblib.load("./model/vectorizer.pkl")
 
 SPRING_BOOT_URL = "http://localhost:8080"
 
+# fetch full dataset and filter specific user
+def get_user_data(user_id):
+    dataset = requests.get(f"{SPRING_BOOT_URL}/api/ml/dataset").json()
+    user_rows = [row for row in dataset if row["userId"] == user_id]
+    return user_rows
+
+# build preference text from first row (all rows have same preferences)
+def build_user_prefs_text(user_rows):
+    prefs = user_rows[0]
+    return " ".join([
+        prefs.get("preferredArtists", "") or "",
+        prefs.get("preferredStyles", "") or "",
+        prefs.get("preferredMediums", "") or "",
+        prefs.get("preferredTimePeriods", "") or "",
+        prefs.get("preferredMovements", "") or "",
+    ])
+
+# vectorize, predict and return top N
+def score_and_rank(df, top_n, return_cols):
+    X = vectorizer.transform(df["combined_text"])
+    df["like_probability"] = model.predict_proba(X)[:, 1]
+    return (
+        df.sort_values("like_probability", ascending=False)
+        .head(top_n)
+        [return_cols]
+        .reset_index(drop=True)
+    )
+
 
 @app.route("/health", methods=["GET"])
 def health():
     return jsonify({"status": "ok"})
-
 
 # recommendation endpoint (artworks)
 @app.route("/recommend/<int:user_id>", methods=["GET"])
@@ -23,36 +50,19 @@ def recommend(user_id):
     top_n = request.args.get("top_n", default=10, type=int)
 
     try:
-        # getting full dataset and filter to specific user
-        dataset = requests.get(f"{SPRING_BOOT_URL}/api/ml/dataset").json()
-        user_rows = [row for row in dataset if row["userId"] == user_id]
-
+        user_rows = get_user_data(user_id)
         if not user_rows:
             return jsonify({"error": f"No data found for user {user_id}"}), 404
 
-        # getting user preferences from first row
-        prefs = user_rows[0]
-        user_prefs_text = " ".join([
-            prefs.get("preferredArtists", "") or "",
-            prefs.get("preferredStyles", "") or "",
-            prefs.get("preferredMediums", "") or "",
-            prefs.get("preferredTimePeriods", "") or "",
-            prefs.get("preferredMovements", "") or "",
-        ])
-
-        # getting already seen artwork IDs
+        user_prefs_text = build_user_prefs_text(user_rows)
         seen_ids = set(row["artworkId"] for row in user_rows)
 
-        # fetch candidate artworks
         candidates = requests.get(f"{SPRING_BOOT_URL}/api/artworks/random").json()
-
-        # filter out seen artworks
         unseen = [a for a in candidates if a["objectID"] not in seen_ids]
 
         if not unseen:
             return jsonify({"recommendations": [], "message": "No new artworks to recommend"})
 
-        # combined text features
         rows = []
         for artwork in unseen:
             combined = " ".join([
@@ -72,18 +82,9 @@ def recommend(user_id):
             })
 
         df_candidates = pd.DataFrame(rows)
-
-        # vectorize and predict
-        X = vectorizer.transform(df_candidates["combined_text"])
-        df_candidates["like_probability"] = model.predict_proba(X)[:, 1]
-
-        # sort and return top N
-        recommendations = (
-            df_candidates
-            .sort_values("like_probability", ascending=False)
-            .head(top_n)
-            [["objectID", "title", "artist", "period", "imageUrl", "like_probability"]]
-            .reset_index(drop=True)
+        recommendations = score_and_rank(
+            df_candidates, top_n,
+            ["objectID", "title", "artist", "period", "imageUrl", "like_probability"]
         )
 
         return jsonify({
@@ -100,23 +101,13 @@ def recommend_collections(user_id):
     top_n = request.args.get("top_n", default=10, type=int)
 
     try:
-        dataset = requests.get(f"{SPRING_BOOT_URL}/api/ml/dataset").json()
-        user_rows = [row for row in dataset if row["userId"] == user_id]
-
+        user_rows = get_user_data(user_id)
         if not user_rows:
             return jsonify({"error": f"No data found for user {user_id}"}), 404
 
-        prefs = user_rows[0]
-        user_prefs_text = " ".join([
-            prefs.get("preferredArtists", "") or "",
-            prefs.get("preferredStyles", "") or "",
-            prefs.get("preferredMediums", "") or "",
-            prefs.get("preferredTimePeriods", "") or "",
-            prefs.get("preferredMovements", "") or "",
-        ])
+        user_prefs_text = build_user_prefs_text(user_rows)
 
         collections = requests.get(f"{SPRING_BOOT_URL}/api/ml/collections").json()
-
         other_collections = [c for c in collections if c["ownerId"] != user_id]
 
         if not other_collections:
@@ -139,16 +130,9 @@ def recommend_collections(user_id):
             })
 
         df_collections = pd.DataFrame(rows)
-
-        X = vectorizer.transform(df_collections["combined_text"])
-        df_collections["like_probability"] = model.predict_proba(X)[:, 1]
-
-        recommendations = (
-            df_collections
-            .sort_values("like_probability", ascending=False)
-            .head(top_n)
-            [["collectionId", "title", "description", "like_probability"]]
-            .reset_index(drop=True)
+        recommendations = score_and_rank(
+            df_collections, top_n,
+            ["collectionId", "title", "description", "like_probability"]
         )
 
         return jsonify({
@@ -158,6 +142,7 @@ def recommend_collections(user_id):
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
