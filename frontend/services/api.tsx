@@ -265,7 +265,8 @@ export async function getUserProfile(userId?: string) {
 
 export async function updateUserProfile(
     username: string,
-    description: string
+    description: string,
+    avatarUrl: string | null
 ) {
     const token = await AsyncStorage.getItem("userToken");
 
@@ -282,6 +283,7 @@ export async function updateUserProfile(
         body: JSON.stringify({
             userName: username,
             description: description,
+            avatarUrl: avatarUrl,
         }),
     });
 

@@ -107,7 +107,8 @@ public class UserService {
 
         user.setUsername(request.getUserName());
         user.setDescription(request.getDescription());
-
+        user.setAvatarUrl(request.getAvatarUrl());
+        
         return userRepository.save(user);
     }
 
