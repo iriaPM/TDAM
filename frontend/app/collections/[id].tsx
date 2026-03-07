@@ -67,9 +67,12 @@ export default function CollectionDetailView() {
             {/* Header */}
             <View style={styles.header}>
                 <View style={styles.headerRow}>
-                    <Pressable onPress={() => {
-                        router.push(`/user/[id]` as Href);
-                    }}>
+                    <Pressable
+                        accessibilityLabel={collection.username}
+                        accessibilityRole="button"
+                        onPress={() => {
+                            router.push(`/user/[id]` as Href);
+                        }}>
                         <ImageViewer
                             imgSource={
                                 collection.avatarUrl
@@ -94,12 +97,16 @@ export default function CollectionDetailView() {
                             {isOwnCollection && (
                                 <View style={styles.iconsContainer}>
                                     <Pressable
+                                        accessibilityLabel="Edit collection"
+                                        accessibilityRole="button"
                                         style={styles.icons}
                                         onPress={openEditSheet}>
                                         <Ionicons name="pencil" size={20} color="#666" />
                                     </Pressable>
 
                                     <Pressable
+                                        accessibilityLabel={`${collection.isPrivate ? "Make collection public" : "Make collection private"}`}
+                                        accessibilityRole="button"
                                         style={styles.icons}
                                         onPress={togglePrivacy}
                                     >
@@ -135,6 +142,8 @@ export default function CollectionDetailView() {
                 numColumns={2}
                 renderItem={({ item }: { item: any }) => (
                     <Pressable
+                        accessibilityLabel={item.title}
+                        accessibilityRole="button"
                         style={{ paddingHorizontal: 4 }}
                         onPress={() => {
                             router.push(`/artwork/${item.id}` as Href);

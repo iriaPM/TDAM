@@ -112,6 +112,8 @@ export default function UserProfile({ id }: UserProfileProps) {
     const renderCollection = ({ item }: any) => (
         <View style={styles.card}>
             <Pressable
+                accessibilityLabel={`View collection: ${item.title}`}
+                accessibilityRole="button"
                 onPress={() => {
                     router.push(`collections/${item.id}` as Href);
                 }}
@@ -133,7 +135,7 @@ export default function UserProfile({ id }: UserProfileProps) {
         <SafeAreaView style={styles.container}>
 
             {/* -------- Header -------- */}
-            <View style={styles.header}>
+            <View accessible={true} style={styles.header}>
                 <View style={styles.avatarRow}>
                     <ImageViewer
                         imgSource={user.avatarUrl ? { uri: user.avatarUrl } : require("@/assets/images/userPlaceholder.png")}
@@ -147,6 +149,8 @@ export default function UserProfile({ id }: UserProfileProps) {
                             {isMe && (
                                 <View style={styles.headerActions}>
                                     <Pressable
+                                        accessibilityLabel="Edit profile"
+                                        accessibilityRole="button"
                                         style={styles.iconButton}
                                         onPress={openEditSheet}>
                                         <Ionicons
@@ -157,6 +161,8 @@ export default function UserProfile({ id }: UserProfileProps) {
                                     </Pressable>
 
                                     <Pressable
+                                        accessibilityLabel="Log out"
+                                        accessibilityRole="button"
                                         style={styles.iconButton}
                                         onPress={logout}>
                                         <Ionicons
@@ -198,7 +204,10 @@ export default function UserProfile({ id }: UserProfileProps) {
                 }}
             >
                 <View style={styles.avatarPickerContainer}>
-                    <Pressable onPress={pickImage}>
+                    <Pressable
+                        accessibilityLabel="Change avatar"
+                        accessibilityRole="button"
+                        onPress={pickImage}>
                         <ImageViewer
                             imgSource={
                                 editAvatar

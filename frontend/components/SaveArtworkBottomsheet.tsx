@@ -36,7 +36,7 @@ export default function SaveArtworkBottomsheet({
             <Text style={styles.headerTitle}>Add to a collection!</Text>
 
             {/* Artwork info */}
-            <View style={styles.artworkInfo}>
+            <View  accessible={true} style={styles.artworkInfo}>
                 <Image
                     source={
                         artworkImageUrl
@@ -52,7 +52,11 @@ export default function SaveArtworkBottomsheet({
             </View>
 
             {/* Create New Collection button */}
-            <Pressable style={styles.createNewButton} onPress={onCreateNew}>
+            <Pressable
+                style={styles.createNewButton}
+                onPress={onCreateNew}
+                accessibilityLabel="Create New Collection"
+                accessibilityRole="button">
                 <Ionicons name="add-circle-outline" size={20} color="#000" />
                 <Text style={styles.createNewText}>Create New Collection</Text>
             </Pressable>
@@ -63,6 +67,8 @@ export default function SaveArtworkBottomsheet({
                 keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                     <Pressable
+                        accessibilityLabel={`${item.isSaved ? "Remove from" : "Add to"} collection: ${item.title}`}
+                        accessibilityRole="button"
                         style={styles.collectionItem}
                         onPress={() => onToggleCollection(item.id)}
                     >

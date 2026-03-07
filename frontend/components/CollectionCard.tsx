@@ -32,10 +32,13 @@ function TdamCollectionCard({
 }: Props) {
 
     return (
-        <View style={[styles.container]}>
+        <View accessible={true} style={[styles.container]}>
             <View style={[styles.cardContainer, style]}>
 
-                <Pressable onPress={onPress}>
+                <Pressable
+                    onPress={onPress}
+                    accessibilityLabel={title}
+                    accessibilityRole="button">
                     <Image
                         source={
                             imageUrl
@@ -46,8 +49,13 @@ function TdamCollectionCard({
                     />
                 </Pressable>
 
-                <View style={styles.infoContainer}>
-                    <Pressable onPress={onUserPress} style={styles.userRow}>
+                <View
+                    accessible={true} style={styles.infoContainer}>
+                    <Pressable
+                        onPress={onUserPress}
+                        style={styles.userRow}
+                        accessibilityLabel={`View user: ${username}`}
+                        accessibilityRole="button">
                         <ImageViewer
                             imgSource={
                                 avatarUrl

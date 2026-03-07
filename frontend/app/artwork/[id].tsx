@@ -80,10 +80,13 @@ export default function ArtworkDetailView() {
 
                             {artwork.artist && (
                                 <View style={styles.artistInfo}>
-                                    <Pressable onPress={() => {
-                                        if (!artwork.artist) return;
-                                        router.push(`/artist/${encodeURIComponent(artwork.artist)}` as Href);
-                                    }}>
+                                    <Pressable
+                                        accessibilityLabel={artwork.artist}
+                                        accessibilityRole="button"
+                                        onPress={() => {
+                                            if (!artwork.artist) return;
+                                            router.push(`/artist/${encodeURIComponent(artwork.artist)}` as Href);
+                                        }}>
                                         <Text style={styles.artistName}>{artwork.artist}</Text>
                                     </Pressable>
                                     {artwork.artistNationality && (
@@ -98,6 +101,8 @@ export default function ArtworkDetailView() {
                         {/* Save / Add to Collection Buttons */}
                         <View style={styles.actionRow}>
                             <Pressable
+                                accessibilityLabel={isSaved ? "Unsave artwork" : "Save artwork"}
+                                accessibilityRole="button"
                                 style={styles.actionButton}
                                 onPress={async () => {
                                     if (!artwork) return;
@@ -120,6 +125,8 @@ export default function ArtworkDetailView() {
                             </Pressable>
 
                             <Pressable
+                                accessibilityLabel="Add to collection"
+                                accessibilityRole="button"
                                 style={styles.actionButton}
                                 onPress={async () => {
                                     if (!artwork) return;
