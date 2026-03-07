@@ -364,3 +364,39 @@ export async function getArtistDetail(artistName: string) {
     if (!response.ok) throw new Error("Failed to load artist detail");
     return response.json();
 }
+
+export async function getArtworkRecommendations(topN: number = 10): Promise<Artwork[]> {
+    const token = await AsyncStorage.getItem("userToken");
+    if (!token) return [];
+
+    const response = await fetch(`${BASE_URL}/recommendations/artworks?topN=${topN}`, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!response.ok) return [];
+
+    const data = await response.json();
+    // map recommendations to Artwork model
+    return data.recommendations.map((r: any) => ({
+        objectID: r.objectID,
+        title: r.title,
+        artist: r.artist,
+        period: r.period,
+        imageUrl: r.imageUrl,
+        isSaved: false,
+    }));
+}
+
+export async function getCollectionRecommendations(topN: number = 10) {
+    const token = await AsyncStorage.getItem("userToken");
+    if (!token) return [];
+
+    const response = await fetch(`${BASE_URL}/recommendations/collections?topN=${topN}`, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!response.ok) return [];
+
+    const data = await response.json();
+    return data.recommendations;
+}

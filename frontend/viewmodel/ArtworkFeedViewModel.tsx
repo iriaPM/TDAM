@@ -2,7 +2,7 @@
 //retrieve and manage artworks data for the feed
 import { useEffect, useRef, useState } from "react";
 import { Artwork } from "@/models/Artwork";
-import { getRandomArtworksAPI, searchArtworksAPI } from "@/services/api";
+import { getArtworkRecommendations, getRandomArtworksAPI, searchArtworksAPI, } from "@/services/api";
 
 export function useArtworksViewModel() {
     const [artworks, setArtworks] = useState<Artwork[]>([]);
@@ -13,17 +13,24 @@ export function useArtworksViewModel() {
 
     //load default feed
     useEffect(() => {
-        loadRandomArtworks();
+        loadFeed();
     }, []);
 
-    //load random feed
-    const loadRandomArtworks = async () => {
+    //load feed
+    const loadFeed = async () => {
         setSearching(true);
         setError(null);
 
         try {
-            const results = await getRandomArtworksAPI();
-            setArtworks(results);
+            // recommendations first
+            const recommended = await getArtworkRecommendations();
+            if (recommended.length > 0) {
+                setArtworks(recommended);
+            } else {
+                // fallback to random
+                const random = await getRandomArtworksAPI();
+                setArtworks(random);
+            }
         } catch {
             setError("Failed to load artworks");
         } finally {
@@ -34,7 +41,7 @@ export function useArtworksViewModel() {
     //search feed
     const searchArtworks = async (query: string) => {
         if (!query.trim()) {
-            loadRandomArtworks();
+            loadFeed();
             return;
         }
 
@@ -68,6 +75,6 @@ export function useArtworksViewModel() {
         error,
         toggleSave,
         searchArtworks,
-        loadRandomArtworks,
+        loadFeed,
     };
 }

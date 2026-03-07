@@ -9,6 +9,7 @@ import {
     getCollectionDetail,
     toggleCollectionPrivacy,
     updateCollection,
+    getCollectionRecommendations,
 } from "@/services/api";
 
 export function useCollectionsViewModel(collectionId?: string) {
@@ -33,8 +34,35 @@ export function useCollectionsViewModel(collectionId?: string) {
 
         try {
             const data = await getPublicCollections();
-            setCollections(
-                data.map((c: any) => ({
+
+            //  recommendations to get ranked order
+            const recommended = await getCollectionRecommendations();
+
+            let finalCollections;
+
+            if (recommended.length > 0) {
+                // use recommended order but with full data from public collections
+                const fullDataMap = new Map(data.map((c: any) => [c.id, c]));
+
+                finalCollections = recommended
+                    .map((r: any) => fullDataMap.get(r.collectionId))
+                    .filter(Boolean)
+                    .map((c: any) => ({
+                        id: c.id,
+                        title: c.title,
+                        username: c.username,
+                        imageUrl: c.coverImageUrl ?? "",
+                        avatarUrl: c.avatarUrl ?? "",
+                        isSaved: false,
+                        userId: c.userId,
+                        time: c.time
+                            ? formatDistanceToNow(new Date(c.time), { addSuffix: true })
+                            : undefined,
+                        description: c.description ?? "",
+                    }));
+            } else {
+                // fallback to public collections in default order
+                finalCollections = data.map((c: any) => ({
                     id: c.id,
                     title: c.title,
                     username: c.username,
@@ -45,10 +73,12 @@ export function useCollectionsViewModel(collectionId?: string) {
                     time: c.time
                         ? formatDistanceToNow(new Date(c.time), { addSuffix: true })
                         : undefined,
-
                     description: c.description ?? "",
-                }))
-            );
+                }));
+            }
+
+            setCollections(finalCollections);
+
         } catch {
             setFeedError("Failed to load collections");
         } finally {
