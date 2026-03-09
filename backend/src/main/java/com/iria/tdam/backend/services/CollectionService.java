@@ -25,7 +25,7 @@ public class CollectionService {
                 dto.setId(c.getId());
                 dto.setTitle(c.getTitle());
                 dto.setUsername(c.getOwner().getUsername());
-                dto.setAvatarUrl(null); // future
+                dto.setAvatarUrl(c.getOwner().getAvatarUrl());
                 dto.setPrivate(c.isPrivate());
                 dto.setDescription(c.getDescription());
                 dto.setTime(c.getCreatedAt().toString());
@@ -57,7 +57,7 @@ public class CollectionService {
                 dto.setTitle(c.getTitle());
                 dto.setDescription(c.getDescription());
                 dto.setUsername(c.getOwner().getUsername());
-                dto.setAvatarUrl(null);
+                dto.setAvatarUrl(c.getOwner().getAvatarUrl());
                 dto.setPrivate(c.isPrivate());
 
                 dto.setOwner(
@@ -173,10 +173,21 @@ public class CollectionService {
                 return collectionRepository.save(collection);
         }
 
+        public void createAllArtworksCollection(User user) {
+                if (collectionRepository.findFirstByOwnerAndTitleOrderByCreatedAtAsc(user, "All artworks").isEmpty()) {
+                        Collection c = new Collection();
+                        c.setOwner(user);
+                        c.setTitle("All artworks");
+                        c.setDescription("All saved artworks");
+                        c.setPrivate(true);
+                        collectionRepository.save(c);
+                }
+        }
+
         @Transactional
         private Collection getOrCreateAllArtworksCollection(User user) {
                 return collectionRepository
-                                .findByOwnerAndTitle(user, "All artworks")
+                                .findFirstByOwnerAndTitleOrderByCreatedAtAsc(user, "All artworks")
                                 .orElseGet(() -> {
                                         Collection c = new Collection();
                                         c.setOwner(user);

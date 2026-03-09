@@ -21,6 +21,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private CollectionService collectionService;
+
     public User register(RegisterRequest request) {
 
         // email regex validation
@@ -49,7 +52,9 @@ public class UserService {
         String token = UUID.randomUUID().toString();
         user.setToken(token);
 
-        return userRepository.save(user);
+        User saved = userRepository.save(user);
+        collectionService.createAllArtworksCollection(saved);
+        return saved;
     }
 
     public User login(LoginRequest request) {

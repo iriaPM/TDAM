@@ -63,6 +63,10 @@ export default function ArtworkDetailView() {
 
             {!loading && artwork && (
                 <ScrollView style={styles.container}>
+                    {/* Title */}
+                    <View style={styles.titleSection}>
+                        <Text style={styles.title}>{artwork.title}</Text>
+                    </View>
                     {/* Image */}
                     <View style={styles.imageContainer}>
                         <Image
@@ -75,9 +79,8 @@ export default function ArtworkDetailView() {
                     <View style={styles.content}>
 
                         {/* Title and Artist */}
-                        <View style={styles.titleSection}>
-                            <Text style={styles.title}>{artwork.title}</Text>
-
+                        {/* Artist */}
+                        <View style={styles.artistSection}>
                             {artwork.artist && (
                                 <View style={styles.artistInfo}>
                                     <Pressable
@@ -98,6 +101,7 @@ export default function ArtworkDetailView() {
                                 </View>
                             )}
                         </View>
+
                         {/* Save / Add to Collection Buttons */}
                         <View style={styles.actionRow}>
                             <Pressable
@@ -153,28 +157,31 @@ export default function ArtworkDetailView() {
                             </Pressable>
                         </View>
 
-                        {/* Primary Info Grid */}
-                        {(artwork.period || artwork.century) && (
-                            <View style={styles.gridContainer}>
-                                {artwork.period && (
-                                    <View style={styles.gridItem}>
-                                        <Text style={styles.gridLabel}>Period</Text>
-                                        <Text style={styles.gridValue}>{artwork.period}</Text>
-                                    </View>
-                                )}
-                                {artwork.century && (
-                                    <View style={styles.gridItem}>
-                                        <Text style={styles.gridLabel}>Century</Text>
-                                        <Text style={styles.gridValue}>{artwork.century}</Text>
-                                    </View>
-                                )}
-                            </View>
-                        )}
+                        {/* All info together, no dividers */}
+                        <View style={styles.infoSection}>
 
-                        {/* Date */}
-                        {artwork.objectDate && (
-                            <View style={styles.infoCard}>
-                                <View style={styles.infoRow}>
+                            {artwork.period && (
+                                <View style={styles.infoItem}>
+                                    <Ionicons name="time-outline" size={20} color="#475569" />
+                                    <View style={styles.infoContent}>
+                                        <Text style={styles.infoLabel}>Period</Text>
+                                        <Text style={styles.infoValue}>{artwork.period}</Text>
+                                    </View>
+                                </View>
+                            )}
+
+                            {artwork.century && (
+                                <View style={styles.infoItem}>
+                                    <Ionicons name="hourglass-outline" size={20} color="#475569" />
+                                    <View style={styles.infoContent}>
+                                        <Text style={styles.infoLabel}>Century</Text>
+                                        <Text style={styles.infoValue}>{artwork.century}</Text>
+                                    </View>
+                                </View>
+                            )}
+
+                            {artwork.objectDate && (
+                                <View style={styles.infoItem}>
                                     <Ionicons name="calendar-outline" size={20} color="#475569" />
                                     <View style={styles.infoContent}>
                                         <Text style={styles.infoLabel}>Date</Text>
@@ -186,70 +193,70 @@ export default function ArtworkDetailView() {
                                         )}
                                     </View>
                                 </View>
-                            </View>
-                        )}
+                            )}
 
-                        {/* Materials & Technique */}
-                        <View style={styles.detailsSection}>
                             {artwork.medium && (
-                                <View style={styles.detailRow}>
+                                <View style={styles.infoItem}>
                                     <Ionicons name="color-palette-outline" size={20} color="#475569" />
-                                    <View style={styles.detailContent}>
-                                        <Text style={styles.detailLabel}>Medium</Text>
-                                        <Text style={styles.detailValue}>{artwork.medium}</Text>
+                                    <View style={styles.infoContent}>
+                                        <Text style={styles.infoLabel}>Medium</Text>
+                                        <Text style={styles.infoValue}>{artwork.medium}</Text>
                                     </View>
                                 </View>
                             )}
 
                             {artwork.technique && (
-                                <View style={styles.detailRow}>
+                                <View style={styles.infoItem}>
                                     <Ionicons name="brush-outline" size={20} color="#475569" />
-                                    <View style={styles.detailContent}>
-                                        <Text style={styles.detailLabel}>Technique</Text>
-                                        <Text style={styles.detailValue}>{artwork.technique}</Text>
+                                    <View style={styles.infoContent}>
+                                        <Text style={styles.infoLabel}>Technique</Text>
+                                        <Text style={styles.infoValue}>{artwork.technique}</Text>
                                     </View>
                                 </View>
                             )}
 
                             {artwork.dimensions && (
-                                <View style={styles.detailRow}>
+                                <View style={styles.infoItem}>
                                     <Ionicons name="resize-outline" size={20} color="#475569" />
-                                    <View style={styles.detailContent}>
-                                        <Text style={styles.detailLabel}>Dimensions</Text>
-                                        <Text style={styles.detailValue}>{artwork.dimensions}</Text>
+                                    <View style={styles.infoContent}>
+                                        <Text style={styles.infoLabel}>Dimensions</Text>
+                                        <Text style={styles.infoValue}>{artwork.dimensions}</Text>
                                     </View>
                                 </View>
                             )}
-                        </View>
 
-                        {/* Classification */}
-                        {(artwork.classification || artwork.department || artwork.culture) && (
-                            <View style={styles.classificationSection}>
-                                {artwork.classification && (
-                                    <View style={styles.classificationItem}>
-                                        <Text style={styles.detailLabel}>Classification</Text>
-                                        <Text style={styles.classificationValue}>{artwork.classification}</Text>
+                            {artwork.classification && (
+                                <View style={styles.infoItem}>
+                                    <Ionicons name="layers-outline" size={20} color="#475569" />
+                                    <View style={styles.infoContent}>
+                                        <Text style={styles.infoLabel}>Classification</Text>
+                                        <Text style={styles.infoValue}>{artwork.classification}</Text>
                                     </View>
-                                )}
-                                {artwork.department && (
-                                    <View style={styles.classificationItem}>
-                                        <Text style={styles.detailLabel}>Department</Text>
-                                        <Text style={styles.classificationValue}>{artwork.department}</Text>
-                                    </View>
-                                )}
-                                {artwork.culture && (
-                                    <View style={styles.classificationItem}>
-                                        <Text style={styles.detailLabel}>Culture</Text>
-                                        <Text style={styles.classificationValue}>{artwork.culture}</Text>
-                                    </View>
-                                )}
-                            </View>
-                        )}
+                                </View>
+                            )}
 
-                        {/* Geography */}
-                        {(artwork.city || artwork.country || artwork.region) && (
-                            <View style={styles.infoCard}>
-                                <View style={styles.infoRow}>
+                            {artwork.department && (
+                                <View style={styles.infoItem}>
+                                    <Ionicons name="folder-outline" size={20} color="#475569" />
+                                    <View style={styles.infoContent}>
+                                        <Text style={styles.infoLabel}>Department</Text>
+                                        <Text style={styles.infoValue}>{artwork.department}</Text>
+                                    </View>
+                                </View>
+                            )}
+
+                            {artwork.culture && (
+                                <View style={styles.infoItem}>
+                                    <Ionicons name="earth-outline" size={20} color="#475569" />
+                                    <View style={styles.infoContent}>
+                                        <Text style={styles.infoLabel}>Culture</Text>
+                                        <Text style={styles.infoValue}>{artwork.culture}</Text>
+                                    </View>
+                                </View>
+                            )}
+
+                            {(artwork.city || artwork.country) && (
+                                <View style={styles.infoItem}>
                                     <Ionicons name="location-outline" size={20} color="#475569" />
                                     <View style={styles.infoContent}>
                                         <Text style={styles.infoLabel}>Geography</Text>
@@ -261,60 +268,65 @@ export default function ArtworkDetailView() {
                                         )}
                                     </View>
                                 </View>
-                            </View>
-                        )}
+                            )}
 
-                        {/* Description */}
-                        {artwork.description && (
-                            <View style={styles.textSection}>
-                                <Text style={styles.sectionLabel}>Description</Text>
-                                <Text style={styles.sectionText}>{artwork.description}</Text>
-                            </View>
-                        )}
+                            {artwork.description && (
+                                <View style={styles.infoItem}>
+                                    <Ionicons name="document-text-outline" size={20} color="#475569" />
+                                    <View style={styles.infoContent}>
+                                        <Text style={styles.infoLabel}>Description</Text>
+                                        <Text style={styles.infoText}>{artwork.description}</Text>
+                                    </View>
+                                </View>
+                            )}
 
-                        {/* Commentary */}
-                        {artwork.commentary && (
-                            <View style={styles.textSection}>
-                                <Text style={styles.sectionLabel}>Commentary</Text>
-                                <Text style={styles.sectionText}>{artwork.commentary}</Text>
-                            </View>
-                        )}
+                            {artwork.commentary && (
+                                <View style={styles.infoItem}>
+                                    <Ionicons name="chatbubble-outline" size={20} color="#475569" />
+                                    <View style={styles.infoContent}>
+                                        <Text style={styles.infoLabel}>Commentary</Text>
+                                        <Text style={styles.infoText}>{artwork.commentary}</Text>
+                                    </View>
+                                </View>
+                            )}
 
-                        {/* Provenance */}
-                        {artwork.provenance && (
-                            <View style={styles.provenanceCard}>
-                                <Text style={styles.sectionLabel}>Provenance</Text>
-                                <Text style={styles.sectionText}>{artwork.provenance}</Text>
-                            </View>
-                        )}
+                            {artwork.provenance && (
+                                <View style={styles.infoItem}>
+                                    <Ionicons name="trail-sign-outline" size={20} color="#475569" />
+                                    <View style={styles.infoContent}>
+                                        <Text style={styles.infoLabel}>Provenance</Text>
+                                        <Text style={styles.infoText}>{artwork.provenance}</Text>
+                                    </View>
+                                </View>
+                            )}
 
-                        {/* Repository & Credit */}
-                        <View style={styles.repositorySection}>
                             {artwork.repository && (
-                                <View style={styles.detailRow}>
+                                <View style={styles.infoItem}>
                                     <Ionicons name="business-outline" size={20} color="#475569" />
-                                    <View style={styles.detailContent}>
-                                        <Text style={styles.detailLabel}>Repository</Text>
-                                        <Text style={styles.repositoryValue}>{artwork.repository}</Text>
+                                    <View style={styles.infoContent}>
+                                        <Text style={styles.infoLabel}>Repository</Text>
+                                        <Text style={styles.infoValue}>{artwork.repository}</Text>
                                     </View>
                                 </View>
                             )}
 
                             {artwork.creditLine && (
-                                <View style={styles.detailRow}>
+                                <View style={styles.infoItem}>
                                     <Ionicons name="ribbon-outline" size={20} color="#475569" />
-                                    <View style={styles.detailContent}>
-                                        <Text style={styles.detailLabel}>Credit Line</Text>
-                                        <Text style={styles.detailValue}>{artwork.creditLine}</Text>
+                                    <View style={styles.infoContent}>
+                                        <Text style={styles.infoLabel}>Credit</Text>
+                                        <Text style={styles.infoValue}>{artwork.creditLine}</Text>
                                     </View>
                                 </View>
                             )}
+
                         </View>
 
                         <View style={styles.spacer} />
                     </View>
                 </ScrollView>
             )}
+
             <RBSheet
                 ref={saveSheetRef}
                 height={700}
@@ -402,7 +414,6 @@ const styles = StyleSheet.create({
         color: "#EF4444",
     },
     imageContainer: {
-        marginTop: 30,
         width: "100%",
         aspectRatio: 1,
         backgroundColor: "#FFFFFF",
@@ -414,21 +425,27 @@ const styles = StyleSheet.create({
     },
     content: {
         backgroundColor: "#FFFFFF",
-        paddingHorizontal: 24,
-        paddingTop: 24,
+        paddingHorizontal: 16,
+        paddingTop: 4,
     },
     titleSection: {
-        marginBottom: 24,
+        paddingHorizontal: 24,
+        paddingTop: 40,
+        marginBottom: 0,
     },
     title: {
-        fontSize: 24,
+        fontSize: 22,
         fontWeight: "600",
         color: "#0F172A",
         marginBottom: 12,
         lineHeight: 32,
     },
     artistInfo: {
-        gap: 8,
+        gap: 4,
+    },
+    artistSection: {
+        paddingTop: 8,
+        marginBottom: 8,
     },
     artistName: {
         fontSize: 18,
@@ -443,128 +460,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: "#475569",
         lineHeight: 20,
-    },
-    gridContainer: {
-        flexDirection: "row",
-        gap: 16,
-        marginBottom: 24,
-    },
-    gridItem: {
-        flex: 1,
-    },
-    gridLabel: {
-        fontSize: 12,
-        color: "#64748B",
-        marginBottom: 4,
-    },
-    gridValue: {
-        fontSize: 14,
-        color: "#0F172A",
-        fontWeight: "500",
-    },
-    infoCard: {
-        backgroundColor: "#F8FAFC",
-        borderRadius: 12,
-        padding: 16,
-        marginBottom: 24,
-    },
-    infoRow: {
-        flexDirection: "row",
-        gap: 12,
-        alignItems: "flex-start",
-    },
-    infoContent: {
-        flex: 1,
-        gap: 4,
-    },
-    infoLabel: {
-        fontSize: 12,
-        color: "#64748B",
-    },
-    infoValue: {
-        fontSize: 14,
-        color: "#0F172A",
-        fontWeight: "500",
-    },
-    infoSubtext: {
-        fontSize: 12,
-        color: "#64748B",
-        marginTop: 2,
-    },
-    detailsSection: {
-        gap: 12,
-        marginBottom: 24,
-    },
-    detailRow: {
-        flexDirection: "row",
-        gap: 12,
-        alignItems: "flex-start",
-    },
-    detailContent: {
-        flex: 1,
-    },
-    detailLabel: {
-        fontSize: 12,
-        color: "#64748B",
-        marginBottom: 2,
-    },
-    detailValue: {
-        fontSize: 14,
-        color: "#0F172A",
-    },
-    classificationSection: {
-        borderTopWidth: 1,
-        borderTopColor: "#E2E8F0",
-        paddingTop: 24,
-        marginBottom: 24,
-        gap: 12,
-    },
-    classificationItem: {
-        marginBottom: 12,
-    },
-    classificationValue: {
-        fontSize: 14,
-        color: "#0F172A",
-        fontWeight: "500",
-        marginTop: 2,
-    },
-    textSection: {
-        borderTopWidth: 1,
-        borderTopColor: "#E2E8F0",
-        paddingTop: 24,
-        marginBottom: 24,
-    },
-    sectionLabel: {
-        fontSize: 12,
-        color: "#64748B",
-        marginBottom: 8,
-    },
-    sectionText: {
-        fontSize: 14,
-        color: "#475569",
-        lineHeight: 22,
-    },
-    provenanceCard: {
-        backgroundColor: "#F8FAFC",
-        borderRadius: 12,
-        padding: 16,
-        marginBottom: 24,
-    },
-    repositorySection: {
-        borderTopWidth: 1,
-        borderTopColor: "#E2E8F0",
-        paddingTop: 24,
-        marginBottom: 16,
-        gap: 16,
-    },
-    repositoryValue: {
-        fontSize: 14,
-        color: "#0F172A",
-        fontWeight: "500",
-        marginTop: 2,
-    },
-    spacer: {
-        height: 24,
     },
     actionRow: {
         flexDirection: "row",
@@ -585,5 +480,39 @@ const styles = StyleSheet.create({
     },
     actionLabelSaved: {
         color: "#EF4444",
+    },
+    infoSection: {
+        gap: 16,
+    },
+    infoItem: {
+        flexDirection: "row",
+        gap: 12,
+        alignItems: "flex-start",
+    },
+    infoContent: {
+        flex: 1,
+        gap: 2,
+    },
+    infoLabel: {
+        fontSize: 12,
+        color: "#64748B",
+    },
+    infoValue: {
+        fontSize: 14,
+        color: "#0F172A",
+        fontWeight: "500",
+    },
+    infoSubtext: {
+        fontSize: 12,
+        color: "#64748B",
+        marginTop: 2,
+    },
+    infoText: {
+        fontSize: 14,
+        color: "#475569",
+        lineHeight: 22,
+    },
+    spacer: {
+        height: 24,
     },
 });
