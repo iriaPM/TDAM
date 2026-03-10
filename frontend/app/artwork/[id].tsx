@@ -18,6 +18,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import SaveArtworkBottomsheet from "@/components/SaveArtworkBottomsheet";
 import CreateCollectionBottomsheet from "@/components/CreateCollectionBottomsheet";
 import { Collection } from "@/models/Collection";
+import ImageViewing from "react-native-image-viewing";
 
 export default function ArtworkDetailView() {
     const { id } = useLocalSearchParams();
@@ -29,6 +30,8 @@ export default function ArtworkDetailView() {
     const [newCollectionDescription, setNewCollectionDescription] = useState("");
     const saveSheetRef = useRef<any>(null);
     const createSheetRef = useRef<any>(null);
+    const [zoomVisible, setZoomVisible] = useState(false);
+
 
     useEffect(() => {
         if (!id) return;
@@ -69,10 +72,12 @@ export default function ArtworkDetailView() {
                     </View>
                     {/* Image */}
                     <View style={styles.imageContainer}>
-                        <Image
-                            source={{ uri: artwork.imageUrl }}
-                            style={styles.image}
-                        />
+                        <Pressable onPress={() => setZoomVisible(true)}>
+                            <Image
+                                source={{ uri: artwork.imageUrl }}
+                                style={styles.image}
+                            />
+                        </Pressable>
                     </View>
 
                     {/* Content */}
@@ -326,7 +331,16 @@ export default function ArtworkDetailView() {
                     </View>
                 </ScrollView>
             )}
-
+            {artwork && (
+                <ImageViewing
+                    images={[{ uri: artwork.imageUrl }]}
+                    imageIndex={0}
+                    visible={zoomVisible}
+                    onRequestClose={() => setZoomVisible(false)}
+                    swipeToCloseEnabled={true}
+                    doubleTapToZoomEnabled={true}
+                />
+            )}
             <RBSheet
                 ref={saveSheetRef}
                 height={700}
