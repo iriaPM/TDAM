@@ -146,7 +146,12 @@ export default function CollectionDetailView() {
                         accessibilityRole="button"
                         style={{ paddingHorizontal: 4 }}
                         onPress={() => {
-                            router.push(`/artwork/${item.id}` as Href);
+                             const ids = collection.artworks
+                                .filter((a: any) => a.imageUrl)
+                                .map((a: any) => a.id)
+                                .join(",");
+
+                            router.push(`/artwork/${item.id}?ids=${ids}` as Href);
                         }}
                     >
                         <ImageViewer
