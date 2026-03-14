@@ -57,8 +57,8 @@ def recommend(user_id):
         user_prefs_text = build_user_prefs_text(user_rows)
         seen_ids = set(row["artworkId"] for row in user_rows)
 
-        candidates = requests.get(f"{SPRING_BOOT_URL}/api/artworks/random").json()
-        unseen = [a for a in candidates if a["objectID"] not in seen_ids]
+        candidates = requests.get(f"{SPRING_BOOT_URL}/api/artworks/random/internal").json()
+        unseen = candidates
 
         if not unseen:
             return jsonify({"recommendations": [], "message": "No new artworks to recommend"})
