@@ -4,6 +4,7 @@ package com.iria.tdam.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import com.iria.tdam.backend.services.ArtworkCacheService;
 import com.iria.tdam.backend.services.ArtworkService;
 import com.iria.tdam.backend.services.HarvardArtworkService;
 import com.iria.tdam.backend.dto.ArtworkDto;
@@ -23,6 +24,8 @@ public class ArtworkController {
         private ArtworkService artworkService;
         @Autowired
         private HarvardArtworkService harvardArtworkService;
+        @Autowired
+        private ArtworkCacheService artworkCacheService;
 
         private final CollectionService collectionService;
         private final UserService userService;
@@ -49,15 +52,18 @@ public class ArtworkController {
                                 ? collectionService.getSavedArtworkIds(user)
                                 : Set.of();
 
-                List<ArtworkDto> result = new ArrayList<>();
-                result.addAll(artworkService.getRandomArtworks());
-                result.addAll(harvardArtworkService.getRandomArtworks());
+                List<ArtworkDto> result = new ArrayList<>(artworkCacheService.getCachedArtworks());
                 Collections.shuffle(result);
 
                 return result.stream()
                                 .limit(50)
                                 .peek(a -> a.setIsSaved(savedIds.contains(a.getObjectID())))
                                 .toList();
+        }
+
+        @GetMapping("/artworks/random/internal")
+        public List<ArtworkDto> getRandomArtworksInternal() {
+                return artworkCacheService.getCachedArtworks();
         }
 
         @GetMapping("/artworks/search")
@@ -77,7 +83,7 @@ public class ArtworkController {
                 result.addAll(artworkService.getArtworks(query)); // Met
                 result.addAll(harvardArtworkService.searchArtworks(query)); // Harvard
                 Collections.shuffle(result);
-                
+
                 return result.stream()
                                 .limit(10)
                                 .peek(a -> a.setIsSaved(savedIds.contains(a.getObjectID())))
@@ -111,29 +117,29 @@ public class ArtworkController {
                                 ? collectionService.getSavedArtworkIds(user)
                                 : Set.of();
 
-                String[] parts = artworkId.split("-", 2);
-                if (parts.length != 2) {
-                        throw new IllegalArgumentException("Invalid artwork ID format");
-                }
+                // check cache first
+                ArtworkDto artwork = artworkCacheService.getArtworkById(artworkId);
 
-                String source = parts[0];
-                String id = parts[1];
-
-                ArtworkDto artwork = null;
-
-                if ("met".equalsIgnoreCase(source)) {
-                        artwork = artworkService.getArtworkById(Integer.parseInt(id));
-                } else if ("harvard".equalsIgnoreCase(source)) {
-                        artwork = harvardArtworkService.getArtworkById(Integer.parseInt(id));
-                }
-
+                // fallback to API if not in cache
                 if (artwork == null) {
-                        throw new RuntimeException("Artwork not found");
+                        String[] parts = artworkId.split("-", 2);
+                        if (parts.length != 2)
+                                throw new IllegalArgumentException("Invalid artwork ID format");
+
+                        String source = parts[0];
+                        String id = parts[1];
+
+                        if ("met".equalsIgnoreCase(source)) {
+                                artwork = artworkService.getArtworkById(Integer.parseInt(id));
+                        } else if ("harvard".equalsIgnoreCase(source)) {
+                                artwork = harvardArtworkService.getArtworkById(Integer.parseInt(id));
+                        }
                 }
 
-                // Set saved status
-                artwork.setIsSaved(savedIds.contains(artwork.getObjectID()));
+                if (artwork == null)
+                        throw new RuntimeException("Artwork not found");
 
+                artwork.setIsSaved(savedIds.contains(artwork.getObjectID()));
                 return artwork;
         }
 

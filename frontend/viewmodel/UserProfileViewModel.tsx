@@ -48,15 +48,16 @@ export function useUserProfileViewModel(userId?: string) {
         }
     };
 
-    const updateProfile = async (username: string, description: string) => {
+    const updateProfile = async (username: string, description: string, avatarUrl: string | null) => {
         if (!user) return;
 
         try {
-            const updated = await updateUserProfile(username, description);
+            const updated = await updateUserProfile(username, description, avatarUrl);
             setUser({
                 ...user,
                 userName: updated.username,
                 description: updated.description,
+                avatarUrl: updated.avatarUrl,
             });
         } catch (err) {
             setError("Failed to update profile");

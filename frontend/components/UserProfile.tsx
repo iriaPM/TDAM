@@ -2,7 +2,7 @@
 //This is the logged user profile and other users profile component 
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Href, router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import { Href, router, useFocusEffect } from "expo-router";
 import RBSheet from "react-native-raw-bottom-sheet";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import ImageViewer from "@/components/imageViewer";
@@ -19,6 +19,9 @@ import {
 import { useUserProfileViewModel } from "@/viewmodel/UserProfileViewModel";
 import CreateCollectionBottomsheet from "@/components/CreateCollectionBottomsheet";
 import { logout } from "../utils/logout";
+import * as ImagePicker from "expo-image-picker";
+import * as ImageManipulator from "expo-image-manipulator";
+
 
 const NUM_COLUMNS = 2;
 const SCREEN_WIDTH = Dimensions.get("window").width;
@@ -39,7 +42,36 @@ export default function UserProfile({ id }: UserProfileProps) {
         load,
         updateProfile,
     } = useUserProfileViewModel(id);
-    
+    const [editAvatar, setEditAvatar] = useState<string | null>(null);
+    const pickImage = async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+            alert("Permission to access photos is required.");
+            return;
+        }
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            const resized = await ImageManipulator.ImageManipulator
+                .manipulate(result.assets[0].uri)
+                .resize({ width: 200, height: 200 })
+                .renderAsync();
+
+            const image = await resized.saveAsync({
+                compress: 0.5,
+                format: ImageManipulator.SaveFormat.JPEG,
+                base64: true,
+            });
+
+            setEditAvatar(`data:image/jpeg;base64,${image.base64}`);
+        }
+    };
+
     useFocusEffect(
         useCallback(() => {
             load();
@@ -64,12 +96,13 @@ export default function UserProfile({ id }: UserProfileProps) {
     const openEditSheet = () => {
         setEditName(user.userName);
         setEditDescription(user.description ?? "");
+        setEditAvatar(null);
         editSheetRef.current?.open();
     };
 
     const handleUpdateProfile = async () => {
         try {
-            await updateProfile(editName, editDescription);
+            await updateProfile(editName, editDescription, editAvatar ?? user.avatarUrl ?? null);
             editSheetRef.current?.close();
         } catch (err) {
             console.error("Update failed:", err);
@@ -79,6 +112,8 @@ export default function UserProfile({ id }: UserProfileProps) {
     const renderCollection = ({ item }: any) => (
         <View style={styles.card}>
             <Pressable
+                accessibilityLabel={`View collection: ${item.title}`}
+                accessibilityRole="button"
                 onPress={() => {
                     router.push(`collections/${item.id}` as Href);
                 }}
@@ -100,7 +135,7 @@ export default function UserProfile({ id }: UserProfileProps) {
         <SafeAreaView style={styles.container}>
 
             {/* -------- Header -------- */}
-            <View style={styles.header}>
+            <View accessible={true} style={styles.header}>
                 <View style={styles.avatarRow}>
                     <ImageViewer
                         imgSource={user.avatarUrl ? { uri: user.avatarUrl } : require("@/assets/images/userPlaceholder.png")}
@@ -114,6 +149,8 @@ export default function UserProfile({ id }: UserProfileProps) {
                             {isMe && (
                                 <View style={styles.headerActions}>
                                     <Pressable
+                                        accessibilityLabel="Edit profile"
+                                        accessibilityRole="button"
                                         style={styles.iconButton}
                                         onPress={openEditSheet}>
                                         <Ionicons
@@ -124,6 +161,8 @@ export default function UserProfile({ id }: UserProfileProps) {
                                     </Pressable>
 
                                     <Pressable
+                                        accessibilityLabel="Log out"
+                                        accessibilityRole="button"
                                         style={styles.iconButton}
                                         onPress={logout}>
                                         <Ionicons
@@ -164,6 +203,27 @@ export default function UserProfile({ id }: UserProfileProps) {
                     draggableIcon: styles.BSdraggableIcon
                 }}
             >
+                <View style={styles.avatarPickerContainer}>
+                    <Pressable
+                        accessibilityLabel="Change avatar"
+                        accessibilityRole="button"
+                        onPress={pickImage}>
+                        <ImageViewer
+                            imgSource={
+                                editAvatar
+                                    ? { uri: editAvatar }
+                                    : user.avatarUrl
+                                        ? { uri: user.avatarUrl }
+                                        : require("@/assets/images/userPlaceholder.png")
+                            }
+                            style={styles.avatarPreview}
+                        />
+                        <View style={styles.editAvatarBadge}>
+                            <Ionicons name="camera" size={14} color="#fff" />
+                        </View>
+                    </Pressable>
+                </View>
+
                 <CreateCollectionBottomsheet
                     title="Edit profile"
                     submitLabel="Save"
@@ -280,5 +340,24 @@ const styles = StyleSheet.create({
     },
     BSdraggableIcon: {
         backgroundColor: '#999',
+    },
+    avatarPickerContainer: {
+        alignItems: "center",
+        paddingTop: 20,
+        paddingBottom: 10,
+    },
+    avatarPreview: {
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        backgroundColor: "#eee",
+    },
+    editAvatarBadge: {
+        position: "absolute",
+        bottom: 0,
+        right: 0,
+        backgroundColor: "#555",
+        borderRadius: 12,
+        padding: 4,
     },
 });

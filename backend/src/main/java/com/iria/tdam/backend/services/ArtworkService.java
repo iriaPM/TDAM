@@ -127,13 +127,13 @@ public class ArtworkService {
     }
 
     // --- Random artworks
-    @Cacheable("randomArtworks")
+    //@Cacheable("randomArtworks")
     public List<ArtworkDto> getRandomArtworks() {
-        String url = "https://collectionapi.metmuseum.org/public/collection/v1/objects";
+        String url = "https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&q=painting&isHighlight=true";
 
-        MetAllObjectsResponse response;
+        MetSearchResponse response;
         try {
-            response = restTemplate.getForObject(url, MetAllObjectsResponse.class);
+            response = restTemplate.getForObject(url, MetSearchResponse.class);
         } catch (Exception e) {
             return List.of();
         }
@@ -141,10 +141,11 @@ public class ArtworkService {
         if (response == null || response.objectIDs == null || response.objectIDs.isEmpty())
             return List.of();
 
-        Collections.shuffle(response.objectIDs);
+        List<Integer> ids = new ArrayList<>(response.objectIDs);
+        Collections.shuffle(ids);
 
-        return response.objectIDs.stream()
-                .limit(30)
+        return ids.stream()
+                .limit(20)
                 .map(this::getArtworkById)
                 .filter(Objects::nonNull)
                 .limit(10)

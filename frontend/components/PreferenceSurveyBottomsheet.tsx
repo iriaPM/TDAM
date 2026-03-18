@@ -63,6 +63,7 @@ export default function PreferenceSurveyBottomsheet({ onSubmit }: PreferenceSurv
         const isSelected = selected.includes(item);
         return (
             <Pressable
+                accessibilityRole="button"
                 key={item}
                 style={[styles.button, isSelected && styles.buttonSelected]}
                 onPress={() => toggleSelection(item, selected, setSelected)}

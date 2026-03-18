@@ -79,7 +79,10 @@ export default function TdamArtistDetail({
             )}
 
             {wikipediaUrl && (
-                <Pressable onPress={() => Linking.openURL(wikipediaUrl)}>
+                <Pressable 
+                accessibilityLabel="Open Wikipedia page"
+                accessibilityRole="button"
+                onPress={() => Linking.openURL(wikipediaUrl)}>
                     <Text style={styles.link}>Read more on Wikipedia</Text>
                 </Pressable>
             )}
@@ -92,6 +95,8 @@ export default function TdamArtistDetail({
                 numColumns={2}
                 renderItem={({ item }: { item: any }) => (
                     <Pressable
+                        accessibilityLabel={item.title}
+                        accessibilityRole="button"
                         style={styles.masonryItem}
                         onPress={() => onArtworkPress?.(item.objectID)}
                     >

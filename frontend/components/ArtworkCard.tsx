@@ -26,7 +26,10 @@ type Props = {
 function TdamArtworkCard({ style, title, artist, imageUrl, year, movement, onPress, isSaved, onSave, onAddToCollection, onArtistPress, size }: Props) {
     if (size === "small") {
         return (
-            <Pressable style={[styles.smallContainer, style]} onPress={onPress}>
+            <Pressable
+                accessibilityLabel={title}
+                accessibilityRole="image"
+                style={[styles.smallContainer, style]} onPress={onPress}>
                 <ImageViewer
                     imgSource={imageUrl ? { uri: imageUrl } : require("../assets/images/placeholderArt.png")}
                     style={styles.smallImage}
@@ -36,8 +39,11 @@ function TdamArtworkCard({ style, title, artist, imageUrl, year, movement, onPre
         );
     }
     return (
-        <View style={[styles.containter]}>
-            <Pressable onPress={onPress}>
+        <View  accessible={true} style={[styles.containter]}>
+            <Pressable
+                accessibilityLabel={title}
+                accessibilityRole="button"
+                onPress={onPress}>
                 <View style={[styles.cardContainer, style]}>
                     <Text style={styles.title}>{title}</Text>
                     <ImageViewer
@@ -45,21 +51,30 @@ function TdamArtworkCard({ style, title, artist, imageUrl, year, movement, onPre
                         style={styles.image}
                     />
                     <View>
-                        <Pressable onPress={onArtistPress}>
+                        <Pressable
+                            accessibilityLabel={`View artist: ${artist}`}
+                            accessibilityRole="button"
+                            onPress={onArtistPress}>
                             <Text style={styles.text}>
                                 {[artist, year, movement].filter(Boolean).join(", ")}
                             </Text>
                         </Pressable>
                     </View>
                     <View style={styles.saveIcon}>
-                        <Pressable onPress={onSave}>
+                        <Pressable
+                            accessibilityLabel={isSaved ? "Unsave artwork" : "Save artwork"}
+                            accessibilityRole="button"
+                            onPress={onSave}>
                             <Ionicons
                                 name={isSaved ? "heart" : "heart-outline"}
                                 size={24}
                                 color="black"
                             />
                         </Pressable>
-                        <Pressable onPress={onAddToCollection}>
+                        <Pressable
+                            accessibilityLabel="Add to collection"
+                            accessibilityRole="button"
+                            onPress={onAddToCollection}>
                             <Ionicons
                                 name={"add-circle-outline"}
                                 size={24}
@@ -115,12 +130,12 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     },
     smallImage: {
-    width: SMALL_CARD_SIZE,
-    height: SMALL_CARD_SIZE,
-    borderRadius: 8,
-    backgroundColor: "#eee",
-    resizeMode: "cover",
-},
+        width: SMALL_CARD_SIZE,
+        height: SMALL_CARD_SIZE,
+        borderRadius: 8,
+        backgroundColor: "#eee",
+        resizeMode: "cover",
+    },
     smallTitle: {
         fontSize: 12,
         fontWeight: "600",

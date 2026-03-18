@@ -18,7 +18,7 @@ import { Href, router, useFocusEffect } from "expo-router";
 
 
 export default function ArtworkFeedView() {
-    const { artworks, toggleSave, searchArtworks, searching, error, loadRandomArtworks } = useArtworksViewModel();
+    const { artworks, toggleSave, searchArtworks, searching, error, loadFeed } = useArtworksViewModel();
     const saveSheetRef = useRef<any>(null);
     const createSheetRef = useRef<any>(null);
 
@@ -29,7 +29,7 @@ export default function ArtworkFeedView() {
 
     useFocusEffect(
         useCallback(() => {
-            loadRandomArtworks();
+            loadFeed();
         }, [])
     );
 
@@ -153,7 +153,7 @@ export default function ArtworkFeedView() {
                 renderItem={renderItem}
                 contentContainerStyle={{ paddingBottom: 16 }}
                 refreshing={searching}
-                onRefresh={loadRandomArtworks}
+                onRefresh={loadFeed}
             />
             <RBSheet
                 ref={saveSheetRef}

@@ -29,6 +29,7 @@ public class User {
     @Column(length = 500)
     private String description;
 
+    @Column(columnDefinition = "TEXT")
     private String avatarUrl;
 
     @Column(columnDefinition = "TEXT")

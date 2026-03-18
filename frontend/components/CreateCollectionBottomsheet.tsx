@@ -36,11 +36,12 @@ export default function CreateCollectionBottomsheet({
 }: CreateCollectionBottomsheetProps) {
 
     return (
-        <View style={styles.container}>
+        <View accessible={true}
+            style={styles.container}>
             {/* Header */}
             <Text style={styles.headerTitle}>{title ?? ""}</Text>
 
-            <View style={styles.form}>
+            <View accessible={true} style={styles.form}>
 
                 {/*name button*/}
                 <TdamTextInput
@@ -101,7 +102,7 @@ const styles = StyleSheet.create({
         width: "100%",
         marginTop: 10,
         paddingHorizontal: 16,
-        paddingTop:20,
+        paddingTop: 20,
     },
     form: {
         width: "100%",

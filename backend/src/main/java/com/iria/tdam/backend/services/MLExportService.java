@@ -4,6 +4,7 @@ package com.iria.tdam.backend.services;
 
 import com.iria.tdam.backend.dto.MlInteractionDto;
 import com.iria.tdam.backend.dto.ArtworkDto;
+import com.iria.tdam.backend.dto.MlCollectionDto;
 import com.iria.tdam.backend.model.*;
 import com.iria.tdam.backend.model.Collection;
 import com.iria.tdam.backend.repository.*;
@@ -129,5 +130,51 @@ public class MLExportService {
 
     private String safe(String value) {
         return value == null ? "" : value;
+    }
+
+    public List<MlCollectionDto> getCollectionDataset() {
+        List<MlCollectionDto> dataset = new ArrayList<>();
+
+        List<Collection> publicCollections = collectionRepository.findByIsPrivateFalse();
+
+        for (Collection collection : publicCollections) {
+            List<CollectionArtwork> artworks = collectionArtworkRepository.findByCollection(collection);
+
+            if (artworks.isEmpty())
+                continue;
+
+            // extract metadata from all artworks in the collection
+            List<String> artists = new ArrayList<>();
+            List<String> periods = new ArrayList<>();
+            List<String> cultures = new ArrayList<>();
+            List<String> mediums = new ArrayList<>();
+
+            for (CollectionArtwork ca : artworks) {
+                ArtworkDto artwork = fetchArtworkMetadata(ca.getArtworkId());
+                if (artwork == null)
+                    continue;
+
+                if (artwork.getArtist() != null)
+                    artists.add(artwork.getArtist());
+                if (artwork.getPeriod() != null)
+                    periods.add(artwork.getPeriod());
+                if (artwork.getCulture() != null)
+                    cultures.add(artwork.getCulture());
+                if (artwork.getMedium() != null)
+                    mediums.add(artwork.getMedium());
+            }
+
+            dataset.add(new MlCollectionDto(
+                    collection.getId(),
+                    collection.getTitle(),
+                    collection.getDescription(),
+                    collection.getOwner().getId(),
+                    String.join(" ", artists),
+                    String.join(" ", periods),
+                    String.join(" ", cultures),
+                    String.join(" ", mediums)));
+        }
+
+        return dataset;
     }
 }

@@ -26,6 +26,8 @@ public interface CollectionRepository extends JpaRepository<Collection, UUID> {
     Optional<Collection> findByIdAndOwner(UUID id, User owner);
 
     // to find "all collections" collection
-    Optional<Collection> findByOwnerAndTitle( User owner, String title);
+    Optional<Collection> findByOwnerAndTitle(User owner, String title);
 
+    // to find "all collections" collection, ordered by creation date (should be only one)
+    Optional<Collection> findFirstByOwnerAndTitleOrderByCreatedAtAsc(User owner, String title);
 }

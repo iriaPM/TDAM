@@ -17,6 +17,8 @@ export default function TdamButton({ label, theme, onPress, disabled, style }: P
         return (
             <View style={[styles.buttonContainer, style]}>
                 <Pressable
+                    accessibilityLabel={label}
+                    accessibilityRole="button"
                     style={styles.button}
                     onPress={onPress}
                     disabled={disabled}
@@ -30,6 +32,8 @@ export default function TdamButton({ label, theme, onPress, disabled, style }: P
         return (
             <View style={[styles.buttonContainer, style]}>
                 <Pressable
+                    accessibilityLabel={label}
+                    accessibilityRole="button"
                     style={[styles.button, styles.primaryButton]}
                     onPress={onPress}
                     disabled={disabled}
@@ -43,6 +47,8 @@ export default function TdamButton({ label, theme, onPress, disabled, style }: P
         return (
             <View style={[styles.buttonContainer, style]}>
                 <Pressable
+                    accessibilityLabel={label}
+                    accessibilityRole="button"
                     style={[styles.button, styles.secondaryButton]}
                     onPress={onPress}
                     disabled={disabled}
@@ -56,6 +62,8 @@ export default function TdamButton({ label, theme, onPress, disabled, style }: P
         return (
             <View style={[styles.buttonContainer, style]}>
                 <Pressable
+                    accessibilityLabel={label}
+                    accessibilityRole="button"
                     style={[styles.button, styles.tertiaryButton]}
                     onPress={onPress}
                     disabled={disabled}
