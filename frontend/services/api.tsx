@@ -322,16 +322,15 @@ export async function submitUserPreferences(
 export async function getArtworkDetail(artworkId: string) {
     const token = await AsyncStorage.getItem("userToken");
 
-    const response = await fetch(
-        `${BASE_URL}/artworks/${artworkId}`,
-        {
-            headers: token
-                ? { Authorization: `Bearer ${token}` }
-                : {},
-        }
-    );
+    const response = await fetch(`${BASE_URL}/artworks/${artworkId}`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+
+    if (response.status === 404) return null;
 
     if (!response.ok) {
+        const text = await response.text();
+        console.error("ARTWORK DETAIL ERROR:", text);
         throw new Error("Failed to load artwork detail");
     }
 
@@ -379,6 +378,7 @@ export async function getArtworkRecommendations(topN: number = 10): Promise<Artw
 
     const data = await response.json();
     // map recommendations to Artwork model
+    console.log("RECOMMENDATIONS DATA:", data);
     return data.recommendations.map((r: any) => ({
         objectID: r.objectID,
         title: r.title,

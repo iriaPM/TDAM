@@ -33,14 +33,6 @@ export default function ArtworkDetailPage({ artworkId }: { artworkId: string }) 
     const saveSheetRef = useRef<any>(null);
     const createSheetRef = useRef<any>(null);
 
-    if (!artwork && !loading) {
-        return (
-            <View style={styles.loadingContainer}>
-                <Text style={styles.errorText}>Artwork not found</Text>
-            </View>
-        );
-    }
-
     return (
         <View style={styles.pageContainer}>
             <LoadingSpinner visible={loading} />

@@ -13,9 +13,8 @@ export function useArtworksViewModel() {
 
     //load default feed
     useEffect(() => {
-        if (artworks.length === 0) {
-            loadFeed();
-        }
+        if (artworks.length > 0) return; 
+        loadFeed();
     }, []);
 
     //load feed

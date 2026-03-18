@@ -3,6 +3,7 @@
 package com.iria.tdam.backend.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.iria.tdam.backend.services.ArtworkCacheService;
 import com.iria.tdam.backend.services.ArtworkService;
@@ -105,7 +106,7 @@ public class ArtworkController {
         }
 
         @GetMapping("/artworks/{artworkId}")
-        public ArtworkDto getArtworkDetail(
+        public ResponseEntity<ArtworkDto> getArtworkDetail(
                         @PathVariable String artworkId,
                         @RequestHeader(value = "Authorization", required = false) String token) {
 
@@ -117,30 +118,32 @@ public class ArtworkController {
                                 ? collectionService.getSavedArtworkIds(user)
                                 : Set.of();
 
-                // check cache first
                 ArtworkDto artwork = artworkCacheService.getArtworkById(artworkId);
 
-                // fallback to API if not in cache
                 if (artwork == null) {
                         String[] parts = artworkId.split("-", 2);
                         if (parts.length != 2)
-                                throw new IllegalArgumentException("Invalid artwork ID format");
+                                return ResponseEntity.badRequest().build();
 
                         String source = parts[0];
                         String id = parts[1];
 
-                        if ("met".equalsIgnoreCase(source)) {
-                                artwork = artworkService.getArtworkById(Integer.parseInt(id));
-                        } else if ("harvard".equalsIgnoreCase(source)) {
-                                artwork = harvardArtworkService.getArtworkById(Integer.parseInt(id));
+                        try {
+                                if ("met".equalsIgnoreCase(source)) {
+                                        artwork = artworkService.getArtworkById(Integer.parseInt(id));
+                                } else if ("harvard".equalsIgnoreCase(source)) {
+                                        artwork = harvardArtworkService.getArtworkById(Integer.parseInt(id));
+                                }
+                        } catch (Exception e) {
+                                // API fetch failed, artwork stays null
                         }
                 }
 
                 if (artwork == null)
-                        throw new RuntimeException("Artwork not found");
+                        return ResponseEntity.notFound().build();
 
                 artwork.setIsSaved(savedIds.contains(artwork.getObjectID()));
-                return artwork;
+                return ResponseEntity.ok(artwork);
         }
 
         @PostMapping("/artworks/viewed")
