@@ -49,6 +49,11 @@ export default function TdamArtistDetail({
     artworks,
     onArtworkPress,
 }: Props) {
+    // Filter artworks to only show those by this artist
+    const filteredArtworks = artworks.filter(
+        (artwork) => artwork.artist?.toLowerCase() === name?.toLowerCase()
+    );
+
     return (
         <ScrollView style={styles.container}>
 
@@ -87,10 +92,10 @@ export default function TdamArtistDetail({
                 </Pressable>
             )}
 
-            <Text style={styles.sectionTitle}>Artworks ({artworks.length})</Text>
+            <Text style={styles.sectionTitle}>Artworks ({filteredArtworks.length})</Text>
 
             <MasonryList
-                data={artworks}
+                data={filteredArtworks}
                 keyExtractor={(item) => item.objectID}
                 numColumns={2}
                 renderItem={({ item }: { item: any }) => (

@@ -84,6 +84,7 @@ export function useArtworkDetailViewModel(artworkId: string) {
         if (!artwork) return;
         const created = await createCollection(name, description, false);
         await toggleArtworkInCollection(created.id, artwork.objectID, artwork.imageUrl);
+        await loadCollections();
     };
 
     return {
