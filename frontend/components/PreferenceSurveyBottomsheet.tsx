@@ -134,7 +134,8 @@ export default function PreferenceSurveyBottomsheet({ onSubmit }: PreferenceSurv
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#ffffff',
-        flex: 1,
+        marginBottom: 50,
+        paddingTop:10,
     },
     contentContainer: {
         padding: 20,

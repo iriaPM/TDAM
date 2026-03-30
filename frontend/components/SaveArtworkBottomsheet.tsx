@@ -36,7 +36,7 @@ export default function SaveArtworkBottomsheet({
             <Text style={styles.headerTitle}>Add to a collection!</Text>
 
             {/* Artwork info */}
-            <View  accessible={true} style={styles.artworkInfo}>
+            <View style={styles.artworkInfo}>
                 <Image
                     source={
                         artworkImageUrl

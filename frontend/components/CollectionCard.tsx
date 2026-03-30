@@ -32,7 +32,7 @@ function TdamCollectionCard({
 }: Props) {
 
     return (
-        <View accessible={true} style={[styles.container]}>
+        <View style={[styles.container]}>
             <View style={[styles.cardContainer, style]}>
 
                 <Pressable
@@ -49,8 +49,7 @@ function TdamCollectionCard({
                     />
                 </Pressable>
 
-                <View
-                    accessible={true} style={styles.infoContainer}>
+                <View style={styles.infoContainer}>
                     <Pressable
                         onPress={onUserPress}
                         style={styles.userRow}

@@ -39,7 +39,7 @@ function TdamArtworkCard({ style, title, artist, imageUrl, year, movement, onPre
         );
     }
     return (
-        <View  accessible={true} style={[styles.containter]}>
+        <View style={[styles.containter]}>
             <Pressable
                 accessibilityLabel={title}
                 accessibilityRole="button"
@@ -74,19 +74,21 @@ function TdamArtworkCard({ style, title, artist, imageUrl, year, movement, onPre
                         <Pressable
                             accessibilityLabel="Add to collection"
                             accessibilityRole="button"
-                            onPress={onAddToCollection}>
+                            onPress={() => {
+                                onAddToCollection?.();
+                            }}>
                             <Ionicons
-                                name={"add-circle-outline"}
-                                size={24}
-                                color="black"
-                            />
-                        </Pressable>
-                        <Text style={styles.text}> {isSaved ? "Saved" : "Add to collection"}</Text>
-                    </View>
+                            name={"add-circle-outline"}
+                            size={24}
+                            color="black"
+                        />
+                    </Pressable>
+                    <Text style={styles.text}> {isSaved ? "Saved" : "Add to collection"}</Text>
                 </View>
-            </Pressable>
-            <View style={styles.separator} />
         </View>
+            </Pressable >
+        <View style={styles.separator} />
+        </View >
     );
 }
 

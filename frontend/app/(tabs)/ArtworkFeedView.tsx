@@ -174,7 +174,9 @@ export default function ArtworkFeedView() {
                         collections={collections}
                         onCreateNew={() => {
                             saveSheetRef.current?.close();
-                            createSheetRef.current?.open()
+                            setTimeout(() => {
+                                createSheetRef.current?.open();
+                            }, 300); 
                         }}
                         onToggleCollection={(id) => { handleToggleCollection(id) }}
                     />

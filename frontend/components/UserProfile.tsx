@@ -135,7 +135,7 @@ export default function UserProfile({ id }: UserProfileProps) {
         <SafeAreaView style={styles.container}>
 
             {/* -------- Header -------- */}
-            <View accessible={true} style={styles.header}>
+            <View style={styles.header}>
                 <View style={styles.avatarRow}>
                     <ImageViewer
                         imgSource={user.avatarUrl ? { uri: user.avatarUrl } : require("@/assets/images/userPlaceholder.png")}
