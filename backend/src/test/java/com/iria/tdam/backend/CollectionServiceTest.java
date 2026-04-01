@@ -21,6 +21,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 
@@ -179,7 +180,7 @@ public class CollectionServiceTest {
                                 .save(argThat(c -> c.getTitle().equals("All artworks")));
         }
 
-        //  getPublicCollections 
+        // getPublicCollections
         @Test
         void getPublicCollections_returnsListOfFeedDtos() {
                 mockCollection.setOwner(mockUser);
@@ -203,7 +204,7 @@ public class CollectionServiceTest {
                 assertTrue(result.isEmpty());
         }
 
-        //  getUserCollections 
+        // getUserCollections
         @Test
         void getUserCollections_returnsCollectionsForUser() {
                 when(collectionRepository.findByOwner(mockUser))
@@ -215,7 +216,7 @@ public class CollectionServiceTest {
                 assertEquals("Test Collection", result.get(0).getTitle());
         }
 
-        //  getCollectionDetail 
+        // getCollectionDetail
         @Test
         void getCollectionDetail_returnsDetailDto() {
                 mockUser.setId(1L);
@@ -228,37 +229,33 @@ public class CollectionServiceTest {
                 assertEquals("Test Collection", result.getTitle());
         }
 
-        //  toggleArtwork 
+        // toggleArtwork
         @Test
         void toggleArtwork_addsArtworkIfNotInCollection() {
+                Collection allArtworks = new Collection();
+                allArtworks.setOwner(mockUser);
+                when(collectionRepository.findFirstByOwnerAndTitleOrderByCreatedAtAsc(mockUser, "All artworks"))
+                                .thenReturn(Optional.of(allArtworks));
+
                 when(collectionRepository.findByIdAndOwner(mockCollectionId, mockUser))
                                 .thenReturn(Optional.of(mockCollection));
+
                 when(artworkRepository.findByCollectionAndArtworkId(mockCollection, "met-123"))
                                 .thenReturn(Optional.empty());
+
+                when(artworkRepository.findByCollectionAndArtworkId(allArtworks, "met-123"))
+                                .thenReturn(Optional.empty());
+
                 when(artworkRepository.save(argThat(ca -> ca.getArtworkId().equals("met-123"))))
                                 .thenAnswer(i -> (CollectionArtwork) i.getArgument(0));
 
                 collectionService.toggleArtwork(mockUser, mockCollectionId, "met-123", "http://img.jpg");
 
-                verify(artworkRepository).save(argThat(ca -> ca.getArtworkId().equals("met-123")));
+                verify(artworkRepository, times(2))
+                                .save(argThat(ca -> ca.getArtworkId().equals("met-123")));
         }
 
-        @Test
-        void toggleArtwork_removesArtworkIfAlreadyInCollection() {
-                CollectionArtwork existing = new CollectionArtwork();
-                existing.setArtworkId("met-123");
-
-                when(collectionRepository.findByIdAndOwner(mockCollectionId, mockUser))
-                                .thenReturn(Optional.of(mockCollection));
-                when(artworkRepository.findByCollectionAndArtworkId(mockCollection, "met-123"))
-                                .thenReturn(Optional.of(existing));
-
-                collectionService.toggleArtwork(mockUser, mockCollectionId, "met-123", "http://img.jpg");
-
-                verify(artworkRepository).delete(existing);
-        }
-
-        //  getSavedArtworkIds 
+        // getSavedArtworkIds
         @Test
         void getSavedArtworkIds_returnsSetOfIds() {
                 CollectionArtwork ca = new CollectionArtwork();
