@@ -140,30 +140,32 @@ export default function CollectionDetailView() {
                 data={collection.artworks}
                 keyExtractor={(item) => item.id}
                 numColumns={2}
-                renderItem={({ item }: { item: any }) => (
-                    <Pressable
-                        accessibilityLabel={item.title}
-                        accessibilityRole="button"
-                        style={{ paddingHorizontal: 4 }}
-                        onPress={() => {
-                             const ids = collection.artworks
-                                .filter((a: any) => a.imageUrl)
-                                .map((a: any) => a.id)
-                                .join(",");
+                renderItem={({ item }: { item: any }) => {
+                    const ids = collection.artworks
+                        .filter((a: any) => a.imageUrl)
+                        .map((a: any) => a.id)   
+                        .join(",");
 
-                            router.push(`/artwork/${item.id}?ids=${ids}` as Href);
-                        }}
-                    >
-                        <ImageViewer
-                            imgSource={
-                                item.imageUrl
-                                    ? { uri: item.imageUrl }
-                                    : require("@/assets/images/placeholderArt.png")
-                            }
-                            style={styles.masonryImage}
-                        />
-                    </Pressable>
-                )}
+                    return (
+                        <Pressable
+                            accessibilityLabel={item.title}
+                            accessibilityRole="button"
+                            style={{ paddingHorizontal: 4 }}
+                            onPress={() => {
+                                router.push(`/artwork/${item.id}?ids=${ids}` as Href);
+                            }}
+                        >
+                            <ImageViewer
+                                imgSource={
+                                    item.imageUrl
+                                        ? { uri: item.imageUrl }
+                                        : require("@/assets/images/placeholderArt.png")
+                                }
+                                style={styles.masonryImage}
+                            />
+                        </Pressable>
+                    );
+                }}
                 containerStyle={styles.masonryContainer}
             />
             <RBSheet

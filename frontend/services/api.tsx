@@ -321,16 +321,19 @@ export async function submitUserPreferences(
 
 export async function getArtworkDetail(artworkId: string) {
     const token = await AsyncStorage.getItem("userToken");
+    const url = `${BASE_URL}/artworks/${artworkId}`;
+    //console.log("Fetching artwork:", url);  
 
-    const response = await fetch(`${BASE_URL}/artworks/${artworkId}`, {
+    const response = await fetch(url, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
 
+    //console.log("Response status:", response.status);   
     if (response.status === 404) return null;
 
     if (!response.ok) {
         const text = await response.text();
-        console.error("ARTWORK DETAIL ERROR:", text);
+        //console.error("ARTWORK DETAIL ERROR:", text);
         throw new Error("Failed to load artwork detail");
     }
 

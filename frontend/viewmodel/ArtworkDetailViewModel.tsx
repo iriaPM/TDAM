@@ -22,13 +22,13 @@ export function useArtworkDetailViewModel(artworkId: string) {
         setArtwork(null);
 
         const load = async () => {
+            setLoading(true);
             try {
                 const data = await getArtworkDetail(artworkId);
                 setArtwork(data);
                 setIsSaved(data.isSaved ?? false);
-                await markArtworkViewed(artworkId);
-            } catch (e) {
-                console.error("Failed to load artwork", e);
+                if (data) markArtworkViewed(artworkId);
+            } catch (err) {
             } finally {
                 setLoading(false);
             }

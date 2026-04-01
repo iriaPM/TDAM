@@ -16,6 +16,7 @@ import com.iria.tdam.backend.services.UserService;
 import com.iria.tdam.backend.dto.ViewArtworkRequest;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -63,8 +64,15 @@ public class ArtworkController {
         }
 
         @GetMapping("/artworks/random/internal")
-        public List<ArtworkDto> getRandomArtworksInternal() {
-                return artworkCacheService.getCachedArtworks();
+        public List<ArtworkDto> getRandomArtworksInternal(
+                        @RequestParam(required = false) String category) {
+                List<ArtworkDto> all = artworkCacheService.getCachedArtworks();
+                if (category == null || category.isEmpty()) {
+                        return all;
+                }
+                return all.stream()
+                                .filter(a -> matchesCategory(a, category))
+                                .collect(Collectors.toList());
         }
 
         @GetMapping("/artworks/search")
@@ -159,4 +167,13 @@ public class ArtworkController {
                 return Map.of("status", "success");
         }
 
+        private boolean matchesCategory(ArtworkDto artwork, String category) {
+                if (category == null || category.isEmpty())
+                        return true;
+                String lower = category.toLowerCase();
+                return (artwork.getArtist() != null && artwork.getArtist().toLowerCase().contains(lower)) ||
+                                (artwork.getPeriod() != null && artwork.getPeriod().toLowerCase().contains(lower)) ||
+                                (artwork.getCulture() != null && artwork.getCulture().toLowerCase().contains(lower)) ||
+                                (artwork.getMedium() != null && artwork.getMedium().toLowerCase().contains(lower));
+        }
 }
