@@ -41,7 +41,7 @@ public class RecommendationServiceTest {
                 "http://localhost:5000/recommend/1?top_n=10", Object.class))
                 .thenReturn(ResponseEntity.ok(mockBody));
 
-        Object result = recommendationService.getArtworkRecommendations(1L, 10);
+        Object result = recommendationService.getArtworkRecommendations(1L, 10, null);
 
         assertNotNull(result);
     }
@@ -51,7 +51,7 @@ public class RecommendationServiceTest {
         when(restTemplate.getForEntity(anyString(), eq(Object.class)))
                 .thenThrow(new RuntimeException("Connection refused"));
 
-        Object result = recommendationService.getArtworkRecommendations(1L, 10);
+        Object result = recommendationService.getArtworkRecommendations(1L, 10, null);
 
         assertNull(result);
     }

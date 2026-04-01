@@ -13,22 +13,19 @@ export function useArtworksViewModel() {
 
     //load default feed
     useEffect(() => {
-        if (artworks.length > 0) return; 
+        if (artworks.length > 0) return;
         loadFeed();
     }, []);
 
     //load feed
-    const loadFeed = async () => {
+    const loadFeed = async (category?: string) => {
         setSearching(true);
         setError(null);
-
         try {
-            // recommendations first
-            const recommended = await getArtworkRecommendations();
+            const recommended = await getArtworkRecommendations(10, category);
             if (recommended.length > 0) {
                 setArtworks(recommended);
             } else {
-                // fallback to random
                 const random = await getRandomArtworksAPI();
                 setArtworks(random);
             }

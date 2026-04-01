@@ -366,14 +366,17 @@ export async function getArtistDetail(artistName: string) {
     return response.json();
 }
 
-export async function getArtworkRecommendations(topN: number = 10): Promise<Artwork[]> {
+export async function getArtworkRecommendations(topN: number = 10, category?: string): Promise<Artwork[]> {
     const token = await AsyncStorage.getItem("userToken");
     if (!token) return [];
 
-    const response = await fetch(`${BASE_URL}/recommendations/artworks?topN=${topN}`, {
+    let url = `${BASE_URL}/recommendations/artworks?topN=${topN}`;
+    if (category) {
+        url += `&category=${encodeURIComponent(category)}`;
+    }
+    const response = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
     });
-
     if (!response.ok) return [];
 
     const data = await response.json();
@@ -387,6 +390,17 @@ export async function getArtworkRecommendations(topN: number = 10): Promise<Artw
         imageUrl: r.imageUrl,
         isSaved: false,
     }));
+}
+
+export async function getUserCategories(): Promise<string[]> {
+    const token = await AsyncStorage.getItem("userToken");
+    if (!token) return [];
+    const response = await fetch(`${BASE_URL}/recommendations/categories`, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!response.ok) return [];
+    const data = await response.json();
+    return data.categories || [];
 }
 
 export async function getCollectionRecommendations(topN: number = 10) {

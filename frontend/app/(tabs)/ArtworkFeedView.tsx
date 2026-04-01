@@ -9,13 +9,13 @@ import TdamSearchBar from "@/components/SearchBar";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Artwork } from "@/models/Artwork";
 import RBSheet from 'react-native-raw-bottom-sheet';
-import { useCallback, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SaveArtworkBottomsheet from "@/components/SaveArtworkBottomsheet";
 import CreateCollectionBottomsheet from "@/components/CreateCollectionBottomsheet";
-import { toggleArtworkInCollection, createCollection, getMyCollections, toggleSaveArtwork } from "@/services/api";
+import { toggleArtworkInCollection, createCollection, getMyCollections, toggleSaveArtwork, getUserCategories } from "@/services/api";
 import { Collection } from "@/models/Collection";
-import { Href, router, useFocusEffect } from "expo-router";
-
+import { Href, router } from "expo-router";
+import CategoryPills from "@/components/Pills";
 
 export default function ArtworkFeedView() {
     const { artworks, toggleSave, searchArtworks, searching, error, loadFeed } = useArtworksViewModel();
@@ -26,12 +26,28 @@ export default function ArtworkFeedView() {
     const [newCollectionDescription, setNewCollectionDescription] = useState("");
     const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
     const [collections, setCollections] = useState<Collection[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [categories, setCategories] = useState<string[]>([]);
 
-    useFocusEffect(
-        useCallback(() => {
-            loadFeed();
-        }, [])
-    );
+    useEffect(() => {
+        if (selectedCategory === null) {
+            loadFeed(); 
+        } else {
+            searchArtworks(selectedCategory); 
+        }
+    }, [selectedCategory]);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const cats = await getUserCategories();
+                setCategories(cats);
+            } catch (error) {
+                console.error('Failed to fetch categories', error);
+            }
+        };
+        fetchCategories();
+    }, []);
 
     const renderItem = ({ item }: { item: Artwork }) => (
         <TdamArtworkCard
@@ -139,6 +155,11 @@ export default function ArtworkFeedView() {
 
             {/*search bar*/}
             <TdamSearchBar onSearch={searchArtworks} />
+            <CategoryPills
+                categories={categories}
+                selectedCategory={selectedCategory}
+                onSelectCategory={setSelectedCategory}
+            />
 
             {error && (
                 <Text style={styles.errorText}>
@@ -151,7 +172,6 @@ export default function ArtworkFeedView() {
                 data={artworks}
                 keyExtractor={(item) => item.objectID}
                 renderItem={renderItem}
-                contentContainerStyle={{ paddingBottom: 16 }}
                 refreshing={searching}
                 onRefresh={loadFeed}
             />
@@ -176,7 +196,7 @@ export default function ArtworkFeedView() {
                             saveSheetRef.current?.close();
                             setTimeout(() => {
                                 createSheetRef.current?.open();
-                            }, 300); 
+                            }, 300);
                         }}
                         onToggleCollection={(id) => { handleToggleCollection(id) }}
                     />
@@ -211,6 +231,7 @@ export default function ArtworkFeedView() {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "#ffffffff",
+        paddingBottom: 40
     },
     errorText: {
         textAlign: "center",
