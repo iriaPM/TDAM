@@ -12,15 +12,17 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import { useEffect, useRef, useState } from "react";
 import SaveArtworkBottomsheet from "@/components/SaveArtworkBottomsheet";
 import CreateCollectionBottomsheet from "@/components/CreateCollectionBottomsheet";
-import { toggleArtworkInCollection, createCollection, getMyCollections, toggleSaveArtwork, getUserCategories } from "@/services/api";
+import { toggleArtworkInCollection, createCollection, getMyCollections, toggleSaveArtwork, getUserCategories, getUserProfile, submitUserPreferences } from "@/services/api";
 import { Collection } from "@/models/Collection";
 import { Href, router } from "expo-router";
 import CategoryPills from "@/components/Pills";
+import PreferenceSurveyBottomsheet from "@/components/PreferenceSurveyBottomsheet";
 
 export default function ArtworkFeedView() {
     const { artworks, toggleSave, searchArtworks, searching, error, loadFeed } = useArtworksViewModel();
     const saveSheetRef = useRef<any>(null);
     const createSheetRef = useRef<any>(null);
+    const PrefSheetRef = useRef<any>(null);  
 
     const [newCollectionName, setNewCollectionName] = useState("");
     const [newCollectionDescription, setNewCollectionDescription] = useState("");
@@ -29,6 +31,20 @@ export default function ArtworkFeedView() {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [categories, setCategories] = useState<string[]>([]);
 
+    useEffect(() => {
+        const checkSurveyStatus = async () => {
+            try {
+                const user = await getUserProfile();
+                if (!user.hasCompletedSurvey) {
+                    PrefSheetRef.current?.open();
+                }
+            } catch (error) {
+                console.log("Failed to check survey status");
+            }
+        };
+        checkSurveyStatus();
+    }, []);
+    
     useEffect(() => {
         if (selectedCategory === null) {
             loadFeed(); 
@@ -49,6 +65,15 @@ export default function ArtworkFeedView() {
         fetchCategories();
     }, []);
 
+    const handleSubmit = async (preferences: any) => {
+        try {
+            await submitUserPreferences(preferences);
+            PrefSheetRef.current?.close();
+        } catch (error) {
+            console.log("Failed to submit preferences");
+        }
+    };
+    
     const renderItem = ({ item }: { item: Artwork }) => (
         <TdamArtworkCard
             title={item.title}
@@ -223,6 +248,21 @@ export default function ArtworkFeedView() {
                     title="Create a new collection!"
                 />
             </RBSheet>
+            <RBSheet
+                ref={PrefSheetRef}
+                height={866}
+                draggable={false}
+                dragOnContent={false}
+                customStyles={{
+                    wrapper: styles.BSwrapper,
+                    container: styles.BScontainerAdd,
+                }}
+            >
+                <PreferenceSurveyBottomsheet
+                    onSubmit={handleSubmit}
+                />
+            </RBSheet>
+            
         </SafeAreaView >
     );
 }
