@@ -5,10 +5,11 @@ import { User } from "../models/Users";
 import { Artwork } from "@/models/Artwork";
 import { UserPreferences } from "@/models/userPreferences";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-//172.18.219.154
-//const BASE_URL = "http://172.18.219.154:8080/api";
-const BASE_URL = "http://10.0.2.2:8080/api";
+import Constants from 'expo-constants';
 
+const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
+
+//const BASE_URL = `${process.env.API_BASE_URL}/api`;
 
 export async function loginUser(identifier: string, password: string): Promise<User> {
     const response = await fetch(`${BASE_URL}/login`, {
