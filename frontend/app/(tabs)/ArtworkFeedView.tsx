@@ -9,30 +9,71 @@ import TdamSearchBar from "@/components/SearchBar";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { Artwork } from "@/models/Artwork";
 import RBSheet from 'react-native-raw-bottom-sheet';
-import { useCallback, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SaveArtworkBottomsheet from "@/components/SaveArtworkBottomsheet";
 import CreateCollectionBottomsheet from "@/components/CreateCollectionBottomsheet";
-import { toggleArtworkInCollection, createCollection, getMyCollections, toggleSaveArtwork } from "@/services/api";
+import { toggleArtworkInCollection, createCollection, getMyCollections, toggleSaveArtwork, getUserCategories, getUserProfile, submitUserPreferences } from "@/services/api";
 import { Collection } from "@/models/Collection";
-import { Href, router, useFocusEffect } from "expo-router";
-
+import { Href, router } from "expo-router";
+import CategoryPills from "@/components/Pills";
+import PreferenceSurveyBottomsheet from "@/components/PreferenceSurveyBottomsheet";
 
 export default function ArtworkFeedView() {
     const { artworks, toggleSave, searchArtworks, searching, error, loadFeed } = useArtworksViewModel();
     const saveSheetRef = useRef<any>(null);
     const createSheetRef = useRef<any>(null);
+    const PrefSheetRef = useRef<any>(null);  
 
     const [newCollectionName, setNewCollectionName] = useState("");
     const [newCollectionDescription, setNewCollectionDescription] = useState("");
     const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
     const [collections, setCollections] = useState<Collection[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [categories, setCategories] = useState<string[]>([]);
 
-    useFocusEffect(
-        useCallback(() => {
-            loadFeed();
-        }, [])
-    );
+    useEffect(() => {
+        const checkSurveyStatus = async () => {
+            try {
+                const user = await getUserProfile();
+                if (!user.hasCompletedSurvey) {
+                    PrefSheetRef.current?.open();
+                }
+            } catch (error) {
+                console.log("Failed to check survey status");
+            }
+        };
+        checkSurveyStatus();
+    }, []);
+    
+    useEffect(() => {
+        if (selectedCategory === null) {
+            loadFeed(); 
+        } else {
+            searchArtworks(selectedCategory); 
+        }
+    }, [selectedCategory]);
 
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const cats = await getUserCategories();
+                setCategories(cats);
+            } catch (error) {
+                console.error('Failed to fetch categories', error);
+            }
+        };
+        fetchCategories();
+    }, []);
+
+    const handleSubmit = async (preferences: any) => {
+        try {
+            await submitUserPreferences(preferences);
+            PrefSheetRef.current?.close();
+        } catch (error) {
+            console.log("Failed to submit preferences");
+        }
+    };
+    
     const renderItem = ({ item }: { item: Artwork }) => (
         <TdamArtworkCard
             title={item.title}
@@ -139,6 +180,11 @@ export default function ArtworkFeedView() {
 
             {/*search bar*/}
             <TdamSearchBar onSearch={searchArtworks} />
+            <CategoryPills
+                categories={categories}
+                selectedCategory={selectedCategory}
+                onSelectCategory={setSelectedCategory}
+            />
 
             {error && (
                 <Text style={styles.errorText}>
@@ -151,7 +197,6 @@ export default function ArtworkFeedView() {
                 data={artworks}
                 keyExtractor={(item) => item.objectID}
                 renderItem={renderItem}
-                contentContainerStyle={{ paddingBottom: 16 }}
                 refreshing={searching}
                 onRefresh={loadFeed}
             />
@@ -174,7 +219,9 @@ export default function ArtworkFeedView() {
                         collections={collections}
                         onCreateNew={() => {
                             saveSheetRef.current?.close();
-                            createSheetRef.current?.open()
+                            setTimeout(() => {
+                                createSheetRef.current?.open();
+                            }, 300);
                         }}
                         onToggleCollection={(id) => { handleToggleCollection(id) }}
                     />
@@ -201,6 +248,21 @@ export default function ArtworkFeedView() {
                     title="Create a new collection!"
                 />
             </RBSheet>
+            <RBSheet
+                ref={PrefSheetRef}
+                height={866}
+                draggable={false}
+                dragOnContent={false}
+                customStyles={{
+                    wrapper: styles.BSwrapper,
+                    container: styles.BScontainerAdd,
+                }}
+            >
+                <PreferenceSurveyBottomsheet
+                    onSubmit={handleSubmit}
+                />
+            </RBSheet>
+            
         </SafeAreaView >
     );
 }
@@ -209,6 +271,7 @@ export default function ArtworkFeedView() {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "#ffffffff",
+        paddingBottom: 40
     },
     errorText: {
         textAlign: "center",

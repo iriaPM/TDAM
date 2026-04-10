@@ -20,7 +20,8 @@
         "usesCleartextTraffic": true
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.iriap.tdam"
     },
     "web": {
       "output": "static",
@@ -46,6 +47,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "3af5e573-87de-45ae-b37e-77acfd6d2c4a"
+      }
     }
   }
 }

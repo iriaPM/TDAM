@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, request, jsonify
 import joblib
 import requests
@@ -9,7 +11,7 @@ app = Flask(__name__)
 model = joblib.load("./model/nb_recommender.pkl")
 vectorizer = joblib.load("./model/vectorizer.pkl")
 
-SPRING_BOOT_URL = "http://localhost:8080"
+SPRING_BOOT_URL = os.environ.get('SPRING_BOOT_URL', 'http://backend:8080')
 
 # fetch full dataset and filter specific user
 def get_user_data(user_id):
@@ -48,6 +50,7 @@ def health():
 @app.route("/recommend/<int:user_id>", methods=["GET"])
 def recommend(user_id):
     top_n = request.args.get("top_n", default=10, type=int)
+    category = request.args.get("category", default=None, type=str)
 
     try:
         user_rows = get_user_data(user_id)
@@ -55,9 +58,11 @@ def recommend(user_id):
             return jsonify({"error": f"No data found for user {user_id}"}), 404
 
         user_prefs_text = build_user_prefs_text(user_rows)
-        seen_ids = set(row["artworkId"] for row in user_rows)
 
-        candidates = requests.get(f"{SPRING_BOOT_URL}/api/artworks/random/internal").json()
+        candidates_url = f"{SPRING_BOOT_URL}/api/artworks/random/internal"
+        if category:
+            candidates_url += f"?category={category}"
+        candidates = requests.get(candidates_url).json()
         unseen = candidates
 
         if not unseen:
@@ -143,6 +148,31 @@ def recommend_collections(user_id):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+# categories endpoint extract from user preferences or return defaults
+@app.route("/user/<int:user_id>/categories", methods=["GET"])
+def get_user_categories(user_id):
+    try:
+        user_rows = get_user_data(user_id)
+        if not user_rows:
+            return jsonify({"categories": ["Impressionism", "Baroque", "Renaissance", "Modern", "Portrait"]})
 
+        prefs = user_rows[0]
+        categories = set()
+        for field in ["preferredStyles", "preferredArtists", "preferredMediums",
+                      "preferredTimePeriods", "preferredMovements"]:
+            val = prefs.get(field, "")
+            if val:
+                parts = [p.strip() for p in val.split(",")]
+                categories.update(parts)
+
+        if not categories:
+            categories = ["Impressionism", "Baroque", "Renaissance", "Modern", "Portrait"]
+        else:
+            categories = list(categories)[:6]  
+
+        return jsonify({"categories": categories})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)

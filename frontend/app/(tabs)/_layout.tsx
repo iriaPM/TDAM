@@ -19,7 +19,7 @@ export default function TabsLayout() {
             }}
         >
             {/*bottom tabs*/}
-            <Tabs.Screen
+            {/* <Tabs.Screen
                 name="home"
                 options={{
                     tabBarLabel: "Home",
@@ -30,7 +30,7 @@ export default function TabsLayout() {
                             color={color}
                             size={24}
                         />
-                }} />
+                }} /> */}
             <Tabs.Screen
                 name="ArtworkFeedView"
                 options={{

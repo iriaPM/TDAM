@@ -170,6 +170,7 @@ export function useCollectionsViewModel(collectionId?: string) {
 
     // effects
     useEffect(() => {
+        if (collections.length > 0) return;
         loadCollections();
     }, []);
 

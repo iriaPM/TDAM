@@ -33,15 +33,16 @@ public class RecommendationController {
     @GetMapping("/artworks")
     public ResponseEntity<Object> getArtworkRecommendations(
             @RequestHeader("Authorization") String token,
-            @RequestParam(defaultValue = "10") int topN) {
+            @RequestParam(defaultValue = "10") int topN,
+            @RequestParam(required = false) String category) {
 
         User user = userService.getProfile(token.replace("Bearer ", ""));
         Set<String> savedIds = collectionService.getSavedArtworkIds(user);
 
-        Object recommendations = recommendationService.getArtworkRecommendations(user.getId(), topN);
+        Object recommendations = recommendationService.getArtworkRecommendations(user.getId(), topN, category);
 
         if (recommendations == null) {
-            return ResponseEntity.status(503).body("ML service unavailable");
+            return ResponseEntity.status(503).body("ML service unavailable, cannot fetch artwork recommendations");
         }
 
         if (recommendations instanceof java.util.Map) {
@@ -56,6 +57,16 @@ public class RecommendationController {
         return ResponseEntity.ok(recommendations);
     }
 
+    @GetMapping("/categories")
+    public ResponseEntity<Object> getUserCategories(@RequestHeader("Authorization") String token) {
+        User user = userService.getProfile(token.replace("Bearer ", ""));
+        Object categories = recommendationService.getUserCategories(user.getId());
+        if (categories == null) {
+            return ResponseEntity.status(503).body("ML service unavailable, cannot fetch categories");
+        }
+        return ResponseEntity.ok(categories);
+    }
+
     // collection recommendations
     @GetMapping("/collections")
     public ResponseEntity<Object> getCollectionRecommendations(
@@ -68,7 +79,7 @@ public class RecommendationController {
                 user.getId(), topN);
 
         if (recommendations == null) {
-            return ResponseEntity.status(503).body("ML service unavailable");
+            return ResponseEntity.status(503).body("ML service unavailabl, cannot fetch collection recommendations");
         }
 
         return ResponseEntity.ok(recommendations);

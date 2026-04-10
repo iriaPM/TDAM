@@ -5,10 +5,11 @@ import { User } from "../models/Users";
 import { Artwork } from "@/models/Artwork";
 import { UserPreferences } from "@/models/userPreferences";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-//172.18.219.154
-//const BASE_URL = "http://172.18.219.154:8080/api";
-const BASE_URL = "http://10.0.2.2:8080/api";
+import Constants from 'expo-constants';
 
+const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
+
+//const BASE_URL = `${process.env.API_BASE_URL}/api`;
 
 export async function loginUser(identifier: string, password: string): Promise<User> {
     const response = await fetch(`${BASE_URL}/login`, {
@@ -321,17 +322,19 @@ export async function submitUserPreferences(
 
 export async function getArtworkDetail(artworkId: string) {
     const token = await AsyncStorage.getItem("userToken");
+    const url = `${BASE_URL}/artworks/${artworkId}`;
+    //console.log("Fetching artwork:", url);  
 
-    const response = await fetch(
-        `${BASE_URL}/artworks/${artworkId}`,
-        {
-            headers: token
-                ? { Authorization: `Bearer ${token}` }
-                : {},
-        }
-    );
+    const response = await fetch(url, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+
+    //console.log("Response status:", response.status);   
+    if (response.status === 404) return null;
 
     if (!response.ok) {
+        const text = await response.text();
+        //console.error("ARTWORK DETAIL ERROR:", text);
         throw new Error("Failed to load artwork detail");
     }
 
@@ -367,18 +370,22 @@ export async function getArtistDetail(artistName: string) {
     return response.json();
 }
 
-export async function getArtworkRecommendations(topN: number = 10): Promise<Artwork[]> {
+export async function getArtworkRecommendations(topN: number = 10, category?: string): Promise<Artwork[]> {
     const token = await AsyncStorage.getItem("userToken");
     if (!token) return [];
 
-    const response = await fetch(`${BASE_URL}/recommendations/artworks?topN=${topN}`, {
+    let url = `${BASE_URL}/recommendations/artworks?topN=${topN}`;
+    if (category) {
+        url += `&category=${encodeURIComponent(category)}`;
+    }
+    const response = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
     });
-
     if (!response.ok) return [];
 
     const data = await response.json();
     // map recommendations to Artwork model
+    console.log("RECOMMENDATIONS DATA:", data);
     return data.recommendations.map((r: any) => ({
         objectID: r.objectID,
         title: r.title,
@@ -387,6 +394,17 @@ export async function getArtworkRecommendations(topN: number = 10): Promise<Artw
         imageUrl: r.imageUrl,
         isSaved: false,
     }));
+}
+
+export async function getUserCategories(): Promise<string[]> {
+    const token = await AsyncStorage.getItem("userToken");
+    if (!token) return [];
+    const response = await fetch(`${BASE_URL}/recommendations/categories`, {
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!response.ok) return [];
+    const data = await response.json();
+    return data.categories || [];
 }
 
 export async function getCollectionRecommendations(topN: number = 10) {

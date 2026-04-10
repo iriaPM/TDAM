@@ -53,9 +53,22 @@ public class ArtworkCacheService {
     }
 
     public ArtworkDto getArtworkById(String objectID) {
-        return cachedArtworks.stream()
+        ArtworkDto cached = cachedArtworks.stream()
                 .filter(a -> a.getObjectID().equals(objectID))
                 .findFirst()
                 .orElse(null);
+
+        if (cached != null)
+            return cached;
+
+        if (objectID.startsWith("met-")) {
+            int id = Integer.parseInt(objectID.replace("met-", ""));
+            return artworkService.getArtworkById(id);
+        } else if (objectID.startsWith("harvard-")) {
+            int id = Integer.parseInt(objectID.replace("harvard-", ""));
+            return harvardArtworkService.getArtworkById(id);
+        }
+
+        return null;
     }
 }

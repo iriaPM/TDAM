@@ -9,7 +9,10 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 export default function ArtworkDetailView() {
     const { id, ids } = useLocalSearchParams<{ id: string; ids?: string }>();
 
-    const artworkIds = ids ? ids.split(",") : [id as string];
+    const artworkIds = ids
+        ? [...new Set(ids.split(","))]
+        : [id as string];
+
     const initialIndex = Math.max(artworkIds.indexOf(id as string), 0);
 
     if (artworkIds.length === 1) {

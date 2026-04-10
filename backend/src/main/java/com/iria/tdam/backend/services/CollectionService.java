@@ -99,6 +99,7 @@ public class CollectionService {
         }
 
         // toggle artwork in collection (add if not exists, remove if exists)
+        @Transactional
         public void toggleArtwork(
                         User user,
                         UUID collectionId,
@@ -108,17 +109,52 @@ public class CollectionService {
                                 .findByIdAndOwner(collectionId, user)
                                 .orElseThrow(() -> new IllegalArgumentException("Collection not found"));
 
-                artworkRepository
+                Collection all = getOrCreateAllArtworksCollection(user);
+
+                boolean isCurrentlyInCollection = artworkRepository
                                 .findByCollectionAndArtworkId(collection, artworkId)
-                                .ifPresentOrElse(
-                                                existing -> artworkRepository.delete(existing),
-                                                () -> {
-                                                        CollectionArtwork ca = new CollectionArtwork();
-                                                        ca.setCollection(collection);
-                                                        ca.setArtworkId(artworkId);
-                                                        ca.setImageUrl(imageUrl);
-                                                        artworkRepository.save(ca);
-                                                });
+                                .isPresent();
+
+                if (isCurrentlyInCollection) {
+                        artworkRepository.deleteByCollectionAndArtworkId(collection, artworkId);
+
+                        List<Collection> userCollections = collectionRepository.findByOwner(user);
+
+                        boolean existsInAnyOtherCollection = false;
+                        for (Collection c : userCollections) {
+                                if (c.getId().equals(collectionId) || c.getId().equals(all.getId())) {
+                                        continue;
+                                }
+
+                                if (artworkRepository
+                                                .findByCollectionAndArtworkId(c, artworkId)
+                                                .isPresent()) {
+                                        existsInAnyOtherCollection = true;
+                                        break;
+                                }
+                        }
+
+                        if (!existsInAnyOtherCollection) {
+                                artworkRepository
+                                                .deleteByCollectionAndArtworkId(all, artworkId);
+                        }
+                } else {
+                        CollectionArtwork ca = new CollectionArtwork();
+                        ca.setCollection(collection);
+                        ca.setArtworkId(artworkId);
+                        ca.setImageUrl(imageUrl);
+                        artworkRepository.save(ca);
+
+                        if (artworkRepository
+                                        .findByCollectionAndArtworkId(all, artworkId)
+                                        .isEmpty()) {
+                                CollectionArtwork caAll = new CollectionArtwork();
+                                caAll.setCollection(all);
+                                caAll.setArtworkId(artworkId);
+                                caAll.setImageUrl(imageUrl);
+                                artworkRepository.save(caAll);
+                        }
+                }
         }
 
         // public feed

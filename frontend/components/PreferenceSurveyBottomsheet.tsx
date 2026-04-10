@@ -28,28 +28,31 @@ export default function PreferenceSurveyBottomsheet({ onSubmit }: PreferenceSurv
     const [selectedArtists, setSelectedArtists] = useState<string[]>([]);
     const [selectedPeriod, setSelectedPeriod] = useState<string[]>([]);
 
-    const artStyles = [
-        'Realism', 'Abstract', 'Impressionism', 'Expressionism',
-        'Surrealism', 'Minimalism', 'Pop Art', 'Cubism'
+    const cultures = [
+        'Chinese', 'Japanese', 'Italian', 'Dutch',
+        'French', 'Indian', 'American', 'Byzantine',
+        'German', 'Flemish', 'Iranian', 'Spanish',
+        'Netherlandish', 'Central Asian',
     ];
 
-    const artMovements = [
-        'Renaissance', 'Baroque', 'Modernism', 'Contemporary',
-        'Art Deco', 'Bauhaus', 'Dadaism', 'Futurism'
-    ];
-
-    const categories = [
-        'Portraits', 'Landscapes', 'Still Life', 'Abstract',
-        'Sculpture', 'Photography', 'Architecture', 'Street Art'
+    const eras = [
+        'Renaissance', 'Baroque',
+        'Tang dynasty', 'Edo period', 'Qing dynasty',
+        'Medieval', 'Neoclassicism', 'Impressionism',
     ];
 
     const favoriteArtists = [
-        'Leonardo da Vinci', 'Van Gogh', 'Picasso', 'Monet', 'Goya'
+        'Michelangelo', 'Van Gogh', 'Hiroshige', 'Han Gan',
+        'Monet', 'Rembrandt', 'Manaku', 'Andrea del Sarto',
+        'Goya', 'Jacques Louis David', 'Rosa Bonheur',
+        'Edouard Manet', 'Georges Seurat',
     ];
 
     const timePeriods = [
-        'Ancient', 'Medieval', 'Renaissance', 'Baroque', '18th Century', '19th Century', 'Modern', 'Contemporary'
-    ]
+        'Ancient', '7th century', '12th century',
+        '15th century', '16th century', '17th century',
+        '18th century', '19th century', 'Contemporary',
+    ];
 
     const toggleSelection = (item: string, selected: string[], setSelected: (items: string[]) => void) => {
         if (selected.includes(item)) {
@@ -78,39 +81,34 @@ export default function PreferenceSurveyBottomsheet({ onSubmit }: PreferenceSurv
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             <Text style={styles.mainTitle}>Let us know what you like...</Text>
+            <Text style={styles.subtitle}>Pick as many as you wish.</Text>
+
 
             <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Art Styles</Text>
+                <Text style={styles.sectionTitle}>Where in the world?</Text>
                 <View style={styles.buttonGrid}>
-                    {artStyles.map(style => renderButton(style, selectedStyles, setSelectedStyles))}
+                    {cultures.map(item => renderButton(item, selectedStyles, setSelectedStyles))}
                 </View>
             </View>
 
             <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Art Movements</Text>
+                <Text style={styles.sectionTitle}>Any specific style?</Text>
                 <View style={styles.buttonGrid}>
-                    {artMovements.map(movement => renderButton(movement, selectedMovements, setSelectedMovements))}
+                    {eras.map(era => renderButton(era, selectedMovements, setSelectedMovements))}
                 </View>
             </View>
 
             <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Categories</Text>
+                <Text style={styles.sectionTitle}>Familiar faces?</Text>
                 <View style={styles.buttonGrid}>
-                    {categories.map(category => renderButton(category, selectedCategories, setSelectedCategories))}
+                    {favoriteArtists.map(item => renderButton(item, selectedArtists, setSelectedArtists))}
                 </View>
             </View>
 
             <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Favorite Artists</Text>
+                <Text style={styles.sectionTitle}>How far back?</Text>
                 <View style={styles.buttonGrid}>
-                    {favoriteArtists.map(artist => renderButton(artist, selectedArtists, setSelectedArtists))}
-                </View>
-            </View>
-
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Time Period</Text>
-                <View style={styles.buttonGrid}>
-                    {timePeriods.map(timePeriods => renderButton(timePeriods, selectedPeriod, setSelectedPeriod))}
+                    {timePeriods.map(item => renderButton(item, selectedPeriod, setSelectedPeriod))}
                 </View>
             </View>
 
@@ -134,7 +132,8 @@ export default function PreferenceSurveyBottomsheet({ onSubmit }: PreferenceSurv
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#ffffff',
-        flex: 1,
+        marginBottom: 50,
+        paddingTop: 10,
     },
     contentContainer: {
         padding: 20,
@@ -146,6 +145,12 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginBottom: 6,
         color: "#000",
+    },
+    subtitle: {
+        fontSize: 14,
+        textAlign: 'center',
+        color: '#666666',
+        marginBottom: 28,
     },
     section: {
         marginBottom: 32,
