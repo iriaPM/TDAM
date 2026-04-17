@@ -71,7 +71,9 @@ export default function CollectionDetailView() {
                         accessibilityLabel={collection.username}
                         accessibilityRole="button"
                         onPress={() => {
-                            router.push(`/user/[id]` as Href);
+                            //router.push(`/user/[id]` as Href);
+                            // TODO: Fix navigation to user profile - need userId or proper routing
+                            console.log("Navigate to user:", collection.username);
                         }}>
                         <ImageViewer
                             imgSource={
@@ -143,7 +145,7 @@ export default function CollectionDetailView() {
                 renderItem={({ item }: { item: any }) => {
                     const ids = collection.artworks
                         .filter((a: any) => a.imageUrl)
-                        .map((a: any) => a.id)   
+                        .map((a: any) => a.id)
                         .join(",");
 
                     return (

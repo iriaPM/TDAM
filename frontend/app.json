@@ -21,7 +21,7 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.iriap.tdam"
+      "package": "com.frontend.tdam"
     },
     "web": {
       "output": "static",
@@ -52,7 +52,8 @@
       "router": {},
       "eas": {
         "projectId": "3af5e573-87de-45ae-b37e-77acfd6d2c4a"
-      }
+      },
+      "apiUrl": "https://had-yellow-classroom-manually.trycloudflare.com/api"
     }
   }
 }
