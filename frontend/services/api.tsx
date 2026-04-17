@@ -7,9 +7,7 @@ import { UserPreferences } from "@/models/userPreferences";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from 'expo-constants';
 
-const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
-
-//const BASE_URL = `${process.env.API_BASE_URL}/api`;
+const BASE_URL = Constants.expoConfig?.extra?.apiUrl || process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export async function loginUser(identifier: string, password: string): Promise<User> {
     const response = await fetch(`${BASE_URL}/login`, {
@@ -323,18 +321,14 @@ export async function submitUserPreferences(
 export async function getArtworkDetail(artworkId: string) {
     const token = await AsyncStorage.getItem("userToken");
     const url = `${BASE_URL}/artworks/${artworkId}`;
-    //console.log("Fetching artwork:", url);  
 
     const response = await fetch(url, {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
 
-    //console.log("Response status:", response.status);   
     if (response.status === 404) return null;
 
     if (!response.ok) {
-        const text = await response.text();
-        //console.error("ARTWORK DETAIL ERROR:", text);
         throw new Error("Failed to load artwork detail");
     }
 

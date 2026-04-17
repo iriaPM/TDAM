@@ -175,7 +175,6 @@ export default function ArtworkFeedView() {
 
     return (
         <SafeAreaView style={styles.container} >
-
             <LoadingSpinner visible={searching && artworks.length === 0} />
 
             {/*search bar*/}

@@ -1,0 +1,51 @@
+# Learn more: https://docs.expo.dev/build-reference/eas-ignore/
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native build outputs
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+/android/
+/ios/
+
+# Metro
+.metro-health-check*
+
+# Debug logs
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# Local env files
+.env*.local
+.env
+
+# TypeScript
+*.tsbuildinfo
+
+# Example app folder
+app-example/
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# EAS specific (optional but recommended)
+/build/
+/eas-build-local-nodejs/
