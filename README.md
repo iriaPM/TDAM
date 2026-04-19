@@ -4,6 +4,9 @@
 ## C22305863 - Iria Parada 
 ### Supervisor: Art Sloan 
 
+TDAM is a mobile app that helps people discover public artworks through a personalised recommendation system and custom collections, allowing users to explore, organise, and revisit the pieces they love.
+What makes it more than just a gallery browser is the machine learning model underneath, which learns each user's preferences and personalises both the artwork feed and the collections feed over time.
+
 Full-stack mobile application
 <br>
 ![ReactNative](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white)
