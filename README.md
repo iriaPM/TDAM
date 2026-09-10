@@ -1,7 +1,7 @@
 # TDAM: The Digital Art Museum
 
 ## Final Year Project - TUDublin
-## C22305863 - Iria Parada
+## Iria Parada
 ### Supervisor: Art Sloan
 
 TDAM is a mobile app that helps people discover public artworks through a personalised recommendation system and custom collections, allowing users to explore, organise, and revisit the pieces they love.
@@ -74,6 +74,7 @@ TDAM isn't a social media platform — there's no uploading, posting, or followi
 - [Harvard Art Museums API](https://harvardartmuseums.org/collections/api)
 
 **Deployment**
+- Docker (containerised backend)
 - Backend hosted on a personal NAS home server, exposed via a Cloudflare Tunnel
 
 ---
@@ -100,7 +101,7 @@ TDAM uses a content-based recommendation model to personalise both the artwork f
 - **Backend:** REST API with clear separation between Controllers, Services, Repositories and DTOs
 - **Database:** PostgreSQL storing users, collections, collection–artwork links, and artwork view history for the recommendation model
 - **ML Service:** Standalone Flask API consuming survey, save, and view data and returning personalised rankings to the Spring Boot backend
-- **Deployment:** Backend containerised and hosted on a personal NAS server, tunnelled to the internet via Cloudflare
+- **Deployment:** Backend containerised with Docker and hosted on a personal NAS server, tunnelled to the internet via Cloudflare
 
 ---
 
