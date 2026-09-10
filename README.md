@@ -1,7 +1,7 @@
 # TDAM: The Digital Art Museum
 
 ## Final Year Project - TUDublin
-## C22305863 - Iria Parada
+## Iria Parada
 ### Supervisor: Art Sloan
 
 TDAM is a mobile app that helps people discover public artworks through a personalised recommendation system and custom collections, allowing users to explore, organise, and revisit the pieces they love.
